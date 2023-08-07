@@ -4,7 +4,12 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut as ChartDoughnut } from "react-chartjs-2";
 import { DoughnutProps } from "./type";
 
-function Doughnut({ data, width, height, ...divProps }: DoughnutProps) {
+export default function Doughnut({
+  data,
+  width,
+  height,
+  ...divProps
+}: DoughnutProps) {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   return (
@@ -13,5 +18,3 @@ function Doughnut({ data, width, height, ...divProps }: DoughnutProps) {
     </div>
   );
 }
-
-export default Doughnut;

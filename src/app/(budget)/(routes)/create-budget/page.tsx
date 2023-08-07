@@ -1,48 +1,103 @@
 "use client";
 import { MainLayout } from "@/components";
-import React, { useLayoutEffect, useState } from "react";
-import { DoughnutCard, SummaryCard } from "./components";
+import React, { ChangeEventHandler, useCallback, useState } from "react";
+import {
+  CreateBudgetDetailForm,
+  CreateIncomeForm,
+  DoughnutCard,
+  SummaryCard,
+} from "./components";
 import { TBudget } from "@/types";
+import { useMounted } from "@/hooks";
+import { isEmpty } from "lodash";
+import { calChartDoughnutColor, formatDate, onlyNumber } from "@/helper";
+import { SelectSingleEventHandler } from "react-day-picker";
 
 const data = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+  labels: ["Housing", "Food and drink", "Travel"],
   datasets: [
     {
       label: "# of Votes",
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.5)",
-        "rgba(54, 162, 235, 0.5)",
-        "rgba(255, 206, 86, 0.5)",
-        "rgba(75, 192, 192, 0.5)",
-        "rgba(153, 102, 255, 0.5)",
-        "rgba(255, 159, 64, 0.5)",
-      ],
+      data: [8500, 12000, 5000],
+      backgroundColor: calChartDoughnutColor({
+        amount: [8500, 12000, 5000],
+        income: 30000,
+      }),
     },
   ],
 };
 
-const summaryList: { label: string; price: number; type: TBudget }[] = [
-  { label: "Housing", price: 8500, type: "income" },
-  { label: "Food and categories", price: 12000, type: "expend" },
-  { label: "Travel", price: 5000, type: "expend" },
-  { label: "Balance", price: 6000, type: "balance" },
+const summaryList: {
+  order: string;
+  price: number;
+  type: TBudget;
+  description?: string;
+}[] = [
+  { order: "Housing", price: 8500, type: "income", description: "lorem" },
+  {
+    order: "Food and drink",
+    price: 12000,
+    type: "expend",
+    description: "lorem",
+  },
+  { order: "Travel", price: 5000, type: "expend", description: "lorem" },
+  { order: "Balance", price: 6000, type: "balance" },
 ];
 
 export default function CreateBudget() {
-  const [mounted, setMounted] = useState(false);
+  const isMounted = useMounted();
+  const [isStarted, setIsStarted] = useState(false);
 
-  useLayoutEffect(() => {
-    if (!mounted) setTimeout(() => setMounted(true), 750);
-  }, []);
+  const [incomeValues, setIncomeValues] = useState<{
+    income: string;
+    date: Date | undefined;
+  }>({
+    income: "",
+    date: undefined,
+  });
+
+  const onIncomeChanged: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      const { value } = e.target;
+      const incomeFormatted = onlyNumber(value);
+
+      setIncomeValues((prev) => ({
+        ...prev,
+        income: incomeFormatted,
+      }));
+    },
+    []
+  );
+
+  const onSelectDateIncome = useCallback((date: Date) => {
+    const dateFormatted = formatDate(date) as unknown as Date;
+
+    setIncomeValues((prev) => ({ ...prev, date: dateFormatted }));
+  }, []) as SelectSingleEventHandler;
 
   return (
     <MainLayout>
       CreateBudget page
-      <section className="flex space-x-5 items-center justify-between h-fit">
+      <section className="flex space-x-5 items-center justify-between h-fit mb-5">
         <DoughnutCard data={data} />
-        <SummaryCard end={30000} isMounted={mounted} data={summaryList} />
+        <SummaryCard
+          end={isStarted && incomeValues.income ? +incomeValues.income : 30000}
+          isMounted={isMounted}
+          data={summaryList}
+        />
       </section>
+      {!isStarted ? (
+        <CreateIncomeForm
+          onSelectDate={onSelectDateIncome}
+          date={incomeValues.date}
+          income={incomeValues.income}
+          onChange={onIncomeChanged}
+          isDisabled={isEmpty(incomeValues.date && incomeValues.income)}
+          onSubmit={() => setIsStarted(true)}
+        />
+      ) : (
+        <CreateBudgetDetailForm />
+      )}
     </MainLayout>
   );
 }

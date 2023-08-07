@@ -1,11 +1,7 @@
 import { Doughnut } from "@/components";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartData } from "chart.js";
 import React from "react";
-
-type DoughnutCardProps = {
-  data: ChartData<"doughnut", number[], string>;
-};
+import type { DoughnutCardProps } from "./type";
 
 export default function DoughnutCard({ data }: DoughnutCardProps) {
   return (

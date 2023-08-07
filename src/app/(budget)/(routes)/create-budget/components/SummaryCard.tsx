@@ -3,17 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CountUp from "react-countup";
 import { priceFormatter } from "@/helper";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TBudget } from "@/types";
 import Image from "next/image";
 
 import Expense from "@/assets/images/expense.png";
-
-type SummaryCardProps = {
-  end: number;
-  start?: number;
-  isMounted: boolean;
-  data: { label: string; price: number; type: TBudget }[];
-};
+import type { SummaryCardProps } from "./type";
 
 export default function SummaryCard({
   end,
@@ -22,9 +15,9 @@ export default function SummaryCard({
   data,
 }: SummaryCardProps) {
   return (
-    <Card className="w-full h-[396px]">
+    <Card className="w-full h-[398px]">
       <CardHeader>
-        <p>Available amount</p>
+        <p aria-label="available-amount">Available amount</p>
         <CardTitle className="text-4xl">
           <CountUp
             duration={0.5}
@@ -36,7 +29,7 @@ export default function SummaryCard({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {data.map(({ label, price, type }, index) => (
+        {data.map(({ order, price, type, description }, index) => (
           <div
             key={index}
             className={`flex justify-between items-center mb-3 pt-2  ${
@@ -56,12 +49,30 @@ export default function SummaryCard({
                   isMounted ? "hidden" : "block"
                 } w-[300px] h-[20px]`}
               />
-              <p className={`${isMounted ? "flex" : "hidden"}`}>{label}</p>
+              <div className="flex-col items-left">
+                <p
+                  className={`${isMounted ? "flex" : "hidden"}`}
+                  about="budget-order"
+                >
+                  {order}
+                </p>
+                <p
+                  about="budget-description"
+                  className={`${
+                    isMounted ? "flex" : "hidden"
+                  } text-slate-400 text-xs`}
+                >
+                  {description}
+                </p>
+              </div>
             </div>
             <Skeleton
               className={`${isMounted ? "hidden" : "block"} w-[100px] h-[20px]`}
             />
-            <p className={`${isMounted ? "flex" : "hidden"} font-medium`}>
+            <p
+              className={`${isMounted ? "flex" : "hidden"} font-medium`}
+              about="price-order"
+            >
               {priceFormatter(price)}
             </p>
           </div>

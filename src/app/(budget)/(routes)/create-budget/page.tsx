@@ -1,103 +1,77 @@
 "use client";
+
 import { MainLayout } from "@/components";
 import React, { ChangeEventHandler, useCallback, useState } from "react";
-import {
-  CreateBudgetDetailForm,
-  CreateIncomeForm,
-  DoughnutCard,
-  SummaryCard,
-} from "./components";
-import { TBudget } from "@/types";
+import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
 import { useMounted } from "@/hooks";
-import { isEmpty } from "lodash";
-import { calChartDoughnutColor, formatDate, onlyNumber } from "@/helper";
-import { SelectSingleEventHandler } from "react-day-picker";
+import { onlyNumber } from "@/helper";
+import {
+  DEFAULT_CHART_DATA,
+  DEFAULT_INCOME_VALUES,
+  DEFAULT_SUMMARY_LIST,
+} from "./constants";
 
-const data = {
-  labels: ["Housing", "Food and drink", "Travel"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [8500, 12000, 5000],
-      backgroundColor: calChartDoughnutColor({
-        amount: [8500, 12000, 5000],
-        income: 30000,
-      }),
-    },
-  ],
-};
-
-const summaryList: {
-  order: string;
-  price: number;
-  type: TBudget;
-  description?: string;
-}[] = [
-  { order: "Housing", price: 8500, type: "income", description: "lorem" },
-  {
-    order: "Food and drink",
-    price: 12000,
-    type: "expend",
-    description: "lorem",
-  },
-  { order: "Travel", price: 5000, type: "expend", description: "lorem" },
-  { order: "Balance", price: 6000, type: "balance" },
-];
+import { v4 as uuidv4 } from "uuid";
+import { setNewBudgetWithoutLogin } from "./helper";
 
 export default function CreateBudget() {
   const isMounted = useMounted();
   const [isStarted, setIsStarted] = useState(false);
 
   const [incomeValues, setIncomeValues] = useState<{
-    income: string;
-    date: Date | undefined;
-  }>({
-    income: "",
-    date: undefined,
-  });
+    value: string;
+    description: string;
+  }>(DEFAULT_INCOME_VALUES);
 
-  const onIncomeChanged: ChangeEventHandler<HTMLInputElement> = useCallback(
+  const onIncomeChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
-      const { value } = e.target;
-      const incomeFormatted = onlyNumber(value);
+      const { value, id } = e.target;
+
+      const cleanValue =
+        onlyNumber(value)?.[0] === "0"
+          ? `${onlyNumber(value)?.slice(1)}`
+          : onlyNumber(value);
+
+      const updateValue = id === "value" ? cleanValue : value;
 
       setIncomeValues((prev) => ({
         ...prev,
-        income: incomeFormatted,
+        [id]: updateValue,
       }));
     },
     []
   );
 
-  const onSelectDateIncome = useCallback((date: Date) => {
-    const dateFormatted = formatDate(date) as unknown as Date;
+  const handleAddIncome = () => {
+    const newIncome = {
+      [uuidv4()]: {
+        ...incomeValues,
+        type: "I",
+        created: new Date(Date.now()).toISOString(),
+      },
+    };
 
-    setIncomeValues((prev) => ({ ...prev, date: dateFormatted }));
-  }, []) as SelectSingleEventHandler;
+    setNewBudgetWithoutLogin(JSON.stringify(newIncome));
+    setIncomeValues(DEFAULT_INCOME_VALUES);
+  };
 
   return (
     <MainLayout>
       CreateBudget page
       <section className="flex space-x-5 items-center justify-between h-fit mb-5">
-        <DoughnutCard data={data} />
+        <DoughnutCard data={DEFAULT_CHART_DATA} />
         <SummaryCard
-          end={isStarted && incomeValues.income ? +incomeValues.income : 30000}
+          end={isStarted && incomeValues.value ? +incomeValues.value : 30000}
           isMounted={isMounted}
-          data={summaryList}
+          data={DEFAULT_SUMMARY_LIST}
         />
       </section>
-      {!isStarted ? (
-        <CreateIncomeForm
-          onSelectDate={onSelectDateIncome}
-          date={incomeValues.date}
-          income={incomeValues.income}
-          onChange={onIncomeChanged}
-          isDisabled={isEmpty(incomeValues.date && incomeValues.income)}
-          onSubmit={() => setIsStarted(true)}
-        />
-      ) : (
-        <CreateBudgetDetailForm />
-      )}
+      <CreateNewBudgetForm
+        income={incomeValues}
+        onIncomeChange={onIncomeChange}
+        onSubmit={() => setIsStarted(true)}
+        onAddIncome={handleAddIncome}
+      />
     </MainLayout>
   );
 }

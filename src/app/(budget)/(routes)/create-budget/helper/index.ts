@@ -1,8 +1,9 @@
 import { getLocalStorage, setLocalStorage } from "@/helper";
 
+//TODO: get login from hooks
 let login = false;
 
-const DEFAULT_LOCAL_STORAGE_KEY = "create_budget";
+const LOCAL_STORAGE_KEY = "create_budget";
 const LOGIN_LOCAL_STORAGE_KEY = "login";
 
 export const setNewBudgetWithoutLogin = (value: string) => {
@@ -10,5 +11,11 @@ export const setNewBudgetWithoutLogin = (value: string) => {
     setLocalStorage(LOGIN_LOCAL_STORAGE_KEY, "[]");
   }
 
-  setLocalStorage(DEFAULT_LOCAL_STORAGE_KEY, value);
+  setLocalStorage(LOCAL_STORAGE_KEY, value);
+};
+
+export const getCreateBudgetFromStorage = () => {
+  const foundValue = getLocalStorage(LOCAL_STORAGE_KEY);
+
+  if (foundValue) return foundValue;
 };

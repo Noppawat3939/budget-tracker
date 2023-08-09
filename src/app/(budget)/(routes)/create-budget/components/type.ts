@@ -15,7 +15,6 @@ export type SummaryCardProps = {
 export type CreateNewBudgetFormProps = {
   onIncomeChange?: React.ChangeEventHandler<HTMLInputElement>;
   income: { value: string; description: string };
-  onSubmit?: () => void;
   onAddIncome?: () => void;
   isDisabled?: boolean;
 };

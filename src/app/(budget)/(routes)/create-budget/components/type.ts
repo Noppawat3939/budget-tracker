@@ -1,5 +1,6 @@
 import { TBudget } from "@/types";
 import { ChartData } from "chart.js";
+import { ChangeEvent } from "react";
 
 export type DoughnutCardProps = {
   data: ChartData<"doughnut", number[], string>;
@@ -12,9 +13,25 @@ export type SummaryCardProps = {
   data: { order: string; price: number; type: TBudget; description?: string }[];
 };
 
+type CreateBudget = "income" | "expense";
+type CreateBudgetFormId = "value" | "description";
+
 export type CreateNewBudgetFormProps = {
-  onIncomeChange?: React.ChangeEventHandler<HTMLInputElement>;
-  income: { value: string; description: string };
-  onAddIncome?: () => void;
   isDisabled?: boolean;
+  values: Record<CreateBudget, Record<CreateBudgetFormId, string>>;
+  onValueChange: (
+    event: ChangeEvent<HTMLInputElement>,
+    key: CreateBudget
+  ) => void;
 };
+
+export type CreateBudgetForms = {
+  title: string;
+  key: CreateBudget;
+  forms: {
+    id: CreateBudgetFormId;
+    label: string;
+    placeholder: string;
+    value: string;
+  }[];
+}[];

@@ -7,3 +7,8 @@ export const priceFormatter = (num: number) =>
   }).format(num);
 
 export const onlyNumber = (str: string) => str.replace(REGEX.NUMBER_FORMAT, "");
+
+export const cleanUpFirstCharacter = (str: string) =>
+  onlyNumber(str)?.[0] === "0"
+    ? `${onlyNumber(str)?.slice(1)}`
+    : onlyNumber(str);

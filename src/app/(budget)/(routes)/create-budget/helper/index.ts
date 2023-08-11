@@ -1,4 +1,8 @@
-import { getLocalStorage, setLocalStorage } from "@/helper";
+import {
+  cleanUpFirstCharacter,
+  getLocalStorage,
+  setLocalStorage,
+} from "@/helper";
 
 //TODO: get login from hooks
 let login = false;
@@ -18,4 +22,17 @@ export const getCreateBudgetFromStorage = () => {
   const foundValue = getLocalStorage(LOCAL_STORAGE_KEY);
 
   if (foundValue) return foundValue;
+};
+
+export const cleanUpCreateBudgetValue = (
+  key: "description" | "value",
+  value: string
+) => {
+  if (key === "value") {
+    const cleaned = cleanUpFirstCharacter(value);
+
+    return cleaned;
+  }
+
+  return value;
 };

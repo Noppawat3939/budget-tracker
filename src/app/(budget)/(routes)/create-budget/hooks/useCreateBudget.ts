@@ -1,12 +1,12 @@
 import { debounce } from "lodash";
-import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import {
+  cleanUpCreateBudgetValue,
   getCreateBudgetFromStorage,
   setNewBudgetWithoutLogin,
 } from "../helper";
-import { TIncomeValues } from "@/types";
+import { TCreateBudget, TIncomeValues } from "@/types";
 import { DEFAULT_INCOME_VALUES } from "../constants";
-import { onlyNumber } from "@/helper";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,6 +16,11 @@ export default function useCreateBudget() {
     value: string;
     description: string;
   }>(DEFAULT_INCOME_VALUES);
+
+  const [createBudgetValues, setCreateBudgetValues] = useState({
+    income: { value: "", description: "" },
+    expense: { value: "", description: "" },
+  });
 
   useEffect(() => {
     const prevValue = getCreateBudgetFromStorage();
@@ -33,20 +38,16 @@ export default function useCreateBudget() {
     }
   }, [incomes]);
 
-  const onIncomeChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) => {
-      const { value, id } = e.target;
+  const onCreateBudgetChange = useCallback(
+    (evt: ChangeEvent<HTMLInputElement>, key: TCreateBudget) => {
+      const { value, id } = evt.target;
 
-      const cleanValue =
-        onlyNumber(value)?.[0] === "0"
-          ? `${onlyNumber(value)?.slice(1)}`
-          : onlyNumber(value);
-
-      const updateValue = id === "value" ? cleanValue : value;
-
-      setIncomeValues((prev) => ({
+      setCreateBudgetValues((prev) => ({
         ...prev,
-        [id]: updateValue,
+        [key]: {
+          ...prev[key],
+          [id]: cleanUpCreateBudgetValue(id as "value" | "description", value),
+        },
       }));
     },
     []
@@ -71,5 +72,8 @@ export default function useCreateBudget() {
     setIncomeValues(DEFAULT_INCOME_VALUES);
   };
 
-  return { incomeValues, onIncomeChange, handleAddIncome };
+  return {
+    createBudgetValues,
+    onCreateBudgetChange,
+  };
 }

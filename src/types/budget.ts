@@ -7,3 +7,5 @@ export type TIncomeValues = {
   value: string;
   description: string;
 };
+
+export type TCreateBudget = "income" | "expense";

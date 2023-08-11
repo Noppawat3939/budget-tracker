@@ -3,118 +3,58 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Drawer } from "@/components";
 import { Button } from "@/components/ui/button";
-import type { CreateNewBudgetFormProps } from "./type";
-import { isEmpty } from "lodash";
+import type { CreateBudgetForms, CreateNewBudgetFormProps } from "./type";
+import { useGetFormContent } from "@/hooks";
 
 export default function CreateNewBudgetForm({
-  onIncomeChange,
-  income,
+  values,
   isDisabled,
-  onAddIncome,
+  onValueChange,
 }: CreateNewBudgetFormProps) {
-  const isShowAddIncome =
-    !isEmpty(income.value) && !isEmpty(income.description);
+  const { date } = useGetFormContent<{ form: CreateBudgetForms }>({
+    path: "create-budget",
+  });
 
-  //TODO: refactor forms
   return (
     <Drawer title="Add a new">
       <div className="flex-col space-y-3">
-        <div className=" bg-gray-50 relative py-5 px-6 rounded-md">
-          <h1 className="font-bold mb-[20px]">💰 Incomes</h1>
-          <Button
-            className={`${
-              isShowAddIncome ? "block" : "hidden"
-            } absolute text-xs right-2 top-2`}
-            size="sm"
-            type="submit"
-            variant="outline"
-            onClick={onAddIncome}
+        {date?.form.map(({ title, forms, key }, index) => (
+          <div
+            key={`form_${key}_${index}`}
+            className=" bg-gray-50 relative py-5 px-6 rounded-md"
           >
-            Add income
-          </Button>
-          <div className="flex space-x-5">
-            <div className=" w-auto flex-auto ">
-              <h3
-                className="font-medium w-full mb-3"
-                aria-label="income-description-label"
-              >
-                Income description
-              </h3>
-              <Input
-                inputMode="text"
-                id="description"
-                value={income.description}
-                className="w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
-                onChange={onIncomeChange}
-                aria-label="income-value-input"
-                placeholder="Add your income categories such as Salary, rent, royalties, dividends, etc."
-              />
-            </div>
-            <div className="flex-auto">
-              <h3 className="font-medium mb-3" aria-label="income-value-label">
-                Income value (฿)
-              </h3>
-              <Input
-                id="value"
-                inputMode="numeric"
-                value={income.value}
-                className="outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
-                onChange={onIncomeChange}
-                aria-label="income-value-input"
-                placeholder="Fill in numbers only (0-9)"
-              />
+            <h1 className="font-bold mb-[20px]">{title}</h1>
+            <Button
+              className={`absolute text-xs right-2 top-2`}
+              size="sm"
+              type="submit"
+              variant="outline"
+            >
+              {`Add ${key}`}
+            </Button>
+            <div className="flex space-x-5">
+              {forms.map(({ id, placeholder, label }, idx) => (
+                <div key={`${id}_${idx}`} className=" w-auto flex-auto ">
+                  <h3
+                    className="font-medium w-full mb-3"
+                    aria-label={`${label.replaceAll(" ", "-")}-label`}
+                  >
+                    {label}
+                  </h3>
+                  <Input
+                    inputMode={id === "value" ? "numeric" : "text"}
+                    id={id}
+                    value={values[key][id]}
+                    className="w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
+                    onChange={(evt) => onValueChange(evt, key)}
+                    aria-label={`${id}-input`}
+                    placeholder={placeholder}
+                  />
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-
-        <div className=" bg-gray-50 relative py-5 px-6 rounded-md">
-          <h1 className="font-bold mb-[20px]">💸 Expenses</h1>
-          <Button
-            className={`${
-              isShowAddIncome ? "block" : "hidden"
-            } absolute text-xs right-2 top-2`}
-            size="sm"
-            type="submit"
-            variant="outline"
-            onClick={onAddIncome}
-          >
-            Add income
-          </Button>
-
-          <div className="flex space-x-5">
-            <div className=" w-auto flex-auto ">
-              <h3
-                className="font-medium w-full mb-3"
-                aria-label="income-description-label"
-              >
-                Income description
-              </h3>
-              <Input
-                inputMode="text"
-                id="description"
-                value={income.description}
-                className="w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
-                onChange={onIncomeChange}
-                aria-label="income-value-input"
-                placeholder="Add your income categories such as Salary, rent, royalties, dividends, etc."
-              />
-            </div>
-            <div className="flex-auto">
-              <h3 className="font-medium mb-3" aria-label="income-value-label">
-                Income value (฿)
-              </h3>
-              <Input
-                id="value"
-                inputMode="numeric"
-                value={income.value}
-                className="outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
-                onChange={onIncomeChange}
-                aria-label="income-value-input"
-                placeholder="Fill in numbers only (0-9)"
-              />
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
       <Button

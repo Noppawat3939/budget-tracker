@@ -10,7 +10,7 @@ import { useCreateBudget } from "./hooks";
 
 export default function CreateBudget() {
   const isMounted = useMounted();
-  const { incomeValues, handleAddIncome, onIncomeChange } = useCreateBudget();
+  const { onCreateBudgetChange, createBudgetValues } = useCreateBudget();
 
   return (
     <MainLayout>
@@ -24,9 +24,8 @@ export default function CreateBudget() {
         />
       </section>
       <CreateNewBudgetForm
-        income={incomeValues}
-        onIncomeChange={onIncomeChange}
-        onAddIncome={handleAddIncome}
+        onValueChange={onCreateBudgetChange}
+        values={createBudgetValues}
       />
     </MainLayout>
   );

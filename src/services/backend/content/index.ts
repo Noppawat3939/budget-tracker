@@ -1,2 +1,1 @@
-export * from "./createBudget";
-export * from "./getFormContent";
+export * from "./getContentService";

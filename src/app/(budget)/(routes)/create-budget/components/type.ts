@@ -35,3 +35,5 @@ export type CreateBudgetForms = {
     value: string;
   }[];
 }[];
+
+export type GetCreateBudgetFormsResponse = { form: CreateBudgetForms };

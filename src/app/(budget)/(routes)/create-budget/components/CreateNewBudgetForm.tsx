@@ -3,22 +3,25 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Drawer } from "@/components";
 import { Button } from "@/components/ui/button";
-import type { CreateBudgetForms, CreateNewBudgetFormProps } from "./type";
-import { useGetFormContent } from "@/hooks";
+import type {
+  GetCreateBudgetFormsResponse,
+  CreateNewBudgetFormProps,
+} from "./type";
+import { useGetContent } from "@/hooks";
 
 export default function CreateNewBudgetForm({
   values,
   isDisabled,
   onValueChange,
 }: CreateNewBudgetFormProps) {
-  const { date } = useGetFormContent<{ form: CreateBudgetForms }>({
-    path: "create-budget",
+  const { data } = useGetContent<GetCreateBudgetFormsResponse>({
+    params: "?form=create-budget",
   });
 
   return (
     <Drawer title="Add a new">
       <div className="flex-col space-y-3">
-        {date?.form.map(({ title, forms, key }, index) => (
+        {data?.form.map(({ title, forms, key }, index) => (
           <div
             key={`form_${key}_${index}`}
             className=" bg-gray-50 relative py-5 px-6 rounded-md"

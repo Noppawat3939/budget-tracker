@@ -1,1 +1,1 @@
-export { default as useGetFormContent } from "./useGetFormContent";
+export { default as useGetContent } from "./useGetContent";

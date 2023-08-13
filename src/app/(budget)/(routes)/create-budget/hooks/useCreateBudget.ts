@@ -14,11 +14,11 @@ import {
   getCreateBudgetFromStorage,
   setNewBudgetWithoutLogin,
 } from "../helper";
-import { BudgetStorage } from "./type";
+import { BudgetStorage, TBudgetValues, TCreateBudgetValues } from "./type";
 
 const initialCreateBudgetValues = {
-  income: { value: "", description: "" },
-  expense: { value: "", description: "" },
+  income: { value: "", description: "", title: "" },
+  expense: { value: "", description: "", title: "" },
 };
 
 export default function useCreateBudget() {
@@ -29,17 +29,20 @@ export default function useCreateBudget() {
 
   const [isPending, startTransition] = useTransition();
 
-  const [createBudgetValues, setCreateBudgetValues] = useState(
-    initialCreateBudgetValues
-  );
+  const [createBudgetValues, setCreateBudgetValues] =
+    useState<TCreateBudgetValues>(initialCreateBudgetValues);
 
-  useEffect(() => {
+  const getPreviousBudget = useCallback(() => {
     const prevValue = getCreateBudgetFromStorage();
 
     if (prevValue) {
       setBudgetStorage(JSON.parse(prevValue));
     }
   }, []);
+
+  useEffect(() => {
+    getPreviousBudget();
+  }, [getPreviousBudget]);
 
   useEffect(() => {
     if (budgetStorage.income.length || budgetStorage.expense.length) {
@@ -65,10 +68,11 @@ export default function useCreateBudget() {
   );
 
   const handleAddValues = (key: TCreateBudget) => {
-    const update = {
+    const update: TBudgetValues = {
       id: uuidv4(),
-      description: createBudgetValues.income.description,
-      value: createBudgetValues.income.value,
+      title: createBudgetValues[key]?.title,
+      description: createBudgetValues[key]?.description,
+      value: createBudgetValues[key]?.value,
       createdAt: new Date(Date.now()).toISOString(),
     };
 
@@ -84,10 +88,18 @@ export default function useCreateBudget() {
     });
   };
 
+  const handleRemoveBudgetValue = (key: TCreateBudget, removeId: string) => {
+    const removeBudgetStorage = budgetStorage[key].filter(
+      (budget) => budget.id !== removeId
+    );
+    setBudgetStorage((prev) => ({ ...prev, [key]: removeBudgetStorage }));
+  };
+
   return {
     createBudgetValues,
     onCreateBudgetChange,
     handleAddValues,
     isPending,
+    handleRemoveBudgetValue,
   };
 }

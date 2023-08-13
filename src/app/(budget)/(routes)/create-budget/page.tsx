@@ -1,7 +1,7 @@
 "use client";
 
 import { MainLayout } from "@/components";
-import React from "react";
+import React, { useCallback } from "react";
 import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
 import { useMounted } from "@/hooks";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
@@ -17,14 +17,17 @@ export default function CreateBudget() {
     isPending,
     createBudgetValues,
     handleAddValues,
+    handleRemoveBudgetValue,
   } = useCreateBudget();
 
   const budget = getCreateBudgetFromStorage();
   const parseBudget = JSON.parse(budget || "{}") as BudgetStorage;
 
-  const sumIncome = parseBudget.income.reduce((sum, entry) => {
-    return sum + +entry.value;
-  }, 0);
+  const sumIncome = useCallback(() => {
+    return parseBudget.income?.reduce((sum, entry) => {
+      return sum + +entry.value;
+    }, 0);
+  }, [parseBudget.income]);
 
   return (
     <MainLayout>
@@ -32,7 +35,7 @@ export default function CreateBudget() {
       <section className="flex space-x-5 items-center justify-between h-fit mb-5">
         <DoughnutCard data={DEFAULT_CHART_DATA} />
         <SummaryCard
-          end={sumIncome || 30000}
+          end={sumIncome() || 30000}
           isMounted={isMounted}
           data={DEFAULT_SUMMARY_LIST}
         />
@@ -42,6 +45,7 @@ export default function CreateBudget() {
         values={createBudgetValues}
         handleAddValues={handleAddValues}
         isDisabled={isPending}
+        handleRemoveBudgetValue={handleRemoveBudgetValue}
       />
     </MainLayout>
   );

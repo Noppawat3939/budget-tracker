@@ -1,6 +1,16 @@
 import { TCreateBudget } from "@/types";
 
-export type BudgetStorage = Record<
+export type TBudgetValues = {
+  id: string;
+  title: string;
+  description?: string;
+  value: string;
+  createdAt: string;
+};
+
+export type BudgetStorage = Record<TCreateBudget, TBudgetValues[]>;
+
+export type TCreateBudgetValues = Record<
   TCreateBudget,
-  { id: string; description: string; value: string; createdAt: string }[]
+  { value: string; title: string; description: string }
 >;

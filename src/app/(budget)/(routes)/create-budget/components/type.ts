@@ -14,7 +14,7 @@ export type SummaryCardProps = {
 };
 
 type CreateBudget = "income" | "expense";
-type CreateBudgetFormId = "value" | "description";
+type CreateBudgetFormId = "value" | "description" | "title";
 
 export type CreateNewBudgetFormProps = {
   isDisabled?: boolean;
@@ -24,6 +24,7 @@ export type CreateNewBudgetFormProps = {
     key: CreateBudget
   ) => void;
   handleAddValues: (key: CreateBudget) => void;
+  handleRemoveBudgetValue: (key: CreateBudget, id: string) => void;
 };
 
 export type CreateBudgetForms = {

@@ -1,5 +1,5 @@
 type CreateBudget = "income" | "expense";
-type CreateBudgetFormId = "value" | "description";
+type CreateBudgetFormId = "value" | "description" | "title";
 
 export type CreateBudgetForms = {
   title: string;

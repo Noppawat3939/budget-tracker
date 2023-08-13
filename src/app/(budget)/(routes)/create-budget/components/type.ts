@@ -23,6 +23,7 @@ export type CreateNewBudgetFormProps = {
     event: ChangeEvent<HTMLInputElement>,
     key: CreateBudget
   ) => void;
+  handleAddValues: (key: CreateBudget) => void;
 };
 
 export type CreateBudgetForms = {

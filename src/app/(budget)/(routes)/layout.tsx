@@ -1,4 +1,5 @@
 import { ROUTES } from "@/constants";
+import { LogIn } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -14,7 +15,11 @@ export default function BudgetLayout({ children }: BudgetLayout) {
           <Link href="/">
             <p>Logo</p>
           </Link>
-          <Link href={ROUTES.AUTH.LOGIN} className="text-slate-500 text-sm">
+          <Link
+            href={ROUTES.AUTH.LOGIN}
+            className="text-slate-500 hover:text-slate-600 flex items-center text-sm"
+          >
+            <LogIn className="w-4 h-4 mr-2" />
             Login
           </Link>
         </div>

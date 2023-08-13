@@ -7,10 +7,24 @@ import { useMounted } from "@/hooks";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
 
 import { useCreateBudget } from "./hooks";
+import { getCreateBudgetFromStorage } from "./helper";
+import { BudgetStorage } from "./hooks/type";
 
 export default function CreateBudget() {
   const isMounted = useMounted();
-  const { onCreateBudgetChange, createBudgetValues } = useCreateBudget();
+  const {
+    onCreateBudgetChange,
+    isPending,
+    createBudgetValues,
+    handleAddValues,
+  } = useCreateBudget();
+
+  const budget = getCreateBudgetFromStorage();
+  const parseBudget = JSON.parse(budget || "{}") as BudgetStorage;
+
+  const sumIncome = parseBudget.income.reduce((sum, entry) => {
+    return sum + +entry.value;
+  }, 0);
 
   return (
     <MainLayout>
@@ -18,7 +32,7 @@ export default function CreateBudget() {
       <section className="flex space-x-5 items-center justify-between h-fit mb-5">
         <DoughnutCard data={DEFAULT_CHART_DATA} />
         <SummaryCard
-          end={30000}
+          end={sumIncome || 30000}
           isMounted={isMounted}
           data={DEFAULT_SUMMARY_LIST}
         />
@@ -26,6 +40,8 @@ export default function CreateBudget() {
       <CreateNewBudgetForm
         onValueChange={onCreateBudgetChange}
         values={createBudgetValues}
+        handleAddValues={handleAddValues}
+        isDisabled={isPending}
       />
     </MainLayout>
   );

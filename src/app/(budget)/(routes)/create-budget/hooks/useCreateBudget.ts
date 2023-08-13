@@ -1,42 +1,53 @@
 import { debounce } from "lodash";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import { TCreateBudget } from "@/types";
+
+import { v4 as uuidv4 } from "uuid";
 import {
   cleanUpCreateBudgetValue,
   getCreateBudgetFromStorage,
   setNewBudgetWithoutLogin,
 } from "../helper";
-import { TCreateBudget, TIncomeValues } from "@/types";
-import { DEFAULT_INCOME_VALUES } from "../constants";
+import { BudgetStorage } from "./type";
 
-import { v4 as uuidv4 } from "uuid";
+const initialCreateBudgetValues = {
+  income: { value: "", description: "" },
+  expense: { value: "", description: "" },
+};
 
 export default function useCreateBudget() {
-  const [incomes, setIncomes] = useState<TIncomeValues[] | []>([]);
-  const [incomeValues, setIncomeValues] = useState<{
-    value: string;
-    description: string;
-  }>(DEFAULT_INCOME_VALUES);
-
-  const [createBudgetValues, setCreateBudgetValues] = useState({
-    income: { value: "", description: "" },
-    expense: { value: "", description: "" },
+  const [budgetStorage, setBudgetStorage] = useState<BudgetStorage>({
+    income: [],
+    expense: [],
   });
+
+  const [isPending, startTransition] = useTransition();
+
+  const [createBudgetValues, setCreateBudgetValues] = useState(
+    initialCreateBudgetValues
+  );
 
   useEffect(() => {
     const prevValue = getCreateBudgetFromStorage();
 
     if (prevValue) {
-      setIncomes(JSON.parse(prevValue));
+      setBudgetStorage(JSON.parse(prevValue));
     }
   }, []);
 
   useEffect(() => {
-    if (incomes.length) {
+    if (budgetStorage.income.length || budgetStorage.expense.length) {
       debounce(() => {
-        setNewBudgetWithoutLogin(JSON.stringify(incomes));
+        setNewBudgetWithoutLogin(JSON.stringify(budgetStorage));
       }, 1000)();
     }
-  }, [incomes]);
+  }, [budgetStorage]);
 
   const onCreateBudgetChange = useCallback(
     (evt: ChangeEvent<HTMLInputElement>, key: TCreateBudget) => {
@@ -53,27 +64,30 @@ export default function useCreateBudget() {
     []
   );
 
-  const handleAddIncome = () => {
-    const newIncome: TIncomeValues = {
-      ...incomeValues,
-      id: `${uuidv4()}`,
-      type: "income",
-      createdBudget: new Date(Date.now()).toISOString(),
+  const handleAddValues = (key: TCreateBudget) => {
+    const update = {
+      id: uuidv4(),
+      description: createBudgetValues.income.description,
+      value: createBudgetValues.income.value,
+      createdAt: new Date(Date.now()).toISOString(),
     };
 
-    setIncomes((prev) => {
-      if (prev.length) {
-        return [...prev, ...[newIncome]];
-      }
+    startTransition(() => {
+      setBudgetStorage((prevState) => ({
+        ...prevState,
+        [key]: [...prevState[key], update],
+      }));
 
-      return [newIncome];
+      debounce(() => {
+        setCreateBudgetValues(initialCreateBudgetValues);
+      }, 1000)();
     });
-
-    setIncomeValues(DEFAULT_INCOME_VALUES);
   };
 
   return {
     createBudgetValues,
     onCreateBudgetChange,
+    handleAddValues,
+    isPending,
   };
 }

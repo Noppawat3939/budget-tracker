@@ -1,8 +1,6 @@
 import { calChartDoughnutColor } from "@/helper";
 import { TBudget } from "@/types";
 
-export const DEFAULT_INCOME_VALUES = { value: "", description: "" };
-
 export const DEFAULT_SUMMARY_LIST: {
   order: string;
   price: number;

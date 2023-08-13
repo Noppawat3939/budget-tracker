@@ -3,12 +3,19 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { Drawer as VDrawer } from "vaul";
 import { DrawerProps } from "./type";
+import { useDrawerStore } from "@/store";
 
 export default function Drawer({ title, children, drawerHeight }: DrawerProps) {
+  const { isOpen, onOpenChange, onOpen } = useDrawerStore();
+
   return (
-    <VDrawer.Root shouldScaleBackground>
+    <VDrawer.Root
+      shouldScaleBackground
+      open={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <VDrawer.Trigger asChild>
-        <Button>Get started</Button>
+        <Button onClick={onOpen}>Get started</Button>
       </VDrawer.Trigger>
       <VDrawer.Portal>
         <VDrawer.Overlay className="fixed inset-0 bg-black/50" />

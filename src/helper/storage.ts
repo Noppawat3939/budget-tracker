@@ -3,7 +3,7 @@ export const setLocalStorage = (key: string, value: string) => {
 };
 
 export const getLocalStorage = (key: string) => {
-  const value = window.localStorage.getItem(key) ?? "";
+  const value = window.localStorage.getItem(key);
 
   return value;
 };

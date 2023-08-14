@@ -7,8 +7,6 @@ import { useMounted } from "@/hooks";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
 
 import { useCreateBudget } from "./hooks";
-import { getCreateBudgetFromStorage } from "./helper";
-import { BudgetStorage } from "./hooks/type";
 
 export default function CreateBudget() {
   const isMounted = useMounted();
@@ -18,16 +16,14 @@ export default function CreateBudget() {
     createBudgetValues,
     handleAddValues,
     handleRemoveBudgetValue,
+    budgetStorage,
   } = useCreateBudget();
 
-  const budget = getCreateBudgetFromStorage();
-  const parseBudget = JSON.parse(budget || "{}") as BudgetStorage;
-
   const sumIncome = useCallback(() => {
-    return parseBudget.income?.reduce((sum, entry) => {
+    return budgetStorage?.income?.reduce((sum, entry) => {
       return sum + +entry.value;
     }, 0);
-  }, [parseBudget.income]);
+  }, [budgetStorage.income]);
 
   return (
     <MainLayout>
@@ -45,6 +41,7 @@ export default function CreateBudget() {
         values={createBudgetValues}
         handleAddValues={handleAddValues}
         isDisabled={isPending}
+        budgetStorage={budgetStorage}
         handleRemoveBudgetValue={handleRemoveBudgetValue}
       />
     </MainLayout>

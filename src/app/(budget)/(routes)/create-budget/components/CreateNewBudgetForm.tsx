@@ -10,8 +10,6 @@ import type {
 import { useGetContent, useRenderSkeleton } from "@/hooks";
 import { isEmpty } from "lodash";
 import { useDrawerStore } from "@/store";
-import { getCreateBudgetFromStorage } from "../helper";
-import { BudgetStorage } from "../hooks/type";
 import { BadgeBudget } from ".";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -21,6 +19,7 @@ export default function CreateNewBudgetForm({
   onValueChange,
   handleAddValues,
   handleRemoveBudgetValue,
+  budgetStorage,
 }: CreateNewBudgetFormProps) {
   const { data } = useGetContent<GetCreateBudgetFormsResponse>({
     params: "?form=create-budget",
@@ -43,9 +42,6 @@ export default function CreateNewBudgetForm({
     }
   }, [drawerStore.isOpen]);
 
-  const budget = getCreateBudgetFromStorage();
-  const parseBudget = JSON.parse(budget || "[]") as BudgetStorage;
-
   return (
     <Drawer title="Add a new">
       <div className="flex-col space-y-3">
@@ -59,10 +55,10 @@ export default function CreateNewBudgetForm({
             >
               <div className="flex items-baseline space-x-2">
                 <h1 className="font-bold mb-[20px]">
-                  {parseBudget?.[key]?.length ? `${title}:` : title}
+                  {budgetStorage?.[key]?.length ? `${title}:` : title}
                 </h1>
                 <span className="flex space-x-2">
-                  {parseBudget?.[key]?.map((value) => (
+                  {budgetStorage?.[key]?.map((value) => (
                     <BadgeBudget
                       key={value?.id}
                       text={value.title || ""}
@@ -128,7 +124,12 @@ export default function CreateNewBudgetForm({
                         {label}
                       </h3>
                       <Textarea
+                        aria-label={`${id}-of-${key}-text-area`}
+                        value={values[key][id]}
                         placeholder={placeholder}
+                        id={id}
+                        onChange={(e) => console.log(e)}
+                        // onChange={(evt) => onValueChange(evt, key)}
                         className="resize-none w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
                       />
                     </div>

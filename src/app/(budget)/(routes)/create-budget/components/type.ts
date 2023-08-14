@@ -1,6 +1,7 @@
-import { TBudget } from "@/types";
+import { TBudget, TCreateBudget } from "@/types";
 import { ChartData } from "chart.js";
 import { ChangeEvent } from "react";
+import { TBudgetValues } from "../hooks/type";
 
 export type DoughnutCardProps = {
   data: ChartData<"doughnut", number[], string>;
@@ -20,11 +21,12 @@ export type CreateNewBudgetFormProps = {
   isDisabled?: boolean;
   values: Record<CreateBudget, Record<CreateBudgetFormId, string>>;
   onValueChange: (
-    event: ChangeEvent<HTMLInputElement>,
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     key: CreateBudget
   ) => void;
   handleAddValues: (key: CreateBudget) => void;
   handleRemoveBudgetValue: (key: CreateBudget, id: string) => void;
+  budgetStorage: Record<TCreateBudget, TBudgetValues[]>;
 };
 
 export type CreateBudgetForms = {

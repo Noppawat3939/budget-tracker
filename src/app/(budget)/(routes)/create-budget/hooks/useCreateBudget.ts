@@ -1,4 +1,5 @@
-import { debounce } from "lodash";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { debounce, isEmpty } from "lodash";
 import {
   ChangeEvent,
   useCallback,
@@ -11,8 +12,8 @@ import { TCreateBudget } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import {
   cleanUpCreateBudgetValue,
-  getCreateBudgetFromStorage,
-  setNewBudgetWithoutLogin,
+  removeCreateBudgetFromStorage,
+  setCreateBudgetToLocalStorage,
 } from "../helper";
 import { BudgetStorage, TBudgetValues, TCreateBudgetValues } from "./type";
 
@@ -21,39 +22,33 @@ const initialCreateBudgetValues = {
   expense: { value: "", description: "", title: "" },
 };
 
-export default function useCreateBudget() {
-  const [budgetStorage, setBudgetStorage] = useState<BudgetStorage>({
-    income: [],
-    expense: [],
-  });
+const initialBudgetStorage = { income: [], expense: [] };
 
+export default function useCreateBudget() {
+  const [budgetStorage, setBudgetStorage] =
+    useState<BudgetStorage>(initialBudgetStorage);
   const [isPending, startTransition] = useTransition();
 
   const [createBudgetValues, setCreateBudgetValues] =
     useState<TCreateBudgetValues>(initialCreateBudgetValues);
 
-  const getPreviousBudget = useCallback(() => {
-    const prevValue = getCreateBudgetFromStorage();
-
-    if (prevValue) {
-      setBudgetStorage(JSON.parse(prevValue));
-    }
-  }, []);
-
   useEffect(() => {
-    getPreviousBudget();
-  }, [getPreviousBudget]);
-
-  useEffect(() => {
-    if (budgetStorage.income.length || budgetStorage.expense.length) {
+    if (budgetStorage.income.length) {
       debounce(() => {
-        setNewBudgetWithoutLogin(JSON.stringify(budgetStorage));
+        setCreateBudgetToLocalStorage(JSON.stringify(budgetStorage));
+      }, 1000)();
+    } else if (isEmpty(budgetStorage.income)) {
+      debounce(() => {
+        removeCreateBudgetFromStorage();
       }, 1000)();
     }
-  }, [budgetStorage]);
+  }, [budgetStorage.income]);
 
   const onCreateBudgetChange = useCallback(
-    (evt: ChangeEvent<HTMLInputElement>, key: TCreateBudget) => {
+    (
+      evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+      key: TCreateBudget
+    ) => {
       const { value, id } = evt.target;
 
       setCreateBudgetValues((prev) => ({
@@ -92,6 +87,7 @@ export default function useCreateBudget() {
     const removeBudgetStorage = budgetStorage[key].filter(
       (budget) => budget.id !== removeId
     );
+
     setBudgetStorage((prev) => ({ ...prev, [key]: removeBudgetStorage }));
   };
 
@@ -100,6 +96,7 @@ export default function useCreateBudget() {
     onCreateBudgetChange,
     handleAddValues,
     isPending,
+    budgetStorage,
     handleRemoveBudgetValue,
   };
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { debounce, isEmpty } from "lodash";
+import { debounce } from "lodash";
 import {
   ChangeEvent,
   useCallback,
@@ -12,7 +12,6 @@ import { TCreateBudget } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import {
   cleanUpCreateBudgetValue,
-  removeCreateBudgetFromStorage,
   setCreateBudgetToLocalStorage,
 } from "../helper";
 import { BudgetStorage, TBudgetValues, TCreateBudgetValues } from "./type";
@@ -24,6 +23,8 @@ const initialCreateBudgetValues = {
 
 const initialBudgetStorage = { income: [], expense: [] };
 
+const debounceTime = 1000;
+
 export default function useCreateBudget() {
   const [budgetStorage, setBudgetStorage] =
     useState<BudgetStorage>(initialBudgetStorage);
@@ -33,14 +34,12 @@ export default function useCreateBudget() {
     useState<TCreateBudgetValues>(initialCreateBudgetValues);
 
   useEffect(() => {
-    if (budgetStorage.income.length) {
+    if (budgetStorage.income.length >= 1) {
       debounce(() => {
         setCreateBudgetToLocalStorage(JSON.stringify(budgetStorage));
-      }, 1000)();
-    } else if (isEmpty(budgetStorage.income)) {
-      debounce(() => {
-        removeCreateBudgetFromStorage();
-      }, 1000)();
+      }, debounceTime)();
+    } else {
+      console.log("remove this");
     }
   }, [budgetStorage.income]);
 
@@ -79,7 +78,7 @@ export default function useCreateBudget() {
 
       debounce(() => {
         setCreateBudgetValues(initialCreateBudgetValues);
-      }, 1000)();
+      }, debounceTime)();
     });
   };
 

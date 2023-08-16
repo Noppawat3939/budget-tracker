@@ -24,7 +24,9 @@ export default function CreateNewBudgetForm({
   const { data } = useGetContent<GetCreateBudgetFormsResponse>({
     params: "?form=create-budget",
   });
-  const drawerStore = useDrawerStore();
+  const { isOpen } = useDrawerStore((store) => ({
+    isOpen: store.isOpen,
+  }));
 
   const [isLoading, setIsLoading] = useState(true);
   const { renderSkeleton } = useRenderSkeleton({
@@ -33,14 +35,14 @@ export default function CreateNewBudgetForm({
   });
 
   useEffect(() => {
-    if (drawerStore.isOpen) {
-      setIsLoading(drawerStore.isOpen);
+    if (isOpen) {
+      setIsLoading(isOpen);
 
       setTimeout(() => {
         setIsLoading(false);
       }, 500);
     }
-  }, [drawerStore.isOpen]);
+  }, [isOpen]);
 
   return (
     <Drawer title="Add a new">
@@ -128,8 +130,7 @@ export default function CreateNewBudgetForm({
                         value={values[key][id]}
                         placeholder={placeholder}
                         id={id}
-                        onChange={(e) => console.log(e)}
-                        // onChange={(evt) => onValueChange(evt, key)}
+                        onChange={(evt) => onValueChange(evt, key)}
                         className="resize-none w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
                       />
                     </div>

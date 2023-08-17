@@ -38,8 +38,6 @@ export default function useCreateBudget() {
       debounce(() => {
         setCreateBudgetToLocalStorage(JSON.stringify(budgetStorage));
       }, debounceTime)();
-    } else {
-      console.log("remove this");
     }
   }, [budgetStorage.income]);
 

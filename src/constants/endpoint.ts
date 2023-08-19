@@ -1,6 +1,6 @@
 export const ENDPOINT = {
   CONTENT: "/api/content",
-  USER: {
-    CREATE: "/api/user/create",
+  AUTH: {
+    SOCIAL_LOGIN: "/api/auth/login/social",
   },
 };

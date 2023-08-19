@@ -1,14 +1,11 @@
 import { ENDPOINT } from "@/constants";
 import axios from "axios";
+import { PostLoginWithSocialRequest } from "./type";
 
 export const getContent = async (param: string) => {
   return await axios.get(ENDPOINT.CONTENT + param);
 };
 
-export const createUser = async (body: {
-  email: string;
-  password: string;
-  provider: string;
-}) => {
-  return await axios.post(ENDPOINT.USER.CREATE, body);
+export const loginWithSocial = async (body: PostLoginWithSocialRequest) => {
+  return await axios.post(ENDPOINT.AUTH.SOCIAL_LOGIN, body);
 };

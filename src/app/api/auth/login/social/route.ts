@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 
-export const POST = async (req: Request) => {
+export const POST = async (req: Request, res: Response) => {
   const body = await req.json();
 
-  console.log("body ==>", body);
-
   try {
-    return NextResponse.json({ message: "Create User" });
+    return NextResponse.json({ message: "Login with social" });
   } catch (error) {
     return new NextResponse("Internal error", { status: 500 });
   }

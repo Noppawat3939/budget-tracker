@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components";
@@ -8,9 +8,19 @@ import GitHubIcon from "@/assets/icons/github.svg";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
-import { signIn } from "next-auth/react";
+import { LiteralUnion, signIn } from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers/index";
+import { useUser } from "@/hooks";
 
 function Login() {
+  const { data } = useUser();
+
+  console.log("🚀 ===> data:", data);
+
+  const handleLogin = async (provider: LiteralUnion<BuiltInProviderType>) => {
+    await signIn(provider);
+  };
+
   return (
     <MainLayout>
       <section className="max-w-lg m-auto flex flex-col justify-center items-center h-full">
@@ -21,7 +31,7 @@ function Login() {
             aria-label="google-login-btn"
             variant="outline"
             className="flex max-w-[200px] mx-auto items-center text-gray-500"
-            onClick={() => signIn("google")}
+            onClick={() => handleLogin("google")}
           >
             Login with Google
             <Image

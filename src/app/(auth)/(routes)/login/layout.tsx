@@ -6,6 +6,7 @@ import type { LoginLayout } from "./type";
 import { useUser } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants";
+import { isEmpty } from "lodash";
 
 const { BUDGET } = ROUTES;
 
@@ -14,10 +15,10 @@ export default function LoginLayout({ children }: LoginLayout) {
   const { data } = useUser();
 
   useEffect(() => {
-    if (data?.data) {
+    if (!isEmpty(data)) {
       router.push(BUDGET.CREATE);
     }
-  }, [data?.data]);
+  }, [data]);
 
   return (
     <>
@@ -28,7 +29,7 @@ export default function LoginLayout({ children }: LoginLayout) {
           </Link>
         </div>
       </nav>
-      {children}
+      {!isEmpty(data) ? <></> : <>{children}</>}
     </>
   );
 }

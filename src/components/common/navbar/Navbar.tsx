@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants";
 import { useUser } from "@/hooks";
+import { isEmpty } from "lodash";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -13,7 +14,7 @@ export default function Navbar() {
       <div className="px-[4%] py-[10px] w-full flex items-center justify-between">
         <p>Logo</p>
         <div className="flex items-center space-x-10">
-          {!data?.data && (
+          {isEmpty(data) && (
             <Link href={ROUTES.AUTH.LOGIN} className="text-slate-500 text-sm">
               Login
             </Link>

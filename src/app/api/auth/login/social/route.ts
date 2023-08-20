@@ -1,5 +1,6 @@
 import { prismaDb } from "@/lib";
 import { AuthRequest } from "@/types";
+import { HttpStatusCode } from "axios";
 import { isEmpty } from "lodash";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -33,7 +34,7 @@ export const POST = async (req: Request) => {
 
       return NextResponse.json(
         { message: "Created new user success", user: newUser },
-        { status: 201 }
+        { status: HttpStatusCode.Created }
       );
     }
 
@@ -41,6 +42,8 @@ export const POST = async (req: Request) => {
       return NextResponse.json({ message: "Login success", user: found });
     }
   } catch (error) {
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: HttpStatusCode.InternalServerError,
+    });
   }
 };

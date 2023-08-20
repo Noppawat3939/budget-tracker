@@ -29,8 +29,7 @@ export default function CreateBudget() {
 
   return (
     <MainLayout>
-      CreateBudget page
-      <section className="flex space-x-5 items-center justify-between h-fit mb-5">
+      <section className="flex space-x-5 py-5 items-center justify-between h-fit mb-5">
         <DoughnutCard data={DEFAULT_CHART_DATA} />
         <SummaryCard
           end={sumIncome || defaultIncomeValue}

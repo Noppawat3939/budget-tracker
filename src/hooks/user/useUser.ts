@@ -3,45 +3,43 @@ import { useSession } from "next-auth/react";
 import type { UserData } from "./type";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
-import axios from "axios";
+import { getUserInfo } from "@/services";
+import { HttpStatusCode } from "axios";
 
 function useUser() {
   const session = useSession();
-  const [data, setData] = useState<{ data?: UserData }>();
+  const [data, setData] = useState<UserData | undefined>();
+  const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
-    if (isEmpty(data?.data) && session.status === "authenticated") {
-      const response = {
-        //@ts-ignore
-        idToken: session?.data?.user.idToken as string,
-        //@ts-ignore
-        accessToken: session.data?.user.accessToken as string,
-        //@ts-ignore
-        name: session.data?.user?.userInfo.name as string,
-        //@ts-ignore
-        email: session.data?.user?.userInfo.email as string,
-        //@ts-ignore
-        profile: session.data?.user?.userInfo.profile as string,
-        //@ts-ignore
-        loginWith: session?.data?.user?.loginProvider as string,
-      };
-
-      setData({ data: response });
-
+    if (session.data && session.status === "authenticated" && isEmpty(data)) {
       (async () => {
-        await axios.post(
-          "/api/user/info",
-          {},
-          {
-            //@ts-ignore
-            headers: { Authorization: `Bearer ${session?.data?.user.idToken}` },
+        setIsPending(true);
+        try {
+          //@ts-ignore
+          const token: string = session.data?.user.idToken;
+          const { data, status } = await getUserInfo({ token });
+
+          if (status === HttpStatusCode.Ok) {
+            const { email, name, profile, provider, userId } = data.user;
+            setData({
+              email: email,
+              name,
+              profile,
+              loginWith: provider,
+              userId,
+            });
+            setIsPending(false);
           }
-        );
+        } catch (error) {
+          console.error("error get user info", error);
+          setIsPending(false);
+        }
       })();
     }
   }, [session.status]);
 
-  return { data };
+  return { data, isPending };
 }
 
 export default useUser;

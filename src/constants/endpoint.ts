@@ -3,4 +3,5 @@ export const ENDPOINT = {
   AUTH: {
     SOCIAL_LOGIN: "/api/auth/login/social",
   },
+  USER: "/api/user/info",
 };

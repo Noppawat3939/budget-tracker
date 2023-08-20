@@ -1,6 +1,5 @@
 export type UserData = {
-  idToken: string;
-  accessToken: string;
+  userId: string;
   name: string;
   email: string;
   profile: string;

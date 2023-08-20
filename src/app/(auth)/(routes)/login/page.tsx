@@ -8,16 +8,14 @@ import GitHubIcon from "@/assets/icons/github.svg";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
-import { LiteralUnion, signIn } from "next-auth/react";
-import { BuiltInProviderType } from "next-auth/providers/index";
+import { signIn } from "next-auth/react";
 import { useUser } from "@/hooks";
+import { AuthProvider } from "@/types";
 
 function Login() {
   const { data } = useUser();
 
-  console.log("🚀 ===> data:", data);
-
-  const handleLogin = async (provider: LiteralUnion<BuiltInProviderType>) => {
+  const handleLogin = async (provider: AuthProvider) => {
     await signIn(provider);
   };
 

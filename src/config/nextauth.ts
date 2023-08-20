@@ -1,12 +1,16 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import axios from "axios";
+import { ENDPOINT } from "@/constants";
 
 const {
   NEXT_GITHUB_CLIENT_ID,
   NEXT_GITHUB_CLIENT_SECRET,
   NEXT_GOOGLE_CLIENT_SECRET,
   NEXT_GOOGLE_CLIENT_ID,
+  NEXT_AUTH_SECRET,
+  NEXT_BASE_URL,
 } = process.env;
 
 export const authOptions: NextAuthOptions = {
@@ -23,7 +27,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: NEXT_GITHUB_CLIENT_SECRET!,
     }),
   ],
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: NEXT_AUTH_SECRET,
   callbacks: {
     async jwt({ token, account, user }) {
       if (account) {
@@ -53,6 +57,24 @@ export const authOptions: NextAuthOptions = {
       session.user = token;
 
       return session;
+    },
+
+    async signIn({ user, account, profile }) {
+      if (account && profile) {
+        const resp = await axios.post(
+          `${NEXT_BASE_URL}${ENDPOINT.AUTH.SOCIAL_LOGIN}`,
+          {
+            provider: account?.provider,
+            email: user.email,
+            name: profile?.name,
+            profile: profile?.image,
+          }
+        );
+
+        if (resp) return true;
+      }
+
+      return true;
     },
   },
 };

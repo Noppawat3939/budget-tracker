@@ -17,6 +17,8 @@ model User {
   profile  String?
   provider String
   budgets  Budget[]
+
+  created_at DateTime @default(now())
 }
 
 model Budget {

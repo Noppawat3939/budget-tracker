@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components";
 import GoogleIcon from "@/assets/icons/google.svg";
@@ -9,16 +8,8 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
 import { signIn } from "next-auth/react";
-import { useUser } from "@/hooks";
-import { AuthProvider } from "@/types";
 
 function Login() {
-  const { data } = useUser();
-
-  const handleLogin = async (provider: AuthProvider) => {
-    await signIn(provider);
-  };
-
   return (
     <MainLayout>
       <section className="max-w-lg m-auto flex flex-col justify-center items-center h-full">
@@ -29,7 +20,7 @@ function Login() {
             aria-label="google-login-btn"
             variant="outline"
             className="flex max-w-[200px] mx-auto items-center text-gray-500"
-            onClick={() => handleLogin("google")}
+            onClick={() => signIn("google")}
           >
             Login with Google
             <Image

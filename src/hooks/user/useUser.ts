@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import type { UserData } from "./type";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
+import axios from "axios";
 
 function useUser() {
   const session = useSession();
@@ -26,6 +27,17 @@ function useUser() {
       };
 
       setData({ data: response });
+
+      (async () => {
+        await axios.post(
+          "/api/user/info",
+          {},
+          {
+            //@ts-ignore
+            headers: { Authorization: `Bearer ${session?.data?.user.idToken}` },
+          }
+        );
+      })();
     }
   }, [session.status]);
 

@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
             provider: account?.provider,
             email: user.email,
             name: profile?.name,
-            profile: profile?.image,
+            profile: user.image,
           }
         );
 

@@ -1,18 +1,55 @@
 "use client";
 import { ROUTES } from "@/constants";
-import { toSubString } from "@/helper";
+import { toCapitalize } from "@/helper";
 import { useUser } from "@/hooks";
-import { isEmpty } from "lodash";
+import { eq, isEmpty } from "lodash";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { Avatar } from "@/components";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type BudgetLayout = {
   children: React.ReactNode;
 };
 
+type MenuSections = "top" | "mid" | "bottom";
+type MenuSection = "name" | "email" | "settings" | "logout";
+
 export default function BudgetLayout({ children }: BudgetLayout) {
   const { data } = useUser();
+
+  const menuBar: {
+    position: MenuSections;
+    menus: { key: MenuSection; value?: string }[];
+  }[] = [
+    {
+      position: "top",
+      menus: [
+        {
+          key: "name",
+          value: toCapitalize(data?.name!),
+        },
+        {
+          key: "email",
+          value: toCapitalize(data?.email!),
+        },
+      ],
+    },
+    {
+      position: "mid",
+      menus: [{ key: "settings", value: "Settings" }],
+    },
+    {
+      position: "bottom",
+      menus: [{ key: "logout", value: "Log out" }],
+    },
+  ];
 
   const renderRightNavbar = () => {
     if (isEmpty(data)) {
@@ -27,9 +64,34 @@ export default function BudgetLayout({ children }: BudgetLayout) {
       );
     } else {
       return (
-        <h1 className="text-slate-500 hover:text-slate-600 flex items-center text-sm">
-          {toSubString(data.name, 10)}
-        </h1>
+        <>
+          <Popover>
+            <PopoverTrigger>
+              <Avatar src={data.profile} fallback={data?.name?.at(0)} />
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-fit p-0">
+              {menuBar.map((menus) => (
+                <div
+                  key={`menus_${menus.position}`}
+                  className="py-2 my-1 px-2 mx-1 cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:rounded-md"
+                >
+                  {menus.menus.map((menu) => {
+                    return (
+                      <p
+                        className={`text-sm ${
+                          eq(menu.key, "email") && "text-[13px] font-light"
+                        } ${eq(menu.key, "name") && "font-medium"} `}
+                        key={menu.key}
+                      >
+                        {menu.value}
+                      </p>
+                    );
+                  })}
+                </div>
+              ))}
+            </PopoverContent>
+          </Popover>
+        </>
       );
     }
   };

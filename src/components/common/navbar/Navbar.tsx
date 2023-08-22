@@ -7,14 +7,14 @@ import Link from "next/link";
 import React from "react";
 
 export default function Navbar() {
-  const { data } = useUser();
+  const { data, isPending } = useUser();
 
   return (
     <nav className="sticky top-0">
       <div className="px-[4%] py-[10px] w-full flex items-center justify-between">
         <p>Logo</p>
         <div className="flex items-center space-x-10">
-          {isEmpty(data) && (
+          {!isPending && isEmpty(data) && (
             <Link href={ROUTES.AUTH.LOGIN} className="text-slate-500 text-sm">
               Login
             </Link>

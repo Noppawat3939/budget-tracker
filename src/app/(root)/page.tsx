@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Banner } from "./components";
-import { MainLayout, Navbar } from "@/components";
+import { MainLayout, MainNavbar } from "@/components";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/constants";
@@ -10,7 +10,7 @@ import { ROUTES } from "@/constants";
 function RootPage() {
   return (
     <>
-      <Navbar />
+      <MainNavbar />
       <MainLayout>
         <Banner />
         <section className="flex flex-col items-center w-full">

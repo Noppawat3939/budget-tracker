@@ -5,3 +5,4 @@ export * from "./datepicker";
 export * from "./modal";
 export * from "./skeleton";
 export * from "./avatar";
+export * from "./menu";

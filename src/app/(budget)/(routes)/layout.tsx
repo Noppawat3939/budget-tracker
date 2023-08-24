@@ -6,7 +6,7 @@ import { eq, isEmpty } from "lodash";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { Avatar } from "@/components";
+import { Avatar, MainNavbar } from "@/components";
 
 import {
   Popover,
@@ -77,14 +77,16 @@ export default function BudgetLayout({ children }: BudgetLayout) {
                 >
                   {menus.menus.map((menu) => {
                     return (
-                      <p
-                        className={`text-sm ${
-                          eq(menu.key, "email") && "text-[13px] font-light"
-                        } ${eq(menu.key, "name") && "font-medium"} `}
-                        key={menu.key}
-                      >
-                        {menu.value}
-                      </p>
+                      <>
+                        <p
+                          className={`text-sm ${
+                            eq(menu.key, "email") && "text-[13px] font-light"
+                          } ${eq(menu.key, "name") && "font-medium"} `}
+                          key={menu.key}
+                        >
+                          {menu.value}
+                        </p>
+                      </>
                     );
                   })}
                 </div>
@@ -98,14 +100,15 @@ export default function BudgetLayout({ children }: BudgetLayout) {
 
   return (
     <>
-      <nav className="sticky top-0 bg-white">
+      {/* <nav className="sticky top-0 bg-white">
         <div className="flex items-center justify-between px-[4%] py-[10px] w-full">
           <Link href="/">
             <p>Logo</p>
           </Link>
           {renderRightNavbar()}
         </div>
-      </nav>
+      </nav> */}
+      <MainNavbar />
       {children}
     </>
   );

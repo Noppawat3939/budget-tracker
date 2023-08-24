@@ -4,4 +4,5 @@ export const ENDPOINT = {
     SOCIAL_LOGIN: "/api/auth/login/social",
   },
   USER: "/api/user/info",
+  PATH_NAME: "/api/path",
 };

@@ -18,29 +18,29 @@ model User {
   provider String
   budgets  Budget[]
 
-  created_at DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@map("users")
 }
 
 model Budget {
-  incomes    Income[]
-  user       User?    @relation(fields: [budgetId], references: [userId])
-  budgetId   String   @id @default(uuid())
-  created_at DateTime @default(now())
-  update_at  DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [userId])
+  budgetId  String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  incomes   Income[]
 
-  @@index([budgetId])
+  @@map("budgets")
 }
 
 model Income {
+  incomeId    String  @id @default(uuid())
+  budgetId    String
+  budget      Budget  @relation(fields: [budgetId], references: [budgetId])
   income      String
-  description String
-  value       String
-  created_at  DateTime @default(now())
-  update_at   DateTime @updatedAt
+  description String?
+  value       Int
 
-  createdAt DateTime @default(now())
-  Budget    Budget?  @relation(fields: [incomeId], references: [budgetId])
-  incomeId  String   @id @default(uuid())
-
-  @@index([incomeId])
+  @@map("incomes")
 }

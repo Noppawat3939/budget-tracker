@@ -15,3 +15,13 @@ export const checkTokenExpiration = (token: JwtToken) => {
 
   return { isExpired };
 };
+
+export const getHeadersToken = (authorizeToken: string) => {
+  const bearerToken = authorizeToken.split(" ")?.[1];
+
+  if (bearerToken) {
+    const { token } = decodedTokenService(bearerToken);
+
+    return token;
+  }
+};

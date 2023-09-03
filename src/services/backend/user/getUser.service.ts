@@ -1,12 +1,18 @@
 import { NEXT_SERVER_RESPONSE } from "@/constants";
 import { PrismaClient } from "@prisma/client";
+import { getAuthToken } from "..";
+import { NextRequest } from "next/server";
 
-export const getUserService = async (email: string) => {
+export const getUserService = async (req: NextRequest) => {
   const prisma = new PrismaClient();
+
+  const token = getAuthToken({ request: req });
+
+  if (!token?.email) return;
 
   try {
     const foundUser = await prisma.user.findUnique({
-      where: { email },
+      where: { email: token?.email },
     });
 
     return foundUser;

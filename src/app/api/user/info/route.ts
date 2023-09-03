@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { decodedTokenService, getUserService } from "@/services";
 import { HttpStatusCode } from "axios";
 import { NEXT_SERVER_REQUEST, NEXT_SERVER_RESPONSE } from "@/constants";
 
-export const POST = async () => {
+export const POST = async (req: NextRequest) => {
   const headersInstance = headers();
   const authorization = headersInstance.get(NEXT_SERVER_REQUEST.HEADERS.AUTH);
 
@@ -25,9 +25,9 @@ export const POST = async () => {
     );
 
   try {
-    const foundUser = getUserService(token?.email);
+    const user = await getUserService(req);
 
-    return NextResponse.json({ user: foundUser });
+    return NextResponse.json({ user });
   } catch (error) {
     console.log(`${NEXT_SERVER_RESPONSE.SERVER_ERROR}_get_user_info`);
     return new NextResponse(NEXT_SERVER_RESPONSE.SERVER_ERROR, {

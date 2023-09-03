@@ -1,5 +1,7 @@
 import jwtDecode from "jwt-decode";
 import type { JwtToken } from "@/types";
+import { NextRequest } from "next/server";
+import { NEXT_SERVER_REQUEST } from "@/constants";
 
 const CONVERT_TIME = 1000;
 
@@ -23,5 +25,15 @@ export const getHeadersToken = (authorizeToken: string) => {
     const { token } = decodedTokenService(bearerToken);
 
     return token;
+  }
+};
+
+export const getAuthToken = ({ request }: { request: NextRequest }) => {
+  const authorizeToken = request.headers?.get(NEXT_SERVER_REQUEST.HEADERS.AUTH);
+
+  if (authorizeToken) {
+    const token = getHeadersToken(authorizeToken);
+
+    if (token) return token;
   }
 };

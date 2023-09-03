@@ -8,7 +8,7 @@ import {
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { CreateBudgetRequest } from "@/types";
-import { mapMessageResponse } from "@/helper";
+import { mapBudgetData, mapMessageResponse } from "@/helper";
 import { SearchParams } from "./type";
 
 export const POST = async (req: NextRequest) => {
@@ -114,18 +114,8 @@ export const POST = async (req: NextRequest) => {
 
       const newBudgetResponse = {
         budgetId: createBudget.budgetId,
-        incomes: createBudget.incomes.map((income) => ({
-          incomeId: income.incomeId,
-          income: income.income,
-          description: income.description,
-          value: income.value,
-        })),
-        expenses: createBudget.expenses.map((expense) => ({
-          expenseId: expense.expenseId,
-          expense: expense.expense,
-          description: expense.description,
-          value: expense.value,
-        })),
+        incomes: mapBudgetData({ incomes: createBudget.incomes }),
+        expenses: mapBudgetData({ expenses: createBudget.expenses }),
       };
 
       return NextResponse.json(

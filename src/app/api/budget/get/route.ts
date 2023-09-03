@@ -1,5 +1,5 @@
 import { NEXT_SERVER_RESPONSE } from "@/constants";
-import { mapMessageResponse } from "@/helper";
+import { mapBudgetData, mapMessageResponse } from "@/helper";
 import {
   getBudgetByIdService,
   getBudgetService,
@@ -8,7 +8,7 @@ import {
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-type QueryParam = "budgetId" | "incomeId" | "expenseId";
+type DirectionParam = "income" | "expense";
 
 export const GET = async (req: NextRequest) => {
   const user = await getUserService(req);
@@ -21,24 +21,68 @@ export const GET = async (req: NextRequest) => {
     });
 
   try {
-    const queryParams = req.nextUrl.search.split("=");
+    const queryParams = req.nextUrl.search;
 
     if (queryParams) {
-      const [query, id] = queryParams;
-      const _query = query.replaceAll("?", "") as QueryParam;
+      const budgetIdParam = req.nextUrl.searchParams.get("budgetId");
+      const directionParam = req.nextUrl.searchParams.get(
+        "direction"
+      ) as DirectionParam;
 
-      if (_query === "budgetId") {
+      if (budgetIdParam && !directionParam) {
         const budgetByIdData = await getBudgetByIdService({
-          budgetId: id,
+          budgetId: budgetIdParam,
           isExpenses: true,
           isIncome: true,
         });
 
-        console.log("budgetByIdData", budgetByIdData);
+        return NextResponse.json({
+          message: `${NEXT_SERVER_RESPONSE.GET}`,
+          data: budgetByIdData.map((data) => ({
+            budgetId: data.budgetId,
+            incomes: mapBudgetData({ incomes: data.incomes }),
+            expenses: mapBudgetData({ expenses: data.expenses }),
+            total: {
+              income: data?.incomes?.length,
+              expense: data?.expenses?.length,
+            },
+          })),
+        });
+      }
+
+      if (budgetIdParam && directionParam === "income") {
+        const budgetByIdData = await getBudgetByIdService({
+          budgetId: budgetIdParam,
+          isIncome: true,
+        });
 
         return NextResponse.json({
           message: `${NEXT_SERVER_RESPONSE.GET}`,
-          data: budgetByIdData,
+          data: budgetByIdData.map((data) => ({
+            budgetId: data.budgetId,
+            incomes: mapBudgetData({ incomes: data.incomes }),
+            total: {
+              income: data?.incomes?.length,
+            },
+          })),
+        });
+      }
+
+      if (budgetIdParam && directionParam === "expense") {
+        const budgetByIdData = await getBudgetByIdService({
+          budgetId: budgetIdParam,
+          isExpenses: true,
+        });
+
+        return NextResponse.json({
+          message: `${NEXT_SERVER_RESPONSE.GET}`,
+          data: budgetByIdData.map((data) => ({
+            budgetId: data.budgetId,
+            expenses: mapBudgetData({ expenses: data.expenses }),
+            total: {
+              expense: data?.expenses?.length,
+            },
+          })),
         });
       }
     }
@@ -47,18 +91,8 @@ export const GET = async (req: NextRequest) => {
 
     const budgetDataResponse = budgetData?.map((data) => ({
       budgetId: data.budgetId,
-      incomes: data.incomes.map((income) => ({
-        incomeId: income.incomeId,
-        income: income.income,
-        value: income.value,
-        description: income.description,
-      })),
-      expenses: data.expenses.map((expense) => ({
-        expenseId: expense.expenseId,
-        expense: expense.expense,
-        value: expense.value,
-        description: expense.description,
-      })),
+      incomes: mapBudgetData({ incomes: data.incomes }),
+      expenses: mapBudgetData({ expenses: data.expenses }),
       total: { income: data?.incomes?.length, expense: data?.expenses?.length },
     }));
 

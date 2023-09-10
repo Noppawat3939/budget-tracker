@@ -29,7 +29,7 @@ export default function useCreateBudget() {
   const [createBudgetValues, setCreateBudgetValues] =
     useState<TCreateBudgetValues>(initialCreateBudgetValues);
 
-  useEffect(() => {
+   useEffect(() => {
     if (budgetStorage.income.length >= 1) {
       debounce(() => {
         setCreateBudgetToLocalStorage(JSON.stringify(budgetStorage));

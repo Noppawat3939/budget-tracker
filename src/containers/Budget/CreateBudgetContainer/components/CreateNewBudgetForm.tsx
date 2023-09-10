@@ -20,6 +20,7 @@ export default function CreateNewBudgetForm({
   handleAddValues,
   handleRemoveBudgetValue,
   budgetStorage,
+  handleCreateNewBudget,
 }: CreateNewBudgetFormProps) {
   const { data } = useGetContent<GetCreateBudgetFormsResponse>({
     params: "?form=create-budget",
@@ -140,8 +141,11 @@ export default function CreateNewBudgetForm({
           ))
         )}
       </div>
-
-      <Button disabled type="submit" className="w-fit flex mx-auto mt-10">
+      <Button
+        onClick={handleCreateNewBudget}
+        type="submit"
+        className="w-fit mx-auto flex mt-10"
+      >
         Create new
       </Button>
     </Drawer>

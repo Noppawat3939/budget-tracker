@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useCreateBudget } from "./hooks";
 import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
@@ -17,13 +17,9 @@ function CreateBudgetContainer() {
     handleAddValues,
     handleRemoveBudgetValue,
     budgetStorage,
+    sumIncome,
+    handleCreateNewBudget,
   } = useCreateBudget();
-
-  const sumIncome = useMemo(() => {
-    return budgetStorage?.income?.reduce((sum, entry) => {
-      return sum + +entry.value;
-    }, 0);
-  }, [budgetStorage.income]);
 
   return (
     <MainLayout>
@@ -42,6 +38,7 @@ function CreateBudgetContainer() {
         isDisabled={isPending}
         budgetStorage={budgetStorage}
         handleRemoveBudgetValue={handleRemoveBudgetValue}
+        handleCreateNewBudget={handleCreateNewBudget}
       />
     </MainLayout>
   );

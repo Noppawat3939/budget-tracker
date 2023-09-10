@@ -5,7 +5,9 @@ import type {
   CreateIncomeParams,
 } from "./type";
 
-export const createIncomeService = async (params: CreateIncomeParams) => {
+export const createIncomeByBudgetIdService = async (
+  params: CreateIncomeParams
+) => {
   const prisma = new PrismaClient();
 
   const createIncomeResponse = await prisma.income.create({
@@ -20,7 +22,9 @@ export const createIncomeService = async (params: CreateIncomeParams) => {
   return createIncomeResponse;
 };
 
-export const createExpenseService = async (params: CreateExpenseParams) => {
+export const createExpenseByBudgetIdService = async (
+  params: CreateExpenseParams
+) => {
   const prisma = new PrismaClient();
 
   const createExpenseResponse = await prisma.expense.create({

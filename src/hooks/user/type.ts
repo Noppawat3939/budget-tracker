@@ -4,4 +4,5 @@ export type UserData = {
   email: string;
   profile: string;
   loginWith: string;
+  idToken: string;
 };

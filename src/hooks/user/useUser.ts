@@ -28,6 +28,8 @@ function useUser() {
               profile,
               loginWith: provider,
               userId,
+              //@ts-ignore
+              idToken: session.data?.user?.idToken || "",
             });
             setIsPending(false);
           }

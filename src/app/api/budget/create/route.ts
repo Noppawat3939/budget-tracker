@@ -1,8 +1,8 @@
 import { NEXT_SERVER_RESPONSE } from "@/constants";
 import {
   createBudgetService,
-  createExpenseService,
-  createIncomeService,
+  createExpenseByBudgetIdService,
+  createIncomeByBudgetIdService,
   getUserService,
 } from "@/services";
 import { HttpStatusCode } from "axios";
@@ -38,7 +38,7 @@ export const POST = async (req: NextRequest) => {
         );
 
       if (searchParams === "income" && income) {
-        const createIncome = await createIncomeService({
+        const createIncome = await createIncomeByBudgetIdService({
           budgetId: budgetId,
           income: income?.income,
           value: income?.value,
@@ -62,7 +62,7 @@ export const POST = async (req: NextRequest) => {
       }
 
       if (searchParams === "expense" && expense) {
-        const createExpense = await createExpenseService({
+        const createExpense = await createExpenseByBudgetIdService({
           budgetId: budgetId,
           expense: expense?.expense,
           value: expense?.value,

@@ -1,10 +1,13 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 
-import { NextAuthProvider } from "@/app/provider";
+import { AppProvider } from "@/app/provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Budget Tracker",
@@ -18,8 +21,8 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <NextAuthProvider>{children}</NextAuthProvider>
+      <body className={poppins.className}>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

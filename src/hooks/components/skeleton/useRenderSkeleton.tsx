@@ -1,6 +1,5 @@
 import { Skeleton } from "@/components";
-
-type UseRenderSkeletonParams = { isShow: boolean; length?: number };
+import type { UseRenderSkeletonParams } from "./type";
 
 export default function useRenderSkeleton({
   length,

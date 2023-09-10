@@ -36,6 +36,6 @@ export const mapBudgetData = (data: BudgetData) => {
       description: expense.description,
     }));
 
-    return { expense: mapExpense };
+    return mapExpense;
   }
 };

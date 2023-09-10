@@ -7,5 +7,6 @@ export const ENDPOINT = {
   PATH_NAME: "/api/path",
   BUDGET: {
     CREATE: "/api/budget/create",
+    GET: "/api/budget/get",
   },
 };

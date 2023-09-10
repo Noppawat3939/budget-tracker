@@ -1,35 +1,24 @@
 import { ENDPOINT } from "@/constants";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import type {
+  GetAllBudgetRequest,
+  GetAllBudgetResponse,
+  PostCreateIncomeExpenseRequest,
+  PostCreateNewBudgetRequest,
+  PostCreateNewBudgetResponse,
+} from "./type";
 
-type IncomeRequest = {
-  income: {
-    income: string;
-    value: number;
-    description?: string;
-  };
-};
-type ExpenseRequest = {
-  expense: {
-    expense: string;
-    value: number;
-    description?: string;
-  };
-};
-
-type PostCreateNewBudgetRequest = IncomeRequest & ExpenseRequest;
-
-export const createNewBudget = async (params: PostCreateNewBudgetRequest) => {
-  return axios.post(ENDPOINT.BUDGET.CREATE, params, {
-    // headers: {
-    //   Authorization: "Bearer " ,
-    // },
+export const createNewBudget = async ({
+  body,
+  idToken,
+}: PostCreateNewBudgetRequest): Promise<
+  AxiosResponse<PostCreateNewBudgetResponse>
+> => {
+  return axios.post(ENDPOINT.BUDGET.CREATE, body, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
   });
-};
-
-type PostCreateIncomeExpenseRequest = {
-  body: IncomeRequest | ExpenseRequest;
-  query: "income" | "expense";
-  idToken: string;
 };
 
 export const createIncomeOrExpense = async ({
@@ -39,7 +28,17 @@ export const createIncomeOrExpense = async ({
 }: PostCreateIncomeExpenseRequest) => {
   return axios.post(ENDPOINT.BUDGET.CREATE + "?" + query, body, {
     headers: {
-      Authorization: "Bearer " + idToken,
+      Authorization: `Bearer ${idToken}`,
+    },
+  });
+};
+
+export const getAllBudget = async (
+  param: GetAllBudgetRequest
+): Promise<AxiosResponse<GetAllBudgetResponse>> => {
+  return await axios.get(ENDPOINT.BUDGET.GET, {
+    headers: {
+      Authorization: `Bearer ${param.idToken}`,
     },
   });
 };

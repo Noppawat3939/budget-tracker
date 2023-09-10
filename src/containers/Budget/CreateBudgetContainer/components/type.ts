@@ -19,6 +19,7 @@ type CreateBudgetFormId = "value" | "description" | "title";
 
 export type CreateNewBudgetFormProps = {
   isDisabled?: boolean;
+  isPending?: boolean;
   values: Record<CreateBudget, Record<CreateBudgetFormId, string>>;
   onValueChange: (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,

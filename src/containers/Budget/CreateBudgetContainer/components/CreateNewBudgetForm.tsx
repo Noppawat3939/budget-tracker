@@ -21,6 +21,7 @@ export default function CreateNewBudgetForm({
   handleRemoveBudgetValue,
   budgetStorage,
   handleCreateNewBudget,
+  isPending,
 }: CreateNewBudgetFormProps) {
   const { data } = useGetContent<GetCreateBudgetFormsResponse>({
     params: "?form=create-budget",
@@ -80,7 +81,6 @@ export default function CreateNewBudgetForm({
                 size="sm"
                 type="submit"
                 variant="outline"
-                disabled={isDisabled}
               >
                 {`Add ${key}`}
               </Button>
@@ -106,7 +106,6 @@ export default function CreateNewBudgetForm({
                             onChange={(evt) => onValueChange(evt, key)}
                             aria-label={`${id}-input`}
                             placeholder={placeholder}
-                            disabled={isDisabled}
                           />
                           {id === "value" && values[key].value && (
                             <p className="absolute  right-10">baht</p>
@@ -145,6 +144,7 @@ export default function CreateNewBudgetForm({
         onClick={handleCreateNewBudget}
         type="submit"
         className="w-fit mx-auto flex mt-10"
+        disabled={isPending || isDisabled}
       >
         Create new
       </Button>

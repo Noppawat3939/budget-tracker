@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useCreateBudget } from "./hooks";
 import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
-import { useMounted } from "@/hooks";
+import { useGetBudget, useMounted, useNotification } from "@/hooks";
 import { MainLayout } from "@/components";
 
 const defaultIncomeValue = 30000;
@@ -12,14 +12,26 @@ function CreateBudgetContainer() {
 
   const {
     onCreateBudgetChange,
-    isPending,
     createBudgetValues,
     handleAddValues,
     handleRemoveBudgetValue,
     budgetStorage,
     sumIncome,
     handleCreateNewBudget,
+    isError,
+    isDisabledCreateBudget,
+    isSuccess,
+    isPending,
   } = useCreateBudget();
+
+  useGetBudget();
+
+  useNotification({
+    isError,
+    errorMessage: `Can't create budget, Please try again`,
+    isSuccess,
+    successMessage: "Create new budget successfully",
+  });
 
   return (
     <MainLayout>
@@ -32,10 +44,11 @@ function CreateBudgetContainer() {
         />
       </section>
       <CreateNewBudgetForm
+        isPending={isPending}
         onValueChange={onCreateBudgetChange}
         values={createBudgetValues}
         handleAddValues={handleAddValues}
-        isDisabled={isPending}
+        isDisabled={isDisabledCreateBudget}
         budgetStorage={budgetStorage}
         handleRemoveBudgetValue={handleRemoveBudgetValue}
         handleCreateNewBudget={handleCreateNewBudget}

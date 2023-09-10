@@ -24,7 +24,7 @@ export const POST = async (req: NextRequest) => {
     );
 
   try {
-    const searchParams = req.nextUrl.search?.split("?=")?.at(1) as SearchParams;
+    const searchParams = req.nextUrl.search?.split("?")?.at(1) as SearchParams;
 
     if (searchParams) {
       if (!budgetId)

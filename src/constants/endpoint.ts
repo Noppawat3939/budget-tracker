@@ -5,4 +5,7 @@ export const ENDPOINT = {
   },
   USER: "/api/user/info",
   PATH_NAME: "/api/path",
+  BUDGET: {
+    CREATE: "/api/budget/create",
+  },
 };

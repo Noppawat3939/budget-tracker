@@ -1,5 +1,5 @@
 import { ENDPOINT } from "@/constants";
-import axios, { AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { PostGetUserRequest, PostGetUserResponse } from "./type";
 
 export const getUserInfo = async ({

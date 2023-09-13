@@ -94,6 +94,7 @@ export const GET = async (req: NextRequest) => {
       incomes: mapBudgetData({ incomes: data.incomes }),
       expenses: mapBudgetData({ expenses: data.expenses }),
       total: { income: data?.incomes?.length, expense: data?.expenses?.length },
+      createdAt: data.createdAt,
     }));
 
     return NextResponse.json({

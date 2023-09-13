@@ -10,7 +10,7 @@ import { Avatar, MenuNavbar } from "../..";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { toCapitalize } from "@/helper";
-import { MenuBarList } from "@/types";
+import { MenuBarList, NavbarMenuList } from "@/types";
 import { usePathname } from "next/navigation";
 
 export default function MainNavbar() {
@@ -39,6 +39,19 @@ export default function MainNavbar() {
     {
       position: "bottom",
       menus: [{ key: "logout", value: "Log out" }],
+    },
+  ];
+
+  const navbarMenus: NavbarMenuList = [
+    {
+      key: "summary",
+      label: "My Summary",
+      url: ROUTES.BUDGET.SUMMARY,
+    },
+    {
+      key: "create_budget",
+      label: "Create budget",
+      url: ROUTES.BUDGET.CREATE,
     },
   ];
 
@@ -88,6 +101,19 @@ export default function MainNavbar() {
         <Link href={ROUTES.MAIN} className="text-[20px] font-medium">
           Logo
         </Link>
+        <div className="ml-10 flex space-x-4 w-full">
+          {navbarMenus.map((menu) => (
+            <Link
+              key={menu.key}
+              href={menu.url}
+              className={`cursor-pointer ${
+                pathName === menu.url ? "text-gray-800" : "text-gray-300"
+              } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
+            >
+              {menu.label}
+            </Link>
+          ))}
+        </div>
         <div className="flex h-5 items-center space-x-3 text-sm">
           {renderRightMenu()}
         </div>

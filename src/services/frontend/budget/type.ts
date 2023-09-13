@@ -67,8 +67,9 @@ export type GetAllBudgetResponse = {
   message: string;
   data: {
     budgetId: string;
+    createdAt: Date;
     incomes: Income[];
     expenses: Expense[];
     total: Total;
-  };
+  }[];
 };

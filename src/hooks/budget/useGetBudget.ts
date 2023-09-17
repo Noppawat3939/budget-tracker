@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import { useEffect } from "react";
 import { useUser } from "..";
 import { useMutation } from "@tanstack/react-query";

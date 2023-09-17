@@ -1,3 +1,5 @@
+"use client";
+
 import { getContent } from "@/services";
 import { useEffect, useState } from "react";
 

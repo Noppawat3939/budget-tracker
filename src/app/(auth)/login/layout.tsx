@@ -1,24 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
-import type { LoginLayout } from "./type";
-import { useUser } from "@/hooks";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/constants";
+import React from "react";
+import { useProtectedRoute, useUser } from "@/hooks";
 import { isEmpty } from "lodash";
+import { LayoutProps } from "@/types";
 
-const { BUDGET } = ROUTES;
-
-export default function LoginLayout({ children }: LoginLayout) {
-  const router = useRouter();
+export default function LoginLayout({ children }: LayoutProps) {
   const { data } = useUser();
 
-  useEffect(() => {
-    if (!isEmpty(data)) {
-      router.push(BUDGET.CREATE);
-    }
-  }, [data]);
+  useProtectedRoute();
 
   return (
     <>

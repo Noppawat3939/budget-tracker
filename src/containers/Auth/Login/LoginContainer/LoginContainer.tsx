@@ -1,15 +1,15 @@
 "use client";
+import { MainLayout } from "@/components";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MainLayout } from "@/components";
-import GoogleIcon from "@/assets/icons/google.svg";
-import GitHubIcon from "@/assets/icons/github.svg";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import GoogleIcon from "@/assets/icons/google.svg";
+import GitHubIcon from "@/assets/icons/github.svg";
 
 import { signIn } from "next-auth/react";
 
-function Login() {
+const LoginContainer = () => {
   return (
     <MainLayout>
       <section className="max-w-lg m-auto flex flex-col justify-center items-center h-full">
@@ -57,6 +57,6 @@ function Login() {
       </section>
     </MainLayout>
   );
-}
+};
 
-export default Login;
+export default LoginContainer;

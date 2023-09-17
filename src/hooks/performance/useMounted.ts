@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import { useLayoutEffect, useState } from "react";
 
 type UseMounted = boolean;

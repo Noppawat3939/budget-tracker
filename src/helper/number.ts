@@ -6,6 +6,9 @@ export const priceFormatter = (num: number) =>
     currency: "THB",
   }).format(num);
 
+export const numberFormatter = (num: number) =>
+  Intl.NumberFormat("th").format(num);
+
 export const onlyNumber = (str: string) => str.replace(REGEX.NUMBER_FORMAT, "");
 
 export const cleanUpFirstCharacter = (str: string) =>

@@ -19,3 +19,17 @@ export type CreateBudgetRequest = {
   expense?: IFCreateExpense;
   budgetId?: string;
 };
+
+export type Expenses = {
+  expenseId: string;
+  description?: string;
+  expense: string;
+  value: number;
+}[];
+
+export type Incomes = {
+  incomeId: string;
+  income: string;
+  description?: string;
+  value: number;
+}[];

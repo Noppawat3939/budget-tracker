@@ -1,22 +1,32 @@
-import { formatDate } from "@/helper";
-import { GetAllBudgetResponse } from "@/services/frontend/budget/type";
-import type { SummaryColumns, SummaryRowsData } from "../types";
+import { formatDate, numberFormatter } from "@/helper";
+import type { BalanceData, BudgetData, SummaryColumns } from "../types";
 
-export const renderSummaryRows = (data: GetAllBudgetResponse) => {
+export const renderSummaryRows = ({
+  budgetData,
+  balanceData,
+}: {
+  budgetData: BudgetData;
+  balanceData: BalanceData;
+}) => {
   const FORMAT_DATE = "DD MMM YYYY";
 
-  if (data?.data) {
-    const newMap: SummaryRowsData = data.data.map((items) => ({
-      date: formatDate(items.createdAt, FORMAT_DATE),
-      income:
-        items.incomes.map((incomeVal) => incomeVal.income).length > 1
-          ? items.incomes.map((incomeVal) => incomeVal.income).join(",")
-          : items.incomes.map((incomeVal) => incomeVal.income).toString(),
-      expense: items.expenses.map((expenseVal) => expenseVal.expense)
-        ? items.expenses.map((expenseVal) => expenseVal.expense).join(",")
-        : items.expenses.map((expenseVal) => expenseVal.expense).toString(),
-      balance: 0,
-    }));
+  if (budgetData?.length && balanceData?.length) {
+    const newMap = budgetData.map((items) => {
+      return {
+        date: formatDate(items.createdAt, FORMAT_DATE),
+        income:
+          items.incomes.map((incomeVal) => incomeVal.income).length > 1
+            ? items.incomes.map((incomeVal) => incomeVal.income).join(",")
+            : items.incomes.map((incomeVal) => incomeVal.income).toString(),
+        expense: items.expenses.map((expenseVal) => expenseVal.expense)
+          ? items.expenses.map((expenseVal) => expenseVal.expense).join(",")
+          : items.expenses.map((expenseVal) => expenseVal.expense).toString(),
+        balance: numberFormatter(
+          balanceData.find((balance) => balance.budgetId === items.budgetId)
+            ?.totalBalance || 0
+        ),
+      };
+    });
 
     return newMap;
   }
@@ -36,7 +46,7 @@ export const renderSummaryColumns: SummaryColumns = [
     key: "expense",
   },
   {
-    label: "Cash Balance",
+    label: "Balance (฿)",
     key: "balance",
   },
 ];

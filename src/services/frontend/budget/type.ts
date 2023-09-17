@@ -48,6 +48,13 @@ type ExpenseRequest = {
   };
 };
 
+type BalanceData = {
+  budgetId: string;
+  incomeValues: number;
+  expenseValues: number;
+  totalBalance: number;
+};
+
 export type PostCreateNewBudgetRequest = {
   body: IncomeRequest & ExpenseRequest;
   idToken: string;
@@ -63,13 +70,37 @@ export type GetAllBudgetRequest = {
   idToken: string;
 };
 
+export type GetBudgetBalanceRequest = {
+  idToken: string;
+};
+
+export type GetBudgetBalanceByBudgetIdRequest = {
+  idToken: string;
+  budgetId: string;
+};
+
+export type GetBudgetBalanceByBudgetIdResponse = {
+  message: string;
+  data: BalanceData;
+};
+
 export type GetAllBudgetResponse = {
   message: string;
   data: {
     budgetId: string;
     createdAt: Date;
-    incomes: Income[];
     expenses: Expense[];
+    incomes: Income[];
     total: Total;
+  }[];
+};
+
+export type GetBudgetBalanceResponse = {
+  message: string;
+  data: {
+    budgetId: string;
+    incomeValues: number;
+    expenseValues: number;
+    totalBalance: number;
   }[];
 };

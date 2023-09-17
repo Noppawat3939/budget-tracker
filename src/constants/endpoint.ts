@@ -8,5 +8,6 @@ export const ENDPOINT = {
   BUDGET: {
     CREATE: "/api/budget/create",
     GET: "/api/budget/get",
+    BALANCE: "/api/budget/balance",
   },
 };

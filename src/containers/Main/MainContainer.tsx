@@ -14,7 +14,7 @@ function MainContainer() {
         <Banner />
         <section className="flex flex-col items-center w-full">
           <Link href={ROUTES.BUDGET.CREATE}>
-            <Button size="sm">
+            <Button className="items-center flex">
               Try free <ChevronRight className="ml-1 w-4 h-4" />
             </Button>
           </Link>

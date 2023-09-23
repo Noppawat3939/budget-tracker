@@ -11,18 +11,10 @@ import {
 
 import type { Table } from "./type";
 import { Skeleton } from "@/components/ui/skeleton";
+import { renderSkeletonTableRow } from "./mock";
 
-type MockTableRows = Record<string, string>[];
-
-const Table: FC<Table> = ({ columns, rows, isLoading }) => {
-  const mockRows = Array.from({
-    length: columns.length,
-  }).fill({
-    render1: "mock",
-    render2: "mock",
-    render3: "mock",
-    render4: "mock",
-  }) as MockTableRows;
+const Table: FC<Table> = ({ columns, rows, isLoading, onRowClick }) => {
+  const renderSkeletonRow = renderSkeletonTableRow(columns);
 
   return (
     <ShadTable className="border">
@@ -33,7 +25,7 @@ const Table: FC<Table> = ({ columns, rows, isLoading }) => {
       </TableHeader>
       <TableBody>
         {isLoading &&
-          mockRows.map((row, idx) => (
+          renderSkeletonRow.map((row, idx) => (
             <TableRow key={idx} className="border">
               {Object.values(row).map((_, idx) => (
                 <TableCell key={idx}>
@@ -44,7 +36,7 @@ const Table: FC<Table> = ({ columns, rows, isLoading }) => {
           ))}
         {!isLoading &&
           rows?.map((row, rowIndex) => (
-            <TableRow key={`row_${rowIndex}`}>
+            <TableRow key={`row_${rowIndex}`} onClick={() => onRowClick?.(row)}>
               {Object.values(row).map((key, index) => (
                 <TableCell key={index}>{key}</TableCell>
               ))}

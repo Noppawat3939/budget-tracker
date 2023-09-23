@@ -2,6 +2,10 @@ import type { Expenses, Incomes } from "@/types";
 
 export type Columns = "date" | "income" | "expense" | "balance";
 
+export type RowData = Record<Columns, string>;
+
+type TotalBudget = { income: number; expense: number };
+
 export type SummaryColumns = {
   label: string;
   key: Columns;
@@ -25,5 +29,5 @@ export type BudgetData = {
   createdAt: Date;
   expenses: Expenses;
   incomes: Incomes;
-  total: { income: number; expense: number };
+  total: TotalBudget;
 }[];

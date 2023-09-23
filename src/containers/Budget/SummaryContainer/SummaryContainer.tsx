@@ -5,14 +5,30 @@ import { MainLayout, Table } from "@/components";
 import { useGetBudget } from "@/hooks";
 import { renderSummaryRows, renderSummaryColumns } from "./utils";
 import { Input } from "@/components/ui/input";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
+import type { RowData } from "./types";
 
 const SummaryContainer: FC = () => {
+  const { push } = useRouter();
   const { budgetData, balanceData, isLoading } = useGetBudget();
 
   const rowData = renderSummaryRows({
     budgetData: budgetData?.data!,
     balanceData: balanceData?.data!,
   });
+
+  const onRow = (rowData: RowData) => {
+    const [dateString] = dayjs(rowData.date).toISOString().split("T");
+
+    const foundData = budgetData?.data.find(
+      (data) =>
+        dateString ===
+        dayjs(data.createdAt).add(-1, "day").toISOString().split("T").at(0)
+    );
+
+    push(`/summary/query?=${foundData?.budgetId}`);
+  };
 
   return (
     <Suspense fallback={<>loading...</>}>
@@ -23,6 +39,7 @@ const SummaryContainer: FC = () => {
             columns={renderSummaryColumns}
             rows={rowData!}
             isLoading={isLoading}
+            onRowClick={(data) => onRow(data as RowData)}
           />
         </section>
       </MainLayout>

@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+
+import React, { type FC } from "react";
 
 import { SummaryContainer } from "@/containers";
 
-function SummaryPage() {
+const SummaryPage: FC = () => {
   return <SummaryContainer />;
-}
+};
 
 export default SummaryPage;

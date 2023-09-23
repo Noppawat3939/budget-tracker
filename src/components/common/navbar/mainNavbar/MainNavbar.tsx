@@ -58,7 +58,7 @@ export default function MainNavbar() {
   const renderRightMenu = () => {
     if (data && pathName !== ROUTES.MAIN) {
       return (
-        <>
+        <React.Fragment>
           <Popover>
             <PopoverTrigger>
               <Avatar src={data.profile} fallback={data?.name?.at(0)} />
@@ -67,14 +67,14 @@ export default function MainNavbar() {
               <MenuNavbar menuList={menuBar} />
             </PopoverContent>
           </Popover>
-        </>
+        </React.Fragment>
       );
     }
     if (pathName === ROUTES.MAIN) {
       return (
-        <>
+        <React.Fragment>
           {isEmpty(data) && (
-            <>
+            <React.Fragment>
               <Link
                 href={ROUTES.AUTH.LOGIN}
                 className="text-sm hover:opacity-50 transition-all duration-300"
@@ -82,15 +82,15 @@ export default function MainNavbar() {
                 Log in
               </Link>
               <Separator orientation="vertical" />
-            </>
+            </React.Fragment>
           )}
 
           <Link href={ROUTES.BUDGET.CREATE}>
-            <Button size="sm">
+            <Button className="flex items-center w-full">
               Try free <ChevronRight className="ml-1 w-4 h-4" />
             </Button>
           </Link>
-        </>
+        </React.Fragment>
       );
     }
   };

@@ -28,6 +28,7 @@ function useGetBudgetByBudgetId(params: UseGetBudgetByBudgetIdParams) {
     data: handleGetBudgetById.data?.data.data,
     isLoading: handleGetBudgetById.isLoading,
     isError: handleGetBudgetById.isError,
+    isSuccess: handleGetBudgetById.isSuccess,
   };
 }
 

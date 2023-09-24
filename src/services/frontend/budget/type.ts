@@ -98,5 +98,5 @@ export type GetBudgetByBudgetIdResponse = {
     expenses: Expenses;
     incomes: Incomes;
     total: IFBudgetTotal;
-  };
+  }[];
 };

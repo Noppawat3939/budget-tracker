@@ -1,7 +1,14 @@
-import React, { type FC } from "react";
+import { useGetBudgetByBudgetId } from "@/hooks";
+import { useSearchParams } from "next/navigation";
+import React from "react";
 
-const SummaryDetailContainer: FC = () => {
+function SummaryDetailContainer() {
+  const searchParam = useSearchParams();
+  const budgetIdParam = searchParam.get("");
+
+  useGetBudgetByBudgetId({ budgetId: budgetIdParam || "" });
+
   return <div>SummaryDetailContainer</div>;
-};
+}
 
 export default SummaryDetailContainer;

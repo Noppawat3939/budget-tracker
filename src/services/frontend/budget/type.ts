@@ -1,3 +1,5 @@
+import { IFBudgetTotal, Incomes, Expenses } from "@/types";
+
 export type PostCreateNewBudgetResponse = {
   message: string;
   budget: Budget;
@@ -5,31 +7,10 @@ export type PostCreateNewBudgetResponse = {
 
 type Budget = {
   budgetId: string;
-  incomes: Income[];
-  expenses: Expenses;
-};
-
-type Expenses = {
-  expense: Expense[];
-};
-
-type Expense = {
-  expenseId: string;
-  expense: string;
-  value: number;
-  description: string;
-};
-
-type Total = {
-  income: number;
-  expense: number;
-};
-
-type Income = {
-  incomeId: string;
-  income: string;
-  value: number;
-  description: string;
+  incomes: Incomes;
+  expenses: {
+    expense: Expenses;
+  };
 };
 
 type IncomeRequest = {
@@ -89,9 +70,9 @@ export type GetAllBudgetResponse = {
   data: {
     budgetId: string;
     createdAt: Date;
-    expenses: Expense[];
-    incomes: Income[];
-    total: Total;
+    expenses: Expenses;
+    incomes: Incomes;
+    total: IFBudgetTotal;
   }[];
 };
 
@@ -103,4 +84,19 @@ export type GetBudgetBalanceResponse = {
     expenseValues: number;
     totalBalance: number;
   }[];
+};
+
+export type GetBudgetByBudgetIdRequest = {
+  budgetId: string;
+  idToken: string;
+};
+
+export type GetBudgetByBudgetIdResponse = {
+  message: string;
+  data: {
+    budgetId: string;
+    expenses: Expenses;
+    incomes: Incomes;
+    total: IFBudgetTotal;
+  };
 };

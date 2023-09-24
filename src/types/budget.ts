@@ -13,6 +13,24 @@ export interface IFCreateExpense {
   description?: string;
   value: number;
 }
+export interface IFBudgetTotal {
+  income: number;
+  expense: number;
+}
+
+export interface IFIncomeData {
+  incomeId: string;
+  income: string;
+  description?: string;
+  value: number;
+}
+
+export interface IFExpenseData {
+  expenseId: string;
+  description?: string;
+  expense: string;
+  value: number;
+}
 
 export type CreateBudgetRequest = {
   income?: IFCreateIncome;
@@ -20,16 +38,6 @@ export type CreateBudgetRequest = {
   budgetId?: string;
 };
 
-export type Expenses = {
-  expenseId: string;
-  description?: string;
-  expense: string;
-  value: number;
-}[];
+export type Expenses = IFExpenseData[];
 
-export type Incomes = {
-  incomeId: string;
-  income: string;
-  description?: string;
-  value: number;
-}[];
+export type Incomes = IFIncomeData[];

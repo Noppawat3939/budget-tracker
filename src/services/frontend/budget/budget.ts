@@ -7,6 +7,8 @@ import type {
   GetBudgetBalanceByBudgetIdResponse,
   GetBudgetBalanceRequest,
   GetBudgetBalanceResponse,
+  GetBudgetByBudgetIdRequest,
+  GetBudgetByBudgetIdResponse,
   PostCreateIncomeExpenseRequest,
   PostCreateNewBudgetRequest,
   PostCreateNewBudgetResponse,
@@ -43,6 +45,19 @@ export const getAllBudget = async (
   return await axios.get(ENDPOINT.BUDGET.GET, {
     headers: {
       Authorization: `Bearer ${param.idToken}`,
+    },
+  });
+};
+
+export const getBudgetByBudgetId = async (
+  params: GetBudgetByBudgetIdRequest
+): Promise<AxiosResponse<GetBudgetByBudgetIdResponse>> => {
+  return await axios.get(ENDPOINT.BUDGET.GET, {
+    params: {
+      budgetId: params.budgetId,
+    },
+    headers: {
+      Authorization: `Bearer ${params.idToken}`,
     },
   });
 };

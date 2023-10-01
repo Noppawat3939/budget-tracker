@@ -4,3 +4,4 @@ export * from "./authLogin";
 export * from "./jwt";
 export * from "./navbar";
 export * from "./layout";
+export * from "./params";

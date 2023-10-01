@@ -1,79 +1,42 @@
 import { Separator } from "@/components/ui/separator";
 import { ROUTES } from "@/constants";
 import Link from "next/link";
-import React from "react";
+import React, { useCallback } from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/hooks";
+import { useHandleNavbar, useUser } from "@/hooks";
 import { isEmpty } from "lodash";
 import { Avatar, MenuNavbar } from "../..";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
-import { toCapitalize } from "@/helper";
-import { MenuBarList, NavbarMenuList } from "@/types";
 import { usePathname } from "next/navigation";
 
 export default function MainNavbar() {
-  const { data } = useUser();
+  const { data: user } = useUser();
 
-  const pathName = usePathname();
+  const pathname = usePathname();
 
-  const menuBar: MenuBarList = [
-    {
-      position: "top",
-      menus: [
-        {
-          key: "name",
-          value: toCapitalize(data?.name!),
-        },
-        {
-          key: "email",
-          value: toCapitalize(data?.email!),
-        },
-      ],
-    },
-    {
-      position: "mid",
-      menus: [{ key: "settings", value: "Settings" }],
-    },
-    {
-      position: "bottom",
-      menus: [{ key: "logout", value: "Log out" }],
-    },
-  ];
+  const { renderMenu, renderMenuBar } = useHandleNavbar();
 
-  const navbarMenus: NavbarMenuList = [
-    {
-      key: "summary",
-      label: "My Summary",
-      url: ROUTES.BUDGET.SUMMARY,
-    },
-    {
-      key: "create_budget",
-      label: "Create budget",
-      url: ROUTES.BUDGET.CREATE,
-    },
-  ];
-
-  const renderRightMenu = () => {
-    if (data && pathName !== ROUTES.MAIN) {
+  const renderRightMenu = useCallback(() => {
+    if (user && pathname !== ROUTES.MAIN) {
       return (
         <React.Fragment>
           <Popover>
             <PopoverTrigger>
-              <Avatar src={data.profile} fallback={data?.name?.at(0)} />
+              <Avatar src={user.profile} fallback={user?.name?.at(0)} />
             </PopoverTrigger>
             <PopoverContent align="end" className="w-fit p-0 mt-2">
-              <MenuNavbar menuList={menuBar} />
+              <MenuNavbar menuList={renderMenuBar} />
             </PopoverContent>
           </Popover>
         </React.Fragment>
       );
     }
-    if (pathName === ROUTES.MAIN) {
+    if (pathname === ROUTES.MAIN) {
       return (
         <React.Fragment>
-          {isEmpty(data) && (
+          {isEmpty(user) && (
             <React.Fragment>
               <Link
                 href={ROUTES.AUTH.LOGIN}
@@ -93,7 +56,10 @@ export default function MainNavbar() {
         </React.Fragment>
       );
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const cleanupPathname = pathname.slice(1).replaceAll("/", "-");
 
   return (
     <nav className="sticky top-0 bg-white">
@@ -102,12 +68,12 @@ export default function MainNavbar() {
           Logo
         </Link>
         <div className="ml-10 flex space-x-4 w-full">
-          {navbarMenus.map((menu) => (
+          {renderMenu.map((menu) => (
             <Link
               key={menu.key}
               href={menu.url}
               className={`cursor-pointer ${
-                pathName === menu.url ? "text-gray-800" : "text-gray-300"
+                cleanupPathname === menu.key ? "text-gray-800" : "text-gray-300"
               } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
             >
               {menu.label}

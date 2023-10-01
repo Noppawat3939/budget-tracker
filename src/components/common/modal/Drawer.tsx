@@ -5,7 +5,12 @@ import { Drawer as VDrawer } from "vaul";
 import { DrawerProps } from "./type";
 import { useDrawerStore } from "@/store";
 
-export default function Drawer({ title, children, drawerHeight }: DrawerProps) {
+export default function Drawer({
+  title,
+  children,
+  drawerHeight,
+  btnText,
+}: DrawerProps) {
   const { isOpen, onOpenChange, onOpen } = useDrawerStore();
 
   return (
@@ -15,7 +20,11 @@ export default function Drawer({ title, children, drawerHeight }: DrawerProps) {
       onOpenChange={onOpenChange}
     >
       <VDrawer.Trigger asChild>
-        <Button onClick={onOpen}>Get started</Button>
+        <div className="flex">
+          <Button onClick={onOpen} className="mx-auto">
+            {btnText}
+          </Button>
+        </div>
       </VDrawer.Trigger>
       <VDrawer.Portal>
         <VDrawer.Overlay className="fixed inset-0 bg-black/50" />

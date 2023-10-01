@@ -4,4 +4,5 @@ export type DrawerProps = {
   title: string;
   children: ReactNode;
   drawerHeight?: string;
+  btnText: string;
 };

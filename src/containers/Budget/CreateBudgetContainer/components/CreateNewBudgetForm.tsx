@@ -31,6 +31,7 @@ export default function CreateNewBudgetForm({
   }));
 
   const [isLoading, setIsLoading] = useState(true);
+
   const { renderSkeleton } = useRenderSkeleton({
     length: 6,
     isShow: isLoading,
@@ -47,10 +48,10 @@ export default function CreateNewBudgetForm({
   }, [isOpen]);
 
   return (
-    <Drawer title="Add a new">
+    <Drawer title="Add a new" btnText="Create now">
       <div className="flex-col space-y-3">
         {isLoading ? (
-          <>{renderSkeleton}</>
+          <React.Fragment>{renderSkeleton}</React.Fragment>
         ) : (
           data?.form.map(({ title, forms, key }, index) => (
             <div

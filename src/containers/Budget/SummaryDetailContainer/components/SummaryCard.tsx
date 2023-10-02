@@ -3,6 +3,7 @@ import Image from "next/image";
 import incomeImage from "@/assets/images/income.png";
 import { IFExpenseData, IFIncomeData } from "@/types";
 import { priceFormatter } from "@/helper";
+import { Select } from "@/components";
 
 type SummaryCardProps = {
   income?: IFIncomeData;
@@ -30,9 +31,13 @@ function SummaryCard({ income, expense }: SummaryCardProps) {
               )}
             </div>
           </div>
-          <p>{priceFormatter(income.value)}</p>
+          <div className="flex items-center space-x-2">
+            <p>{priceFormatter(income.value)}</p>
+            <Select items={["edit", "remove"]} />
+          </div>
         </div>
       )}
+
       {expense && (
         <div
           className="flex items-center justify-between"
@@ -51,7 +56,10 @@ function SummaryCard({ income, expense }: SummaryCardProps) {
               )}
             </div>
           </div>
-          <p>{priceFormatter(expense.value)}</p>
+          <div className="flex items-center space-x-2">
+            <p>{priceFormatter(expense.value)}</p>
+            <Select items={["edit", "remove"]} />
+          </div>
         </div>
       )}
     </React.Fragment>

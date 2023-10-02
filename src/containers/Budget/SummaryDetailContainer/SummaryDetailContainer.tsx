@@ -7,12 +7,16 @@ import {
 } from "@/components/ui/card";
 import { useGetBudgetByBudgetId, useRenderSkeleton } from "@/hooks";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useCallback } from "react";
 import { SummaryCard } from "./components";
 import { MainLayout, Skeleton } from "@/components";
 import { Skeleton as ShadSkeleton } from "@/components/ui/skeleton";
+import { EMPTY_STRING, FIRST_INDEX } from "@/constants";
+import { Button } from "@/components/ui/button";
 
 const MIN_LENGTH = 1;
+const BUDGET_DETAILS = ["income", "expense"];
+type Description = "income" | "expense";
 
 function SummaryDetailContainer() {
   const searchParam = useSearchParams();
@@ -24,14 +28,27 @@ function SummaryDetailContainer() {
   });
 
   const { data, isLoading, isSuccess } = useGetBudgetByBudgetId({
-    budgetId: budgetIdParam || "",
+    budgetId: budgetIdParam || EMPTY_STRING,
   });
+
+  const renderDescription = useCallback((key: Description) => {
+    return (
+      data?.at(FIRST_INDEX)?.total && (
+        <CardDescription>{`${
+          data.at(FIRST_INDEX)!.total?.[key] > MIN_LENGTH
+            ? `${data?.[FIRST_INDEX].total[key]} items`
+            : `${data?.[FIRST_INDEX].total[key]} item`
+        } of all your ${key}`}</CardDescription>
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <MainLayout>
       <div className="flex space-x-5">
         {isLoading &&
-          ["income", "expense"].map((render) => (
+          BUDGET_DETAILS.map((render) => (
             <Card className="flex-1" key={render}>
               <CardHeader>
                 <Skeleton isShow />
@@ -51,13 +68,7 @@ function SummaryDetailContainer() {
           <Card className="flex-1">
             <CardHeader>
               <CardTitle>Recent Incomes</CardTitle>
-              {data?.at(0)?.total && (
-                <CardDescription>{`${
-                  data.at(0)!.total?.income > MIN_LENGTH
-                    ? `${data?.[0].total.income} items`
-                    : `${data?.[0].total.income} item`
-                } of all your income`}</CardDescription>
-              )}
+              {renderDescription("income")}
             </CardHeader>
             <CardContent>
               {data?.map(
@@ -75,13 +86,7 @@ function SummaryDetailContainer() {
           <Card className="flex-1">
             <CardHeader>
               <CardTitle>Recent Expenses</CardTitle>
-              {data?.at(0)?.total && (
-                <CardDescription>{`${
-                  data.at(0)!.total?.expense > MIN_LENGTH
-                    ? `${data?.[0].total.expense} items`
-                    : `${data?.[0].total.expense} item`
-                } of all your expense`}</CardDescription>
-              )}
+              {renderDescription("expense")}
             </CardHeader>
             <CardContent>
               {data?.map(
@@ -94,6 +99,11 @@ function SummaryDetailContainer() {
             </CardContent>
           </Card>
         )}
+      </div>
+      <div className="flex">
+        <Button className="mx-auto mt-3" disabled={isLoading}>
+          Add Expense
+        </Button>
       </div>
     </MainLayout>
   );

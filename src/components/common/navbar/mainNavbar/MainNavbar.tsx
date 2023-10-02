@@ -68,17 +68,20 @@ export default function MainNavbar() {
           Logo
         </Link>
         <div className="ml-10 flex space-x-4 w-full">
-          {renderMenu.map((menu) => (
-            <Link
-              key={menu.key}
-              href={menu.url}
-              className={`cursor-pointer ${
-                cleanupPathname === menu.key ? "text-gray-800" : "text-gray-300"
-              } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
-            >
-              {menu.label}
-            </Link>
-          ))}
+          {user &&
+            renderMenu.map((menu) => (
+              <Link
+                key={menu.key}
+                href={menu.url}
+                className={`cursor-pointer ${
+                  cleanupPathname === menu.key
+                    ? "text-gray-800"
+                    : "text-gray-300"
+                } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
+              >
+                {menu.label}
+              </Link>
+            ))}
         </div>
         <div className="flex h-5 items-center space-x-3 text-sm">
           {renderRightMenu()}

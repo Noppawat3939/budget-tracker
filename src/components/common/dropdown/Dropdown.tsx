@@ -1,13 +1,4 @@
 import React, { FC } from "react";
-import {
-  Select as ShadSelect,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { FiMoreVertical } from "react-icons/fi";
 
 import { Button } from "@/components/ui/button";
@@ -18,24 +9,25 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import type { DropdownProps } from "./type";
 
-type SelectProps = {
-  items: string[];
-  label?: string;
-};
-
-const Select: FC<SelectProps> = ({ items, label }) => {
+const Dropdown: FC<DropdownProps> = ({ items, disabled }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className=" w-6 h-6 border-none rounded-full outline-none">
-        <Button variant="ghost" className="h-6 w-6 p-0 rounded-full ">
-          <span className="sr-only">Open menu</span>
+      <DropdownMenuTrigger
+        className=" w-6 h-6 border-none rounded-full outline-none"
+        disabled={disabled}
+      >
+        <Button
+          variant="ghost"
+          className="h-6 w-6 p-0 rounded-full"
+          disabled={disabled}
+        >
           <FiMoreVertical className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          {label && <SelectLabel>{label}</SelectLabel>}
           {items.map((item) => (
             <DropdownMenuItem key={item} className="text-slate-700 capitalize">
               {item}
@@ -47,4 +39,4 @@ const Select: FC<SelectProps> = ({ items, label }) => {
   );
 };
 
-export default Select;
+export default Dropdown;

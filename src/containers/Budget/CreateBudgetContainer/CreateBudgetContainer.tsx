@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useCreateBudget } from "./hooks";
 import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";

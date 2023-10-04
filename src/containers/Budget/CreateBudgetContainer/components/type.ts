@@ -25,7 +25,7 @@ export type CreateNewBudgetFormProps = {
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     key: CreateBudget
   ) => void;
-  handleAddValues: (key: CreateBudget) => void;
+  handleAddValues: (key: CreateBudget, budgetId: string) => void;
   handleRemoveBudgetValue: (key: CreateBudget, id: string) => void;
   budgetStorage: Record<TCreateBudget, TBudgetValues[]>;
   handleCreateNewBudget: () => void;

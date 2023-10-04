@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { debounce, isEmpty } from "lodash";
+import { debounce, identity, isEmpty } from "lodash";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { TCreateBudget } from "@/types";
 import {
@@ -64,11 +64,12 @@ export default function useCreateBudget() {
     []
   );
 
+  const handleResetCreateBudgetValues = () =>
+    setCreateBudgetValues(initialCreateBudgetValues);
+
   const createIncomeOrExpenseMutate = useMutation({
     mutationFn: createIncomeOrExpense,
-    onSuccess: ({ data }) => {
-      console.log("data", data);
-    },
+    onSuccess: handleResetCreateBudgetValues,
     onError: (err) => {
       console.log("err", err);
     },
@@ -76,19 +77,32 @@ export default function useCreateBudget() {
 
   const createNewBudgetMutate = useMutation({
     mutationFn: createNewBudget,
-    onSuccess: () => setCreateBudgetValues(initialCreateBudgetValues),
+    onSuccess: handleResetCreateBudgetValues,
   });
 
-  const handleAddValues = (key: TCreateBudget) => {
+  const handleAddValues = (key: TCreateBudget, budgetId: string) => {
     if (data?.idToken) {
+      const reqBody =
+        key === "income"
+          ? {
+              [key]: {
+                [key]: createBudgetValues[key]?.title,
+                value: Number(createBudgetValues[key]?.value),
+                description: createBudgetValues[key]?.description,
+              },
+              budgetId,
+            }
+          : {
+              [key]: {
+                [key]: createBudgetValues[key]?.title,
+                value: Number(createBudgetValues[key]?.value),
+                description: createBudgetValues[key]?.description,
+              },
+              budgetId,
+            };
+
       createIncomeOrExpenseMutate.mutate({
-        body: {
-          income: {
-            income: createBudgetValues[key]?.title,
-            description: createBudgetValues[key]?.description,
-            value: Number(createBudgetValues[key]?.value),
-          },
-        },
+        body: reqBody,
         query: key,
         idToken: data?.idToken!,
       });
@@ -131,6 +145,21 @@ export default function useCreateBudget() {
     }, 0);
   }, [budgetStorage.income]);
 
+  const hasFetchSuccess = [
+    createIncomeOrExpenseMutate.isSuccess,
+    createNewBudgetMutate.isSuccess,
+  ].some(identity);
+
+  const hasFetchFail = [
+    createIncomeOrExpenseMutate.isError,
+    createNewBudgetMutate.isError,
+  ].some(identity);
+
+  const hasFetching = [
+    createIncomeOrExpenseMutate.isLoading,
+    createNewBudgetMutate.isLoading,
+  ].some(identity);
+
   return {
     createBudgetValues,
     onCreateBudgetChange,
@@ -139,9 +168,9 @@ export default function useCreateBudget() {
     handleRemoveBudgetValue,
     sumIncome,
     handleCreateNewBudget,
-    isError: createNewBudgetMutate.isError,
+    isError: hasFetchFail,
     isDisabledCreateBudget,
-    isSuccess: createNewBudgetMutate.isSuccess,
-    isPending: createNewBudgetMutate.isLoading,
+    isSuccess: hasFetchSuccess,
+    isPending: hasFetching,
   };
 }

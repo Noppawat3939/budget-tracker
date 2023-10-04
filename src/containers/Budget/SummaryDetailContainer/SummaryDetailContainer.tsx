@@ -6,21 +6,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useGetBudgetByBudgetId, useRenderSkeleton } from "@/hooks";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback } from "react";
 import { SummaryCard } from "./components";
 import { MainLayout, Skeleton } from "@/components";
 import { Skeleton as ShadSkeleton } from "@/components/ui/skeleton";
-import { EMPTY_STRING, FIRST_INDEX } from "@/constants";
+import { EMPTY_STRING, FIRST_INDEX, ROUTES } from "@/constants";
 import { Button } from "@/components/ui/button";
+import { FiPlusCircle } from "react-icons/fi";
 
 const MIN_LENGTH = 1;
 const BUDGET_DETAILS = ["income", "expense"];
-type Description = "income" | "expense";
+type BudgetKey = "income" | "expense";
 
 function SummaryDetailContainer() {
   const searchParam = useSearchParams();
   const budgetIdParam = searchParam.get("");
+  const { push } = useRouter();
 
   const { renderSkeleton } = useRenderSkeleton({
     length: 2,
@@ -31,7 +33,7 @@ function SummaryDetailContainer() {
     budgetId: budgetIdParam || EMPTY_STRING,
   });
 
-  const renderDescription = useCallback((key: Description) => {
+  const renderDescription = useCallback((key: BudgetKey) => {
     return (
       data?.at(FIRST_INDEX)?.total && (
         <CardDescription>{`${
@@ -43,6 +45,9 @@ function SummaryDetailContainer() {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const goToCreateNewBudget = (query: BudgetKey) =>
+    push(`${ROUTES.BUDGET.CREATE}?selected=${query}&id=${budgetIdParam}`);
 
   return (
     <MainLayout>
@@ -67,17 +72,30 @@ function SummaryDetailContainer() {
         {isSuccess && (
           <Card className="flex-1">
             <CardHeader>
-              <CardTitle>Recent Incomes</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle aria-label="income-title">Recent Incomes</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[12px] px-1"
+                  onClick={() => goToCreateNewBudget("income")}
+                >
+                  <FiPlusCircle className="mr-1" />
+                  Add income
+                </Button>
+              </div>
               {renderDescription("income")}
             </CardHeader>
             <CardContent>
-              {data?.map(
-                (budget) =>
-                  budget.incomes &&
-                  budget.incomes.map((income) => (
-                    <SummaryCard key={income.incomeId} income={income} />
-                  ))
-              )}
+              <div className="flex flex-col gap-y-2">
+                {data?.map(
+                  (budget) =>
+                    budget.incomes &&
+                    budget.incomes.map((income) => (
+                      <SummaryCard key={income.incomeId} income={income} />
+                    ))
+                )}
+              </div>
             </CardContent>
           </Card>
         )}
@@ -85,25 +103,33 @@ function SummaryDetailContainer() {
         {isSuccess && (
           <Card className="flex-1">
             <CardHeader>
-              <CardTitle>Recent Expenses</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Recent Expenses</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[12px] px-1"
+                  onClick={() => goToCreateNewBudget("expense")}
+                >
+                  <FiPlusCircle className="mr-1" />
+                  Add expense
+                </Button>
+              </div>
               {renderDescription("expense")}
             </CardHeader>
             <CardContent>
-              {data?.map(
-                (budget) =>
-                  budget.expenses &&
-                  budget.expenses.map((expense) => (
-                    <SummaryCard key={expense.expenseId} expense={expense} />
-                  ))
-              )}
+              <div className="flex flex-col gap-y-2">
+                {data?.map(
+                  (budget) =>
+                    budget.expenses &&
+                    budget.expenses.map((expense) => (
+                      <SummaryCard key={expense.expenseId} expense={expense} />
+                    ))
+                )}
+              </div>
             </CardContent>
           </Card>
         )}
-      </div>
-      <div className="flex">
-        <Button className="mx-auto mt-3" disabled={isLoading}>
-          Add Expense
-        </Button>
       </div>
     </MainLayout>
   );

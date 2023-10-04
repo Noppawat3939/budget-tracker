@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+
 import { getBudgetByBudgetId } from "@/services";
 import { useMutation } from "@tanstack/react-query";
 import { useUser } from "..";
@@ -22,6 +23,8 @@ function useGetBudgetByBudgetId(params: UseGetBudgetByBudgetIdParams) {
         budgetId: params.budgetId,
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.idToken, params.budgetId]);
 
   return {

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Drawer } from "@/components";
@@ -12,6 +13,9 @@ import { isEmpty } from "lodash";
 import { useDrawerStore } from "@/store";
 import { BadgeBudget } from ".";
 import { Textarea } from "@/components/ui/textarea";
+import { useSearchParams } from "next/navigation";
+import type { TCreateBudget } from "@/types";
+import { EMPTY_STRING } from "@/constants";
 
 export default function CreateNewBudgetForm({
   values,
@@ -26,6 +30,11 @@ export default function CreateNewBudgetForm({
   const { data } = useGetContent<GetCreateBudgetFormsResponse>({
     params: "?form=create-budget",
   });
+
+  const searchParams = useSearchParams();
+  const selectedParam = searchParams.get("selected") as TCreateBudget;
+  const budgetId = searchParams.get("id");
+
   const { isOpen } = useDrawerStore((store) => ({
     isOpen: store.isOpen,
   }));
@@ -47,16 +56,34 @@ export default function CreateNewBudgetForm({
     }
   }, [isOpen]);
 
+  const selectedCreateExpense = selectedParam === "expense";
+  const selectedCreateIncome = selectedParam === "income";
+  const isShowAddNewButton = selectedCreateExpense || selectedCreateIncome;
+
+  const renderFormContent = () => {
+    if (selectedCreateIncome)
+      return data?.form.filter((item) => item.key === "income");
+
+    if (selectedCreateExpense)
+      return data?.form.filter((item) => item.key === "expense");
+
+    return data?.form;
+  };
+
+  const newFormContent = renderFormContent();
+
   return (
     <Drawer title="Add a new" btnText="Create now">
       <div className="flex-col space-y-3">
         {isLoading ? (
           <React.Fragment>{renderSkeleton}</React.Fragment>
         ) : (
-          data?.form.map(({ title, forms, key }, index) => (
+          newFormContent?.map(({ title, forms, key }, index) => (
             <div
               key={`form_${key}_${index}`}
-              className=" bg-gray-50 relative py-5 px-6 rounded-md"
+              className={`bg-gray-50 relative py-5 px-6 rounded-md ${
+                isShowAddNewButton ? "mb-8" : "mb-0"
+              }`}
             >
               <div className="flex items-baseline space-x-2">
                 <h1 className="font-bold mb-[20px]">
@@ -66,19 +93,23 @@ export default function CreateNewBudgetForm({
                   {budgetStorage?.[key]?.map((value) => (
                     <BadgeBudget
                       key={value?.id}
-                      text={value.title || ""}
+                      text={value.title || EMPTY_STRING}
                       onClick={() => handleRemoveBudgetValue(key, value.id)}
                     />
                   ))}
                 </span>
               </div>
               <Button
-                onClick={() => handleAddValues(key)}
+                onClick={() =>
+                  budgetId ? handleAddValues(key, budgetId) : null
+                }
                 className={`${
                   isEmpty(values[key].title) || isEmpty(values[key].value)
                     ? "hidden"
                     : "block"
-                } absolute text-xs right-2 top-2`}
+                } absolute text-xs right-2 top-2 ${
+                  isShowAddNewButton ? "block" : "hidden"
+                }`}
                 size="sm"
                 type="submit"
                 variant="outline"
@@ -141,14 +172,16 @@ export default function CreateNewBudgetForm({
           ))
         )}
       </div>
-      <Button
-        onClick={handleCreateNewBudget}
-        type="submit"
-        className="w-fit mx-auto flex mt-10"
-        disabled={isPending || isDisabled}
-      >
-        Create new
-      </Button>
+      {!isShowAddNewButton && (
+        <Button
+          onClick={handleCreateNewBudget}
+          type="submit"
+          className="w-fit mx-auto flex mt-10"
+          disabled={isPending || isDisabled}
+        >
+          Create new
+        </Button>
+      )}
     </Drawer>
   );
 }

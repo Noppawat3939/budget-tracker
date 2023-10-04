@@ -1,4 +1,4 @@
-import { IFBudgetTotal, Incomes, Expenses } from "@/types";
+import { IFBudgetTotal, Incomes, Expenses, TCreateBudget } from "@/types";
 
 export type PostCreateNewBudgetResponse = {
   message: string;
@@ -41,9 +41,11 @@ export type PostCreateNewBudgetRequest = {
   idToken: string;
 };
 
-export type PostCreateIncomeExpenseRequest = {
-  body: IncomeRequest | ExpenseRequest;
-  query: "income" | "expense";
+export type PostCreateIncomeOrExpenseRequest = {
+  body:
+    | (IncomeRequest & { budgetId: string })
+    | (ExpenseRequest & { budgetId: string });
+  query: TCreateBudget;
   idToken: string;
 };
 

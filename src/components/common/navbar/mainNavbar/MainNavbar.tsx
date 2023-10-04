@@ -1,3 +1,5 @@
+"use client";
+
 import { Separator } from "@/components/ui/separator";
 import { ROUTES } from "@/constants";
 import Link from "next/link";

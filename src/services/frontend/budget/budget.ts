@@ -9,7 +9,7 @@ import type {
   GetBudgetBalanceResponse,
   GetBudgetByBudgetIdRequest,
   GetBudgetByBudgetIdResponse,
-  PostCreateIncomeExpenseRequest,
+  PostCreateIncomeOrExpenseRequest,
   PostCreateNewBudgetRequest,
   PostCreateNewBudgetResponse,
 } from "./type";
@@ -31,7 +31,7 @@ export const createIncomeOrExpense = async ({
   body,
   query,
   idToken,
-}: PostCreateIncomeExpenseRequest) => {
+}: PostCreateIncomeOrExpenseRequest) => {
   return axios.post(ENDPOINT.BUDGET.CREATE + "?" + query, body, {
     headers: {
       Authorization: `Bearer ${idToken}`,

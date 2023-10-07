@@ -6,12 +6,12 @@ import { priceFormatter } from "@/helper";
 import { Dropdown } from "@/components";
 import { DEFAULT_TEXT } from "@/constants";
 
-type SummaryCardProps = {
+type SummaryCardDetailProps = {
   income?: IFIncomeData;
   expense?: IFExpenseData;
 };
 
-function SummaryCard({ income, expense }: SummaryCardProps) {
+function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
   return (
     <React.Fragment>
       {income && (
@@ -73,4 +73,4 @@ function SummaryCard({ income, expense }: SummaryCardProps) {
   );
 }
 
-export default SummaryCard;
+export default SummaryCardDetail;

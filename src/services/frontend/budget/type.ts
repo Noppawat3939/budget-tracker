@@ -88,9 +88,12 @@ export type GetBudgetBalanceResponse = {
   }[];
 };
 
+type BudgetDirection = "income" | "expense";
+
 export type GetBudgetByBudgetIdRequest = {
   budgetId: string;
   idToken: string;
+  direction?: BudgetDirection;
 };
 
 export type GetBudgetByBudgetIdResponse = {

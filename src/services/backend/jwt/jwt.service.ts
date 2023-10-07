@@ -1,7 +1,7 @@
 import jwtDecode from "jwt-decode";
 import type { JwtToken } from "@/types";
 import { NextRequest } from "next/server";
-import { NEXT_SERVER_REQUEST } from "@/constants";
+import { NEXT_SERVER_REQUEST, SECOND_INDEX } from "@/constants";
 
 const CONVERT_TIME = 1000;
 
@@ -19,7 +19,7 @@ export const checkTokenExpiration = (token: JwtToken) => {
 };
 
 export const getHeadersToken = (authorizeToken: string) => {
-  const bearerToken = authorizeToken.split(" ")?.[1];
+  const bearerToken = authorizeToken.split(" ")?.at(SECOND_INDEX);
 
   if (bearerToken) {
     const { token } = decodedTokenService(bearerToken);

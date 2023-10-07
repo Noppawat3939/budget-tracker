@@ -59,7 +59,7 @@ export default function MainNavbar() {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   const cleanupPathname = pathname.slice(1).replaceAll("/", "-");
 

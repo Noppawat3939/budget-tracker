@@ -23,7 +23,7 @@ export default function SummaryCard({
             duration={0.5}
             start={start || 0}
             decimals={2}
-            suffix="฿"
+            suffix=" ฿"
             end={end}
           />
         </CardTitle>

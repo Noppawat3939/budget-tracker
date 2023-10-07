@@ -55,6 +55,7 @@ export const getBudgetByBudgetId = async (
   return await axios.get(ENDPOINT.BUDGET.GET, {
     params: {
       budgetId: params.budgetId,
+      direction: params.direction,
     },
     headers: {
       Authorization: `Bearer ${params.idToken}`,

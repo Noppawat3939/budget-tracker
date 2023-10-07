@@ -1,9 +1,10 @@
 "use client";
 
 import { getBudgetByBudgetId } from "@/services";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useUser } from "..";
-import { useEffect } from "react";
+import { EMPTY_STRING } from "@/constants";
+import { isUndefined } from "lodash";
 
 type UseGetBudgetByBudgetIdParams = {
   budgetId: string;
@@ -11,28 +12,20 @@ type UseGetBudgetByBudgetIdParams = {
 
 function useGetBudgetByBudgetId(params: UseGetBudgetByBudgetIdParams) {
   const { data } = useUser();
+  const { budgetId } = params;
 
-  const handleGetBudgetById = useMutation({
-    mutationFn: getBudgetByBudgetId,
+  const budgetByIdQuery = useQuery({
+    queryKey: ["budgetById", { budgetId }],
+    queryFn: () =>
+      getBudgetByBudgetId({
+        idToken: data?.idToken || EMPTY_STRING,
+        budgetId: budgetId,
+      }),
+    select: (res) => res.data.data,
+    enabled: !isUndefined(data?.idToken),
   });
 
-  useEffect(() => {
-    if (data?.idToken) {
-      handleGetBudgetById.mutate({
-        idToken: data.idToken,
-        budgetId: params.budgetId,
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.idToken, params.budgetId]);
-
-  return {
-    data: handleGetBudgetById.data?.data.data,
-    isLoading: handleGetBudgetById.isLoading,
-    isError: handleGetBudgetById.isError,
-    isSuccess: handleGetBudgetById.isSuccess,
-  };
+  return budgetByIdQuery;
 }
 
 export default useGetBudgetByBudgetId;

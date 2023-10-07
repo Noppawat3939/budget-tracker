@@ -5,3 +5,4 @@ export * from "./jwt";
 export * from "./navbar";
 export * from "./layout";
 export * from "./params";
+export * from "./chart";

@@ -36,7 +36,11 @@ const Table: FC<Table> = ({ columns, rows, isLoading, onRowClick }) => {
           ))}
         {!isLoading &&
           rows?.map((row, rowIndex) => (
-            <TableRow key={`row_${rowIndex}`} onClick={() => onRowClick?.(row)}>
+            <TableRow
+              key={`row_${rowIndex}`}
+              onClick={() => onRowClick?.(row)}
+              className="cursor-pointer"
+            >
               {Object.values(row).map((key, index) => (
                 <TableCell key={index}>{key}</TableCell>
               ))}

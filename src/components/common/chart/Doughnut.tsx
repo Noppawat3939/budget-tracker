@@ -8,9 +8,12 @@ export default function Doughnut({
   data,
   width,
   height,
+  isShowLegend = true,
   ...divProps
 }: DoughnutProps) {
-  ChartJS.register(ArcElement, Tooltip, Legend);
+  isShowLegend
+    ? ChartJS.register(ArcElement, Tooltip, Legend)
+    : ChartJS.register(ArcElement, Tooltip);
 
   return (
     <div {...divProps}>

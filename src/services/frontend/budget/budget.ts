@@ -13,6 +13,7 @@ import type {
   PostCreateNewBudgetRequest,
   PostCreateNewBudgetResponse,
 } from "./type";
+import { createAuthHeader } from "@/helper";
 
 export const createNewBudget = async ({
   body,
@@ -21,9 +22,7 @@ export const createNewBudget = async ({
   AxiosResponse<PostCreateNewBudgetResponse>
 > => {
   return axios.post(ENDPOINT.BUDGET.CREATE, body, {
-    headers: {
-      Authorization: `Bearer ${idToken}`,
-    },
+    headers: createAuthHeader(idToken),
   });
 };
 
@@ -32,10 +31,8 @@ export const createIncomeOrExpense = async ({
   query,
   idToken,
 }: PostCreateIncomeOrExpenseRequest) => {
-  return axios.post(ENDPOINT.BUDGET.CREATE + "?" + query, body, {
-    headers: {
-      Authorization: `Bearer ${idToken}`,
-    },
+  return axios.post(`${ENDPOINT.BUDGET.CREATE}?${query}`, body, {
+    headers: createAuthHeader(idToken),
   });
 };
 
@@ -43,9 +40,7 @@ export const getAllBudget = async (
   param: GetAllBudgetRequest
 ): Promise<AxiosResponse<GetAllBudgetResponse>> => {
   return await axios.get(ENDPOINT.BUDGET.GET, {
-    headers: {
-      Authorization: `Bearer ${param.idToken}`,
-    },
+    headers: createAuthHeader(param.idToken),
   });
 };
 
@@ -57,9 +52,7 @@ export const getBudgetByBudgetId = async (
       budgetId: params.budgetId,
       direction: params.direction,
     },
-    headers: {
-      Authorization: `Bearer ${params.idToken}`,
-    },
+    headers: createAuthHeader(params.idToken),
   });
 };
 
@@ -67,7 +60,7 @@ export const getBudgetBalance = async (
   param: GetBudgetBalanceRequest
 ): Promise<AxiosResponse<GetBudgetBalanceResponse>> => {
   return await axios.get(ENDPOINT.BUDGET.BALANCE, {
-    headers: { Authorization: `Bearer ${param.idToken}` },
+    headers: createAuthHeader(param.idToken),
   });
 };
 
@@ -75,7 +68,7 @@ export const getBudgetBalanceByBudgetId = async (
   params: GetBudgetBalanceByBudgetIdRequest
 ): Promise<AxiosResponse<GetBudgetBalanceByBudgetIdResponse>> => {
   return await axios.get(ENDPOINT.BUDGET.BALANCE, {
-    headers: { Authorization: `Bearer ${params.idToken}` },
+    headers: createAuthHeader(params.idToken),
     params: { budgetId: params.budgetId },
   });
 };

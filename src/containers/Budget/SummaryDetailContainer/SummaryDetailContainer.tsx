@@ -20,13 +20,7 @@ import { Button } from "@/components/ui/button";
 import { FiPlusCircle } from "react-icons/fi";
 import { BiSolidUpArrow } from "react-icons/bi";
 
-import {
-  numberFormatter,
-  priceFormatter,
-  toAverage,
-  toCapitalize,
-  toPercent,
-} from "@/helper";
+import { priceFormatter, toAverage, toCapitalize, toPercent } from "@/helper";
 import { DoughnutChart } from "@/types";
 import { getExpenses, getIncomes, renderChartBackground } from "./utils";
 
@@ -108,9 +102,9 @@ function SummaryDetailContainer() {
   );
 
   const summaryTotalMap = {
-    income: numberFormatter(totalIncomeValue),
-    expense: numberFormatter(totalExpenseValue),
-    balance: numberFormatter(totalIncomeValue - totalExpenseValue),
+    income: priceFormatter(totalIncomeValue),
+    expense: priceFormatter(totalExpenseValue),
+    balance: priceFormatter(totalIncomeValue - totalExpenseValue),
   };
 
   return (

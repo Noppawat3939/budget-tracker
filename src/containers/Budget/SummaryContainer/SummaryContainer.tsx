@@ -2,7 +2,7 @@
 import React, { Suspense, type FC } from "react";
 
 import { MainLayout, Table } from "@/components";
-import { useGetBudget } from "@/hooks";
+import { useGetBudget, useGetBudgetList } from "@/hooks";
 import { renderSummaryRows, renderSummaryColumns } from "./utils";
 import { Input } from "@/components/ui/input";
 import dayjs from "dayjs";
@@ -11,17 +11,20 @@ import type { RowData } from "./types";
 
 const SummaryContainer: FC = () => {
   const { push } = useRouter();
-  const { budgetData, balanceData, isLoading } = useGetBudget();
 
-  const rowData = renderSummaryRows({
-    budgetData: budgetData?.data!,
-    balanceData: balanceData?.data!,
-  });
+  const { balanceData, budgetData, isLoading, isSuccess } = useGetBudgetList();
+
+  const rowData = isSuccess
+    ? renderSummaryRows({
+        budgetData: budgetData!,
+        balanceData: balanceData!,
+      })
+    : [];
 
   const onRow = (rowData: RowData) => {
     const [dateString] = dayjs(rowData.date).toISOString().split("T");
 
-    const foundData = budgetData?.data.find(
+    const foundData = budgetData?.find(
       (data) =>
         dateString ===
         dayjs(data.createdAt).add(-1, "day").toISOString().split("T").at(0)

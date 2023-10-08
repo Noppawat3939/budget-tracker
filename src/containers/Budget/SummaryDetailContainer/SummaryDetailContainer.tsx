@@ -5,9 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useGetBudgetByBudgetId, useRenderSkeleton } from "@/hooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useCallback, useState } from "react";
+import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
+import { useSearchParams } from "next/navigation";
+import React from "react";
 import {
   SelectedFilter,
   SummaryCardDetail,
@@ -15,16 +15,15 @@ import {
   SummaryDoughnutChart,
 } from "./components";
 import { MainLayout } from "@/components";
-import { EMPTY_STRING, FIRST_INDEX, ROUTES, SECOND_INDEX } from "@/constants";
+import { EMPTY_STRING, SECOND_INDEX } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { FiPlusCircle } from "react-icons/fi";
-import { BiSolidUpArrow } from "react-icons/bi";
+import { BiSolidUpArrow, BiSolidDownArrow } from "react-icons/bi";
 
 import { priceFormatter, toAverage, toCapitalize, toPercent } from "@/helper";
 import { DoughnutChart } from "@/types";
 import { getExpenses, getIncomes, renderChartBackground } from "./utils";
 
-const MIN_LENGTH = 1;
 const BUDGET_DETAILS = ["income", "expense"];
 
 const FILTER_OPTIONS = [
@@ -32,14 +31,18 @@ const FILTER_OPTIONS = [
   { label: "Expense", value: "expense" },
 ];
 
-type BudgetKey = "income" | "expense";
-
 function SummaryDetailContainer() {
   const searchParam = useSearchParams();
   const budgetIdParam = searchParam.get("");
-  const { push } = useRouter();
 
-  const [selectedFilter, setSelectedFilter] = useState<BudgetKey>("expense");
+  const {
+    response,
+    renderDescription,
+    goToCreateNewBudget,
+    onSelectedFilter,
+    selectedFilter,
+    renderArrowIcon,
+  } = useRenderSummaryDetail(budgetIdParam || EMPTY_STRING);
 
   const isFilterIncome = selectedFilter === "income";
 
@@ -48,28 +51,12 @@ function SummaryDetailContainer() {
     isShow: true,
   });
 
-  const { data, isLoading, isSuccess } = useGetBudgetByBudgetId({
-    budgetId: budgetIdParam || EMPTY_STRING,
-  });
-
-  const renderDescription = useCallback((key: BudgetKey) => {
-    return (
-      data?.at(FIRST_INDEX)?.total && (
-        <CardDescription>{`${
-          data.at(FIRST_INDEX)!.total?.[key] > MIN_LENGTH
-            ? `${data?.[FIRST_INDEX].total[key]} items`
-            : `${data?.[FIRST_INDEX].total[key]} item`
-        } of all your ${key}`}</CardDescription>
-      )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const goToCreateNewBudget = (query: BudgetKey) =>
-    push(`${ROUTES.BUDGET.CREATE}?selected=${query}&id=${budgetIdParam}`);
-
-  const { incomeValues, totalIncomeValue, incomeData } = getIncomes(data);
-  const { expenseValues, expenseData, totalExpenseValue } = getExpenses(data);
+  const { incomeValues, totalIncomeValue, incomeData } = getIncomes(
+    response.data
+  );
+  const { expenseValues, expenseData, totalExpenseValue } = getExpenses(
+    response.data
+  );
 
   const renderIncomeLabels = incomeData?.map((income) =>
     income?.label?.toUpperCase()
@@ -78,24 +65,24 @@ function SummaryDetailContainer() {
     expense?.label?.toUpperCase()
   );
 
-  const chartBackground = renderChartBackground(
-    selectedFilter,
-    isFilterIncome ? incomeValues : expenseValues
-  );
+  const renderChartData = () => {
+    const labels = isFilterIncome ? renderIncomeLabels : renderExpenseLabels;
+    const data = isFilterIncome ? incomeValues : expenseValues;
+    const backgroundColor = renderChartBackground(
+      selectedFilter,
+      isFilterIncome ? incomeValues : expenseValues
+    );
 
-  // filter all
-  const chartData: DoughnutChart = {
-    labels: isFilterIncome ? renderIncomeLabels : renderExpenseLabels,
-    datasets: [
-      {
-        data: isFilterIncome ? incomeValues : expenseValues,
-        backgroundColor: chartBackground,
-      },
-    ],
+    return {
+      labels,
+      datasets: [
+        {
+          data,
+          backgroundColor,
+        },
+      ],
+    };
   };
-
-  const onSelectedFilter = (selectedValue: string) =>
-    setSelectedFilter(selectedValue as BudgetKey);
 
   const renderAverage = priceFormatter(
     toAverage(isFilterIncome ? incomeValues : expenseValues)
@@ -106,6 +93,9 @@ function SummaryDetailContainer() {
     expense: priceFormatter(totalExpenseValue),
     balance: priceFormatter(totalIncomeValue - totalExpenseValue),
   };
+
+  const hasGoodDirection = totalIncomeValue >= totalExpenseValue;
+  const chartData = renderChartData();
 
   return (
     <MainLayout>
@@ -197,22 +187,14 @@ function SummaryDetailContainer() {
                       {`total ${toCapitalize(key)}:`}
                     </p>
                     <span className="flex space-x-2 items-center">
-                      {key === "balance" && (
-                        <BiSolidUpArrow
-                          className={`w-3 h-3 ${
-                            totalExpenseValue > totalIncomeValue
-                              ? "text-red-600"
-                              : "text-green-600"
-                          }`}
-                        />
-                      )}
+                      {key === "balance" && renderArrowIcon(hasGoodDirection)}
                       <p
                         aria-label="total-value"
                         className={`text-[15px] font-medium ${
                           key === "balance"
-                            ? totalExpenseValue > totalIncomeValue
-                              ? "text-red-600"
-                              : "text-green-500"
+                            ? hasGoodDirection
+                              ? "text-green-600"
+                              : "text-red-600"
                             : "text-slate-900"
                         }`}
                       >
@@ -226,12 +208,12 @@ function SummaryDetailContainer() {
           </CardContent>
         </Card>
         <div className="flex space-x-5">
-          {isLoading &&
+          {response.isLoading &&
             BUDGET_DETAILS.map((render) => (
               <SummaryCardLoader key={render} renderSkeleton={renderSkeleton} />
             ))}
 
-          {isSuccess && (
+          {response.isSuccess && (
             <Card className="flex-1">
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -252,7 +234,7 @@ function SummaryDetailContainer() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col gap-y-2">
-                  {data?.map(
+                  {response.data?.map(
                     (budget) =>
                       budget.incomes &&
                       budget.incomes.map((income) => (
@@ -267,7 +249,7 @@ function SummaryDetailContainer() {
             </Card>
           )}
 
-          {isSuccess && (
+          {response.isSuccess && (
             <Card className="flex-1">
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -286,7 +268,7 @@ function SummaryDetailContainer() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col gap-y-2">
-                  {data?.map(
+                  {response.data?.map(
                     (budget) =>
                       budget.expenses &&
                       budget.expenses.map((expense) => (

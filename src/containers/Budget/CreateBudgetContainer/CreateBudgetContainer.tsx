@@ -2,7 +2,7 @@ import React from "react";
 import { useCreateBudget } from "./hooks";
 import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
-import { useGetBudget, useMounted, useNotification } from "@/hooks";
+import { useMounted, useNotification } from "@/hooks";
 import { MainLayout } from "@/components";
 
 const defaultIncomeValue = 30000;
@@ -23,8 +23,6 @@ function CreateBudgetContainer() {
     isSuccess,
     isPending,
   } = useCreateBudget();
-
-  useGetBudget();
 
   useNotification({
     isError,

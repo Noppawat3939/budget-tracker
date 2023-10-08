@@ -4,20 +4,20 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllBudget, getBudgetBalance } from "@/services";
 import { useUser } from "@/hooks";
 import { identity, isEmpty, isUndefined } from "lodash";
-import { EMPTY_STRING } from "@/constants";
+import { EMPTY_STRING, QUERY_KEY } from "@/constants";
 
 function useGetBudgetList() {
   const { data } = useUser();
 
   const budgetListQuery = useQuery({
-    queryKey: ["budgetList"],
+    queryKey: [QUERY_KEY.GET_BUDGET_LIST],
     queryFn: () => getAllBudget({ idToken: data?.idToken || EMPTY_STRING }),
     select: (res) => res.data.data,
     enabled: !isUndefined(data?.idToken),
   });
 
   const budgetBalanceQuery = useQuery({
-    queryKey: ["budgetBalance"],
+    queryKey: [QUERY_KEY.GET_BUDGET_BALANCE],
     queryFn: () => getBudgetBalance({ idToken: data?.idToken || EMPTY_STRING }),
     select: (res) => res.data.data,
     enabled: !isUndefined(data?.idToken) && !isEmpty(budgetListQuery.data),

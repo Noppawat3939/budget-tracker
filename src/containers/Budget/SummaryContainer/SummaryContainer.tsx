@@ -1,25 +1,23 @@
 "use client";
-import React, { Suspense, type FC } from "react";
+import React, { Suspense } from "react";
 
 import { MainLayout, Table } from "@/components";
-import { useGetBudget, useGetBudgetList } from "@/hooks";
+import { useGetBudgetList } from "@/hooks";
 import { renderSummaryRows, renderSummaryColumns } from "./utils";
 import { Input } from "@/components/ui/input";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import type { RowData } from "./types";
 
-const SummaryContainer: FC = () => {
+const SummaryContainer = () => {
   const { push } = useRouter();
 
-  const { balanceData, budgetData, isLoading, isSuccess } = useGetBudgetList();
+  const { balanceData, budgetData, isLoading } = useGetBudgetList();
 
-  const rowData = isSuccess
-    ? renderSummaryRows({
-        budgetData: budgetData!,
-        balanceData: balanceData!,
-      })
-    : [];
+  const rowData = renderSummaryRows({
+    budgetData: budgetData!,
+    balanceData: balanceData!,
+  });
 
   const onRow = (rowData: RowData) => {
     const [dateString] = dayjs(rowData.date).toISOString().split("T");
@@ -34,19 +32,19 @@ const SummaryContainer: FC = () => {
   };
 
   return (
-    <Suspense fallback={<>loading...</>}>
-      <MainLayout>
-        <section className="flex flex-col space-y-6 py-2">
-          <Input placeholder="Search..." className="w-[300px] h-[36px]" />
+    <MainLayout>
+      <section className="flex flex-col space-y-6 py-2">
+        <Input placeholder="Search..." className="w-[300px] h-[36px]" />
+        <div className="max-h-[75vh] overflow-y-auto">
           <Table
             columns={renderSummaryColumns}
             rows={rowData!}
             isLoading={isLoading}
             onRowClick={(data) => onRow(data as RowData)}
           />
-        </section>
-      </MainLayout>
-    </Suspense>
+        </div>
+      </section>
+    </MainLayout>
   );
 };
 

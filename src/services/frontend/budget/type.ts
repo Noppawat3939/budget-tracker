@@ -49,6 +49,30 @@ export type PostCreateIncomeOrExpenseRequest = {
   idToken: string;
 };
 
+type PostCreateOnlyIncomeResponse = {
+  message: string;
+  incomeResponse: {
+    incomeId: string;
+    income: string;
+    value: number;
+    description: string;
+  };
+};
+
+type PostCreateOnlyExpenseResponse = {
+  message: string;
+  expenseResponse: {
+    expenseId: string;
+    expense: string;
+    value: number;
+    description: string;
+  };
+};
+
+export type PostCreateIncomeOrExpenseResponse =
+  | PostCreateOnlyIncomeResponse
+  | PostCreateOnlyExpenseResponse;
+
 export type GetAllBudgetRequest = {
   idToken: string;
 };

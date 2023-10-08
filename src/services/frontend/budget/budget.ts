@@ -10,6 +10,7 @@ import type {
   GetBudgetByBudgetIdRequest,
   GetBudgetByBudgetIdResponse,
   PostCreateIncomeOrExpenseRequest,
+  PostCreateIncomeOrExpenseResponse,
   PostCreateNewBudgetRequest,
   PostCreateNewBudgetResponse,
 } from "./type";
@@ -30,7 +31,9 @@ export const createIncomeOrExpense = async ({
   body,
   query,
   idToken,
-}: PostCreateIncomeOrExpenseRequest) => {
+}: PostCreateIncomeOrExpenseRequest): Promise<
+  AxiosResponse<PostCreateIncomeOrExpenseResponse>
+> => {
   return axios.post(`${ENDPOINT.BUDGET.CREATE}?${query}`, body, {
     headers: createAuthHeader(idToken),
   });

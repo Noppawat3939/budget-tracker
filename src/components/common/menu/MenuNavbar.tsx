@@ -1,5 +1,5 @@
 import { eq } from "lodash";
-import React from "react";
+import React, { Fragment } from "react";
 import type { MenuNavbarProps } from "./type";
 
 export default function MenuNavbar({ menuList }: MenuNavbarProps) {
@@ -16,16 +16,15 @@ export default function MenuNavbar({ menuList }: MenuNavbarProps) {
         >
           {menus.menus.map((menu) => {
             return (
-              <>
+              <React.Fragment key={menu.key}>
                 <p
                   className={`text-[13px] ${
                     eq(menu.key, "email") && "text-[13px] font-light"
                   } ${eq(menu.key, "name") && "font-medium"} `}
-                  key={menu.key}
                 >
                   {menu.value}
                 </p>
-              </>
+              </React.Fragment>
             );
           })}
         </div>

@@ -1,15 +1,10 @@
-import { ROUTES } from "@/constants";
-import { toCapitalize } from "@/helper";
+import { ROUTES, STORAGE_KEY } from "@/constants";
+import { localStorage, toCapitalize } from "@/helper";
 import { useUser } from "@/hooks";
 import { MenuBarList, NavbarMenuList } from "@/types";
 import { usePathname, useSearchParams } from "next/navigation";
 
-type UseHandleNavbar = () => {
-  renderMenu: NavbarMenuList;
-  renderMenuBar: MenuBarList;
-};
-
-const useHandleNavbar: UseHandleNavbar = () => {
+const useHandleNavbar = () => {
   const pathname = usePathname();
   const search = useSearchParams();
   const budgetIdParams = search.get("");
@@ -17,6 +12,8 @@ const useHandleNavbar: UseHandleNavbar = () => {
   const { data: user } = useUser();
 
   const hideDisplayNavbarMenu = ["summary-query"];
+
+  const storage = localStorage();
 
   const navbarMenus: NavbarMenuList = [
     {
@@ -65,9 +62,18 @@ const useHandleNavbar: UseHandleNavbar = () => {
     },
   ];
 
+  const handleRemoveNotification = () => {
+    const _key = STORAGE_KEY.CREATED_NEW_BUDGET_NOTIFICATION;
+
+    if (() => storage.get(_key)) return storage.remove(_key);
+  };
+
   return {
     renderMenu: filterMenu,
     renderMenuBar: menuBar,
+    hasNewNotification: () =>
+      storage.get(STORAGE_KEY.CREATED_NEW_BUDGET_NOTIFICATION),
+    handleRemoveNotification,
   };
 };
 

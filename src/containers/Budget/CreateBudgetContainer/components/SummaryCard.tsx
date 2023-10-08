@@ -28,11 +28,11 @@ export default function SummaryCard({
           />
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[256px] overflow-y-auto">
         {data.map(({ order, price, type, description }, index) => (
           <div
             key={index}
-            className={`flex justify-between items-center mb-3 pt-2  ${
+            className={`flex justify-between items-center mb-3 pt-2 ${
               type === "balance" && isMounted ? "border-t" : "border-t-0 "
             }`}
           >

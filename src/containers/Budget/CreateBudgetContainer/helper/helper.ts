@@ -7,9 +7,6 @@ import {
 
 const LOCAL_STORAGE_KEY = "create_budget";
 
-export const setCreateBudgetToLocalStorage = (value: string) =>
-  setLocalStorage(LOCAL_STORAGE_KEY, value);
-
 export const removeCreateBudgetFromStorage = () =>
   removeLocalStorage(LOCAL_STORAGE_KEY);
 

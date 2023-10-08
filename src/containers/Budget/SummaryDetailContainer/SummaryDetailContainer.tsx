@@ -10,18 +10,18 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import {
   SelectedFilter,
+  SummaryByPercentage,
   SummaryCardDetail,
   SummaryCardLoader,
   SummaryDoughnutChart,
+  SummaryTotal,
 } from "./components";
-import { MainLayout } from "@/components";
-import { EMPTY_STRING, SECOND_INDEX } from "@/constants";
+import { MainLayout, Skeleton } from "@/components";
+import { EMPTY_STRING } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { FiPlusCircle } from "react-icons/fi";
-import { BiSolidUpArrow, BiSolidDownArrow } from "react-icons/bi";
 
-import { priceFormatter, toAverage, toCapitalize, toPercent } from "@/helper";
-import { DoughnutChart } from "@/types";
+import { priceFormatter, toAverage, toPercent } from "@/helper";
 import { getExpenses, getIncomes, renderChartBackground } from "./utils";
 
 const BUDGET_DETAILS = ["income", "expense"];
@@ -102,9 +102,9 @@ function SummaryDetailContainer() {
       <section className="flex flex-col gap-y-4 h-[85vh]">
         <Card>
           <div className="p-5 flex justify-between">
-            <h1 className="text-2xl font-medium">{`Top ${
-              isFilterIncome ? "Income" : "Expense"
-            }`}</h1>
+            <h1 className="text-2xl font-medium">
+              {`Top ${isFilterIncome ? "Income" : "Expense"}`}
+            </h1>
             <SelectedFilter
               defaultValue={selectedFilter}
               onValueChange={onSelectedFilter}
@@ -115,7 +115,11 @@ function SummaryDetailContainer() {
             <SummaryDoughnutChart chartData={chartData} />
             <div className="flex w-[60%] max-w-[600px]  mx-auto flex-col justify-between">
               <div className="flex flex-col">
-                <p className="text-[14px] text-slate-500">
+                <p
+                  className={`text-[14px] text-slate-500 ${
+                    response.isSuccess ? "block" : "hidden"
+                  }`}
+                >
                   {`You have an average ${selectedFilter} of `}
                   <span
                     className={`${
@@ -126,84 +130,28 @@ function SummaryDetailContainer() {
                   </span>{" "}
                   per month.
                 </p>
-                <ul className="mt-2 max-h-[300px] overflow-y-auto">
-                  {isFilterIncome
-                    ? incomeData.map((income, incomeIdx) => (
-                        <li
-                          className="flex justify-between items-center py-1 px-3 border border-slate-100 rounded-sm mb-2 transition-all duration-300 hover:bg-slate-50"
-                          key={incomeIdx}
-                        >
-                          <p
-                            aria-label="budget-label"
-                            className="text-lg font-medium"
-                          >
-                            {income.label}
-                          </p>
-                          <p
-                            aria-label="budget-value"
-                            className="text-lg font-semibold"
-                          >
-                            {toPercent(income.value, totalIncomeValue)}
-                          </p>
-                        </li>
-                      ))
-                    : expenseData.map((expense, expenseIdx) => (
-                        <li
-                          className="flex justify-between items-center py-1 px-3 border border-slate-100 rounded-sm mb-2 transition-all duration-300 hover:bg-slate-50"
-                          key={expenseIdx}
-                        >
-                          <p
-                            aria-label="budget-label"
-                            className="text-lg font-medium"
-                          >
-                            {expense.label}
-                          </p>
-                          <p
-                            aria-label="budget-value"
-                            className="text-lg font-semibold"
-                          >
-                            {toPercent(expense.value, totalExpenseValue)}
-                          </p>
-                        </li>
-                      ))}
+                <ul className="my-2 max-h-[300px] overflow-y-auto">
+                  {isFilterIncome ? (
+                    <SummaryByPercentage
+                      isLoading={response.isLoading}
+                      data={incomeData as { label: string; value: number }[]}
+                      total={totalIncomeValue}
+                    />
+                  ) : (
+                    <SummaryByPercentage
+                      isLoading={response.isLoading}
+                      data={expenseData as { label: string; value: number }[]}
+                      total={totalExpenseValue}
+                    />
+                  )}
                 </ul>
               </div>
-
-              <div className="flex flex-col gap-y-1">
-                {Object.keys(summaryTotalMap).map((key, keyIdx) => (
-                  <div
-                    className={`flex justify-between space-x-6 items-baseline w-[280px] ${
-                      keyIdx ===
-                      Object.keys(summaryTotalMap).length - SECOND_INDEX
-                        ? "pb-2"
-                        : undefined
-                    }`}
-                    key={key}
-                  >
-                    <p
-                      className="text-slate-400 text-[14px]"
-                      aria-label="total-label"
-                    >
-                      {`total ${toCapitalize(key)}:`}
-                    </p>
-                    <span className="flex space-x-2 items-center">
-                      {key === "balance" && renderArrowIcon(hasGoodDirection)}
-                      <p
-                        aria-label="total-value"
-                        className={`text-[15px] font-medium ${
-                          key === "balance"
-                            ? hasGoodDirection
-                              ? "text-green-600"
-                              : "text-red-600"
-                            : "text-slate-900"
-                        }`}
-                      >
-                        {summaryTotalMap[key as keyof typeof summaryTotalMap]}
-                      </p>
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <SummaryTotal
+                isLoading={response.isLoading}
+                summary={summaryTotalMap}
+                icon={renderArrowIcon(hasGoodDirection)}
+                hasGoodDirection={hasGoodDirection}
+              />
             </div>
           </CardContent>
         </Card>

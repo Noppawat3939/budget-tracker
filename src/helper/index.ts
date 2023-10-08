@@ -6,3 +6,4 @@ export * from "./text";
 export * from "./nextResponse";
 export * from "./budget";
 export * from "./axios";
+export * from "./localStorage";

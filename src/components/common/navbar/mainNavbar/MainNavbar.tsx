@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { ROUTES } from "@/constants";
+import { ROUTES, SECOND_INDEX } from "@/constants";
 import Link from "next/link";
 import React, { useCallback } from "react";
 import { ChevronRight } from "lucide-react";
@@ -18,7 +18,12 @@ export default function MainNavbar() {
 
   const pathname = usePathname();
 
-  const { renderMenu, renderMenuBar } = useHandleNavbar();
+  const {
+    renderMenu,
+    renderMenuBar,
+    hasNewNotification,
+    handleRemoveNotification,
+  } = useHandleNavbar();
 
   const renderRightMenu = useCallback(() => {
     if (user && pathname !== ROUTES.MAIN) {
@@ -61,7 +66,7 @@ export default function MainNavbar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const cleanupPathname = pathname.slice(1).replaceAll("/", "-");
+  const cleanupPathname = pathname.slice(SECOND_INDEX).replaceAll("/", "-");
 
   return (
     <nav className="sticky top-0 bg-white">
@@ -69,19 +74,27 @@ export default function MainNavbar() {
         <Link href={ROUTES.MAIN} className="text-[20px] font-medium">
           Logo
         </Link>
-        <div className="ml-10 flex space-x-4 w-full">
+        <div className="ml-10 flex space-x-6 w-full">
           {user &&
             renderMenu.map((menu) => (
               <Link
+                onClick={() =>
+                  menu.key === "summary"
+                    ? handleRemoveNotification()
+                    : undefined
+                }
                 key={menu.key}
                 href={menu.url}
-                className={`cursor-pointer ${
+                className={`cursor-pointer relative ${
                   cleanupPathname === menu.key
                     ? "text-gray-800"
                     : "text-gray-300"
                 } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
               >
                 {menu.label}
+                {menu.key === "summary" && hasNewNotification() && (
+                  <span className="w-2 h-2 bg-red-500 rounded-full absolute top-0 right-[-10px]" />
+                )}
               </Link>
             ))}
         </div>

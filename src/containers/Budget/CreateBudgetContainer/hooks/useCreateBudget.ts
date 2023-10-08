@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { debounce, identity, isEmpty } from "lodash";
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { identity, isEmpty } from "lodash";
+import { type ChangeEvent, useCallback, useState } from "react";
 import { TCreateBudget } from "@/types";
-import {
-  cleanUpCreateBudgetValue,
-  setCreateBudgetToLocalStorage,
-} from "../helper";
-import { BudgetStorage, TCreateBudgetValues } from "./type";
+import { cleanUpCreateBudgetValue } from "../helper";
+import type { BudgetStorage, TCreateBudgetValues } from "./type";
 import { useMutation } from "@tanstack/react-query";
 import { createIncomeOrExpense, createNewBudget } from "@/services";
 import { useUser } from "@/hooks";
+import { EMPTY_STRING, STORAGE_KEY } from "@/constants";
+import { localStorage } from "@/helper";
 
 const initialCreateBudgetValues = {
   income: { value: "", description: "", title: "" },
@@ -20,16 +19,16 @@ const initialCreateBudgetValues = {
 
 const initialBudgetStorage = { income: [], expense: [] };
 
-const debounceTime = 1000;
-
 export default function useCreateBudget() {
+  const { data } = useUser();
+
   const [budgetStorage, setBudgetStorage] =
     useState<BudgetStorage>(initialBudgetStorage);
 
-  const { data } = useUser();
-
   const [createBudgetValues, setCreateBudgetValues] =
     useState<TCreateBudgetValues>(initialCreateBudgetValues);
+
+  const storage = localStorage();
 
   const isDisabledCreateBudget = isEmpty(
     createBudgetValues.income.title &&
@@ -37,14 +36,6 @@ export default function useCreateBudget() {
       createBudgetValues.expense.title &&
       createBudgetValues.expense.value
   );
-
-  useEffect(() => {
-    if (budgetStorage.income.length >= 1) {
-      debounce(() => {
-        setCreateBudgetToLocalStorage(JSON.stringify(budgetStorage));
-      }, debounceTime)();
-    }
-  }, [budgetStorage.income]);
 
   const onCreateBudgetChange = useCallback(
     (
@@ -57,7 +48,13 @@ export default function useCreateBudget() {
         ...prev,
         [key]: {
           ...prev[key],
-          [id]: cleanUpCreateBudgetValue(id as "value" | "description", value),
+          [id]: cleanUpCreateBudgetValue(
+            id as Exclude<
+              keyof typeof initialCreateBudgetValues.income,
+              "title"
+            >,
+            value
+          ),
         },
       }));
     },
@@ -67,12 +64,14 @@ export default function useCreateBudget() {
   const handleResetCreateBudgetValues = () =>
     setCreateBudgetValues(initialCreateBudgetValues);
 
+  const handleCreatedIncomeOrExpenseSuccess = () => {
+    storage.set(STORAGE_KEY.CREATED_NEW_BUDGET_NOTIFICATION, "1");
+    handleResetCreateBudgetValues();
+  };
+
   const createIncomeOrExpenseMutate = useMutation({
     mutationFn: createIncomeOrExpense,
-    onSuccess: handleResetCreateBudgetValues,
-    onError: (err) => {
-      console.log("err", err);
-    },
+    onSuccess: handleCreatedIncomeOrExpenseSuccess,
   });
 
   const createNewBudgetMutate = useMutation({
@@ -87,7 +86,7 @@ export default function useCreateBudget() {
           ? {
               [key]: {
                 [key]: createBudgetValues[key]?.title,
-                value: Number(createBudgetValues[key]?.value),
+                value: +createBudgetValues[key]?.value,
                 description: createBudgetValues[key]?.description,
               },
               budgetId,
@@ -95,7 +94,7 @@ export default function useCreateBudget() {
           : {
               [key]: {
                 [key]: createBudgetValues[key]?.title,
-                value: Number(createBudgetValues[key]?.value),
+                value: +createBudgetValues[key]?.value,
                 description: createBudgetValues[key]?.description,
               },
               budgetId,
@@ -116,18 +115,18 @@ export default function useCreateBudget() {
       income: {
         income: createBudgetValues.income.title,
         description: createBudgetValues.income.description,
-        value: Number(createBudgetValues.income.value),
+        value: +createBudgetValues.income.value,
       },
       expense: {
         expense: createBudgetValues.expense.title,
         description: createBudgetValues.expense.description,
-        value: Number(createBudgetValues.expense.value),
+        value: +createBudgetValues.expense.value,
       },
     };
 
     createNewBudgetMutate.mutate({
       body: createBudgetParams,
-      idToken: data?.idToken || "",
+      idToken: data?.idToken || EMPTY_STRING,
     });
   };
 
@@ -138,12 +137,6 @@ export default function useCreateBudget() {
 
     setBudgetStorage((prev) => ({ ...prev, [key]: removeBudgetStorage }));
   };
-
-  const sumIncome = useMemo(() => {
-    return budgetStorage?.income?.reduce((sum, entry) => {
-      return sum + +entry.value;
-    }, 0);
-  }, [budgetStorage.income]);
 
   const hasFetchSuccess = [
     createIncomeOrExpenseMutate.isSuccess,
@@ -166,7 +159,6 @@ export default function useCreateBudget() {
     handleAddValues,
     budgetStorage,
     handleRemoveBudgetValue,
-    sumIncome,
     handleCreateNewBudget,
     isError: hasFetchFail,
     isDisabledCreateBudget,

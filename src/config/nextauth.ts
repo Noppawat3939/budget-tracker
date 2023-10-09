@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import axios from "axios";
-import { ENDPOINT } from "@/constants";
+import { ENDPOINT, FIRST_INDEX, ROUTES } from "@/constants";
 
 const {
   NEXT_GITHUB_CLIENT_ID,
@@ -28,10 +28,16 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: NEXT_AUTH_SECRET,
+  pages: {
+    signIn: ROUTES.AUTH.LOGIN,
+    signOut: ROUTES.MAIN,
+  },
   callbacks: {
     async jwt({ token, account, user }) {
       if (account) {
-        const userId = `${token?.email?.at(0)}${token?.name?.at(0)}${user.id}`;
+        const userId = `${token?.email?.at(FIRST_INDEX)}${token?.name?.at(
+          FIRST_INDEX
+        )}${user.id}`;
 
         token = Object.assign(
           {},

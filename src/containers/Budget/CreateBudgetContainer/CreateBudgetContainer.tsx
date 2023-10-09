@@ -10,7 +10,7 @@ const defaultIncomeValue = 30000;
 function CreateBudgetContainer() {
   const isMounted = useMounted();
 
-  const { summaryList, sumIncome } = useRenderCreateNewBudget();
+  const { summaryList, sumIncome, isFetched } = useRenderCreateNewBudget();
 
   const {
     onCreateBudgetChange,
@@ -37,9 +37,9 @@ function CreateBudgetContainer() {
       <section className="flex space-x-5 py-5 items-center justify-between h-fit mb-5">
         <DoughnutCard data={DEFAULT_CHART_DATA} />
         <SummaryCard
-          end={sumIncome ?? defaultIncomeValue}
-          isMounted={isMounted}
-          data={summaryList ?? DEFAULT_SUMMARY_LIST}
+          end={sumIncome || defaultIncomeValue}
+          isMounted={isFetched || isMounted}
+          data={summaryList || DEFAULT_SUMMARY_LIST}
         />
       </section>
       <CreateNewBudgetForm

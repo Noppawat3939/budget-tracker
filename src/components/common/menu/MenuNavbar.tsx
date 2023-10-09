@@ -16,15 +16,16 @@ export default function MenuNavbar({ menuList }: MenuNavbarProps) {
         >
           {menus.menus.map((menu) => {
             return (
-              <React.Fragment key={menu.key}>
+              <Fragment key={menu.key}>
                 <p
                   className={`text-[13px] ${
                     eq(menu.key, "email") && "text-[13px] font-light"
                   } ${eq(menu.key, "name") && "font-medium"} `}
+                  onClick={menu.onClick ?? undefined}
                 >
                   {menu.value}
                 </p>
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>

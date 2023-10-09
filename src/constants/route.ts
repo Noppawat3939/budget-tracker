@@ -7,4 +7,4 @@ export const ROUTES = {
     CREATE: "/create-budget",
     SUMMARY: "/summary",
   },
-};
+} as const;

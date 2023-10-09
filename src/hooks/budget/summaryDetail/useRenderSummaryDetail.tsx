@@ -1,3 +1,5 @@
+"use client";
+
 import { FIRST_INDEX, ROUTES } from "@/constants";
 import { useGetBudgetByBudgetId } from "@/hooks";
 import { useCallback, useState } from "react";

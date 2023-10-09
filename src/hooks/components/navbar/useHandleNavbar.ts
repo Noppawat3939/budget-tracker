@@ -1,6 +1,7 @@
-import { ROUTES, STORAGE_KEY } from "@/constants";
+import { DEFAULT_TEXT, ROUTES, STORAGE_KEY } from "@/constants";
 import { localStorage, toCapitalize } from "@/helper";
 import { useUser } from "@/hooks";
+import { useLogoutStore } from "@/store";
 import { MenuBarList, NavbarMenuList } from "@/types";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -8,6 +9,10 @@ const useHandleNavbar = () => {
   const pathname = usePathname();
   const search = useSearchParams();
   const budgetIdParams = search.get("");
+
+  const { onOpenLogout } = useLogoutStore((store) => ({
+    onOpenLogout: store.onOpen,
+  }));
 
   const { data: user } = useUser();
 
@@ -44,11 +49,11 @@ const useHandleNavbar = () => {
       menus: [
         {
           key: "name",
-          value: toCapitalize(user?.name!),
+          value: user?.name ? toCapitalize(user.name) : DEFAULT_TEXT,
         },
         {
           key: "email",
-          value: toCapitalize(user?.email!),
+          value: user?.email ? toCapitalize(user.email) : DEFAULT_TEXT,
         },
       ],
     },
@@ -58,7 +63,13 @@ const useHandleNavbar = () => {
     },
     {
       position: "bottom",
-      menus: [{ key: "logout", value: "Log out" }],
+      menus: [
+        {
+          key: "logout",
+          value: "Log out",
+          onClick: onOpenLogout,
+        },
+      ],
     },
   ];
 

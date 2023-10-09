@@ -10,4 +10,4 @@ export const ENDPOINT = {
     GET: "/api/budget/get",
     BALANCE: "/api/budget/balance",
   },
-};
+} as const;

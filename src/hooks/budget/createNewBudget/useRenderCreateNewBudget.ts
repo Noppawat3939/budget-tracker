@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DEFAULT_TEXT,
   DEFAULT_VALUE_NUMBER,
@@ -15,15 +17,19 @@ type SummaryList = {
   description?: string;
 }[];
 
+const CACHE_TIME = 60000; //1 minute
+
 function useRenderCreateNewBudget() {
   const search = useSearchParams();
   const budgetId = search.get("id") || EMPTY_STRING;
 
-  const { data: budget } = useGetBudgetByBudgetId({ budgetId });
+  const { data: budget, isFetched } = useGetBudgetByBudgetId({
+    budgetId,
+    cacheTime: CACHE_TIME,
+  });
 
   const expensesMap = budget
-    ?.map((item) => item.expenses)
-    .at(0)
+    ?.flatMap((item) => item.expenses)
     ?.sort((exA, exB) => exB.value - exA.value)
     ?.map((expense) => ({
       order: expense.expense,
@@ -43,25 +49,28 @@ function useRenderCreateNewBudget() {
     }))
     .at(FIRST_INDEX);
 
-  const summaryList = expensesMap
-    ? ([
-        ...expensesMap,
-        {
-          order: "Balance",
-          price: newBudgetMap!.sumIncome - newBudgetMap!.sumExpense,
-          type: "balance",
-        },
-      ] as SummaryList)
-    : undefined;
+  const summaryList =
+    expensesMap && budgetId
+      ? ([
+          ...expensesMap,
+          {
+            order: "Balance",
+            price: newBudgetMap!.sumIncome - newBudgetMap!.sumExpense,
+            type: "balance",
+          },
+        ] as SummaryList)
+      : undefined;
 
-  const sumIncome = budget
-    ?.map((item) => item.incomes.map((income) => income.value))
-    .at(FIRST_INDEX)
-    ?.reduce((prev, cur) => prev + cur, DEFAULT_VALUE_NUMBER);
+  const sumIncome = budgetId
+    ? budget
+        ?.flatMap((item) => item.incomes.map((income) => income.value))
+        ?.reduce((prev, cur) => prev + cur, DEFAULT_VALUE_NUMBER)
+    : DEFAULT_VALUE_NUMBER;
 
   return {
     summaryList,
     sumIncome,
+    isFetched,
   };
 }
 

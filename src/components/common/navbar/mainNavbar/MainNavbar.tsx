@@ -3,12 +3,12 @@
 import { Separator } from "@/components/ui/separator";
 import { ROUTES, SECOND_INDEX } from "@/constants";
 import Link from "next/link";
-import React, { useCallback } from "react";
+import React, { Fragment, useCallback } from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHandleNavbar, useUser } from "@/hooks";
-import { isEmpty } from "lodash";
-import { Avatar, MenuNavbar } from "../..";
+import { eq, isEmpty } from "lodash";
+import { Avatar, MenuNavbar, ModalLogout } from "@/components";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { usePathname } from "next/navigation";
@@ -40,7 +40,7 @@ export default function MainNavbar() {
         </React.Fragment>
       );
     }
-    if (pathname === ROUTES.MAIN) {
+    if (eq(pathname, ROUTES.MAIN)) {
       return (
         <React.Fragment>
           {isEmpty(user) && (
@@ -69,39 +69,43 @@ export default function MainNavbar() {
   const cleanupPathname = pathname.slice(SECOND_INDEX).replaceAll("/", "-");
 
   return (
-    <nav className="sticky top-0 bg-white">
-      <div className="flex items-center py-4 justify-between px-[4%]">
-        <Link href={ROUTES.MAIN} className="text-[20px] font-medium">
-          Logo
-        </Link>
-        <div className="ml-10 flex space-x-6 w-full">
-          {user &&
-            renderMenu.map((menu) => (
-              <Link
-                onClick={() =>
-                  menu.key === "summary"
-                    ? handleRemoveNotification()
-                    : undefined
-                }
-                key={menu.key}
-                href={menu.url}
-                className={`cursor-pointer relative ${
-                  cleanupPathname === menu.key
-                    ? "text-gray-800"
-                    : "text-gray-300"
-                } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
-              >
-                {menu.label}
-                {menu.key === "summary" && hasNewNotification() && (
-                  <span className="w-2 h-2 bg-red-500 rounded-full absolute top-0 right-[-10px]" />
-                )}
-              </Link>
-            ))}
+    <Fragment>
+      <nav className="sticky top-0 bg-white">
+        <div className="flex items-center py-4 justify-between px-[4%]">
+          <Link href={ROUTES.MAIN} className="text-[20px] font-medium">
+            Logo
+          </Link>
+          <div className="ml-10 flex space-x-6 w-full">
+            {user &&
+              renderMenu.map((menu) => (
+                <Link
+                  onClick={() =>
+                    menu.key === "summary"
+                      ? handleRemoveNotification()
+                      : undefined
+                  }
+                  key={menu.key}
+                  href={menu.url}
+                  className={`cursor-pointer relative ${
+                    cleanupPathname === menu.key
+                      ? "text-gray-800"
+                      : "text-gray-300"
+                  } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
+                >
+                  {menu.label}
+                  {menu.key === "summary" && hasNewNotification() && (
+                    <span className="w-2 h-2 bg-red-500 rounded-full absolute top-0 right-[-10px]" />
+                  )}
+                </Link>
+              ))}
+          </div>
+          <div className="flex h-5 items-center space-x-3 text-sm">
+            {renderRightMenu()}
+          </div>
         </div>
-        <div className="flex h-5 items-center space-x-3 text-sm">
-          {renderRightMenu()}
-        </div>
-      </div>
-    </nav>
+      </nav>
+
+      <ModalLogout />
+    </Fragment>
   );
 }

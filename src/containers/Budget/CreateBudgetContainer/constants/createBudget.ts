@@ -22,7 +22,6 @@ export const DEFAULT_CHART_DATA = {
   labels: ["Housing", "Food and drink", "Travel"],
   datasets: [
     {
-      label: "# of Votes",
       data: [8500, 12000, 5000],
       backgroundColor: calChartDoughnutColor({
         amount: [8500, 12000, 5000],

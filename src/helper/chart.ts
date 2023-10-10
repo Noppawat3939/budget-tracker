@@ -11,7 +11,7 @@ export const calChartDoughnutColor = ({
 }: TCalChartDoughnutColor) => {
   if (isArray(amount)) {
     return amount.map(
-      (num) => `rgba(82, 113, 255, ${((+num / income) * 2).toFixed(2)})`
+      (num) => `rgba(0, 125, 240, ${((+num / income) * 3).toFixed(2)})`
     );
   }
 

@@ -76,7 +76,7 @@ const useHandleNavbar = () => {
   const handleRemoveNotification = () => {
     const _key = STORAGE_KEY.CREATED_NEW_BUDGET_NOTIFICATION;
 
-    if (() => storage.get(_key)) return storage.remove(_key);
+    if (storage.get(_key)) return storage.remove(_key);
   };
 
   return {

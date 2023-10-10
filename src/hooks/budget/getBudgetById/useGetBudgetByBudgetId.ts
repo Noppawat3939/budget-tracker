@@ -19,7 +19,7 @@ function useGetBudgetByBudgetId(params: UseGetBudgetByBudgetIdParams) {
     queryKey: [QUERY_KEY.GET_BUDGET_BY_ID, { budgetId }],
     queryFn: () =>
       getBudgetByBudgetId({
-        idToken: data?.idToken || EMPTY_STRING,
+        idToken: data!.idToken || EMPTY_STRING,
         budgetId: budgetId,
       }),
     select: (res) => res.data.data,

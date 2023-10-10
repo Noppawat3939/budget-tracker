@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+
 import { useSession } from "next-auth/react";
 import type { UserData } from "./type";
 import { useEffect, useState } from "react";
@@ -17,8 +18,8 @@ function useUser() {
       (async () => {
         setIsPending(true);
         try {
-          //@ts-ignore
-          const token: string = session.data?.user.idToken;
+          // @ts-ignore
+          const token: string = session?.data?.user.idToken;
           const { data, status } = await getUserInfo({ token });
 
           if (status === HttpStatusCode.Ok) {

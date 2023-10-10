@@ -5,9 +5,11 @@ import {
   DEFAULT_VALUE_NUMBER,
   EMPTY_STRING,
   FIRST_INDEX,
+  PERCENT,
 } from "@/constants";
+import { toPercent } from "@/helper";
 import { useGetBudgetByBudgetId } from "@/hooks";
-import { TBudget } from "@/types";
+import { DoughnutChart, TBudget } from "@/types";
 import { useSearchParams } from "next/navigation";
 
 type SummaryList = {
@@ -50,27 +52,46 @@ function useRenderCreateNewBudget() {
     .at(FIRST_INDEX);
 
   const summaryList =
-    expensesMap && budgetId
-      ? ([
-          ...expensesMap,
-          {
-            order: "Balance",
-            price: newBudgetMap!.sumIncome - newBudgetMap!.sumExpense,
-            type: "balance",
-          },
-        ] as SummaryList)
-      : undefined;
+    expensesMap && budgetId ? ([...expensesMap] as SummaryList) : undefined;
 
   const sumIncome = budgetId
-    ? budget
-        ?.flatMap((item) => item.incomes.map((income) => income.value))
-        ?.reduce((prev, cur) => prev + cur, DEFAULT_VALUE_NUMBER)
+    ? newBudgetMap?.sumIncome! - newBudgetMap?.sumExpense!
     : DEFAULT_VALUE_NUMBER;
+
+  const expenseValues = budget?.flatMap((item) =>
+    item.expenses.map((exp) => exp.value)
+  );
+
+  const totalExpenses =
+    expenseValues?.reduce((pre, cur) => pre + cur, DEFAULT_VALUE_NUMBER) ||
+    DEFAULT_VALUE_NUMBER;
+
+  const renderChartBackground = expenseValues?.map(
+    (value) =>
+      `rgba(250,0,0,${
+        (+toPercent(value, totalExpenses).replaceAll(" %", "") / PERCENT) * 2
+      })`
+  );
+
+  const renderChartData = budgetId
+    ? ({
+        labels: budget?.flatMap((item) =>
+          item.expenses.map((exp) => exp.expense)
+        ),
+        datasets: [
+          {
+            data: expenseValues,
+            backgroundColor: renderChartBackground,
+          },
+        ],
+      } as DoughnutChart)
+    : undefined;
 
   return {
     summaryList,
     sumIncome,
     isFetched,
+    renderChartData,
   };
 }
 

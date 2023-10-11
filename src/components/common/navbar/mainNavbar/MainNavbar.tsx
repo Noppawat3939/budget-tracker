@@ -12,6 +12,8 @@ import { Avatar, MenuNavbar, ModalLogout } from "@/components";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import DarkLogo from "@/assets/logo/dark-logo.png";
 
 export default function MainNavbar() {
   const { data: user } = useUser();
@@ -73,7 +75,11 @@ export default function MainNavbar() {
       <nav className="sticky top-0 bg-white">
         <div className="flex items-center py-4 justify-between px-[4%]">
           <Link href={ROUTES.MAIN} className="text-[20px] font-medium">
-            Logo
+            <Image
+              src={DarkLogo}
+              alt="logo-icon"
+              className="w-[48px] h-[40px] object-cover rounded-md"
+            />
           </Link>
           <div className="ml-10 flex space-x-6 w-full">
             {user &&

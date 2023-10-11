@@ -1,6 +1,8 @@
+"use client";
+
 import React, { FC } from "react";
 import {
-  Select,
+  Select as ShadSelect,
   SelectContent,
   SelectGroup,
   SelectItem,
@@ -8,24 +10,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { SelectedProps } from "./type";
 
-type SelectedFilterProps = {
-  options: { label: string; value: string }[];
-  selectLabel?: string;
-  defaultValue?: string;
-  onValueChange: (value: string) => void;
-};
+import { BiFilter } from "react-icons/bi";
 
-const SelectedFilter: FC<SelectedFilterProps> = ({
+const Select: FC<SelectedProps> = ({
+  onValueChange,
   options,
   selectLabel,
-  onValueChange,
   defaultValue,
+  isShowFilterIcon = false,
 }) => {
   return (
-    <Select onValueChange={onValueChange} defaultValue={defaultValue}>
-      <SelectTrigger className="w-[120px]">
-        <SelectValue placeholder="Select" />
+    <ShadSelect onValueChange={onValueChange} defaultValue={defaultValue}>
+      <SelectTrigger className="w-[130px]">
+        {isShowFilterIcon && <BiFilter className="w-5 h-5 text-slate-600" />}
+        <SelectValue placeholder="Select" className="text-sm" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -37,8 +37,8 @@ const SelectedFilter: FC<SelectedFilterProps> = ({
           ))}
         </SelectGroup>
       </SelectContent>
-    </Select>
+    </ShadSelect>
   );
 };
 
-export default SelectedFilter;
+export default Select;

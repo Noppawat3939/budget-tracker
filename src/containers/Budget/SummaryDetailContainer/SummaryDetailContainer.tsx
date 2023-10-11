@@ -1,27 +1,20 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import {
-  SelectedFilter,
   SummaryByPercentage,
   SummaryCardDetail,
   SummaryCardLoader,
   SummaryDoughnutChart,
   SummaryTotal,
 } from "./components";
-import { MainLayout, Skeleton } from "@/components";
+import { MainLayout, Select } from "@/components";
 import { EMPTY_STRING } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { FiPlusCircle } from "react-icons/fi";
 
-import { priceFormatter, toAverage, toPercent } from "@/helper";
+import { priceFormatter, toAverage } from "@/helper";
 import { getExpenses, getIncomes, renderChartBackground } from "./utils";
 
 const BUDGET_DETAILS = ["income", "expense"];
@@ -105,7 +98,7 @@ function SummaryDetailContainer() {
             <h1 className="text-2xl font-medium">
               {`Top ${isFilterIncome ? "Income" : "Expense"}`}
             </h1>
-            <SelectedFilter
+            <Select
               defaultValue={selectedFilter}
               onValueChange={onSelectedFilter}
               options={FILTER_OPTIONS}

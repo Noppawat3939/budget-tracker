@@ -5,6 +5,7 @@ import {
   getBudgetService,
   getUserService,
 } from "@/services";
+import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -14,9 +15,9 @@ export const GET = async (req: NextRequest) => {
 
   if (!user)
     return NextResponse.json({
-      message: `${NEXT_SERVER_RESPONSE.BAD_REQUEST}_${mapMessageResponse(
-        "user not found"
-      )}`,
+      error: true,
+      code: HttpStatusCode.BadRequest,
+      message: mapMessageResponse("user not found"),
     });
 
   try {

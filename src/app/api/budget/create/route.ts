@@ -19,7 +19,11 @@ export const POST = async (req: NextRequest) => {
 
   if (!user)
     return NextResponse.json(
-      { message: mapMessageResponse("user not found") },
+      {
+        message: mapMessageResponse("user not found"),
+        error: true,
+        code: HttpStatusCode.BadRequest,
+      },
       { status: HttpStatusCode.BadRequest }
     );
 

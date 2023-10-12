@@ -2,10 +2,12 @@ import { NEXT_SERVER_RESPONSE } from "@/constants";
 import { mapBudgetData, mapMessageResponse } from "@/helper";
 import {
   getBudgetByIdService,
+  getBudgetBySearchService,
   getBudgetService,
   getUserService,
 } from "@/services";
 import { HttpStatusCode } from "axios";
+import { isEmpty } from "lodash";
 import { NextRequest, NextResponse } from "next/server";
 
 type DirectionParam = "income" | "expense";
@@ -14,14 +16,19 @@ export const GET = async (req: NextRequest) => {
   const user = await getUserService(req);
 
   if (!user)
-    return NextResponse.json({
-      message: `${NEXT_SERVER_RESPONSE.BAD_REQUEST}_${mapMessageResponse(
-        "user not found"
-      )}`,
-    });
+    return NextResponse.json(
+      {
+        message: mapMessageResponse("user not found"),
+        error: true,
+        code: HttpStatusCode.BadRequest,
+      },
+      { status: HttpStatusCode.BadRequest }
+    );
 
   try {
     const queryParams = req.nextUrl.search;
+
+    const querySearch = req.nextUrl.searchParams.get("search");
 
     if (queryParams) {
       const budgetIdParam = req.nextUrl.searchParams.get("budgetId");
@@ -85,6 +92,18 @@ export const GET = async (req: NextRequest) => {
           })),
         });
       }
+    }
+
+    if (querySearch) {
+      const data = await getBudgetBySearchService(querySearch);
+
+      return NextResponse.json({
+        message:
+          isEmpty(data.incomes) && isEmpty(data.expenses)
+            ? mapMessageResponse("data not found")
+            : mapMessageResponse("search budget success"),
+        data,
+      });
     }
 
     const budgetData = await getBudgetService({ userId: user.userId });

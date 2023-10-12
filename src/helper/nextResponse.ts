@@ -1,5 +1,6 @@
+//* utils for service API
 export const mapMessageResponse = (message: string) => {
-  const cleaned = message.replaceAll(" ", "_").toUpperCase();
+  const newTextResponse = message.replaceAll(" ", "_").toUpperCase();
 
-  return cleaned;
+  return newTextResponse;
 };

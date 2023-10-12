@@ -23,15 +23,21 @@ const Select: FC<SelectedProps> = ({
 }) => {
   return (
     <ShadSelect onValueChange={onValueChange} defaultValue={defaultValue}>
-      <SelectTrigger className="w-[130px]">
+      <SelectTrigger className="w-[130px] text-[12px]">
         {isShowFilterIcon && <BiFilter className="w-5 h-5 text-slate-600" />}
-        <SelectValue placeholder="Select" className="text-sm" />
+        <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>{selectLabel || "Filter by"}</SelectLabel>
+          <SelectLabel className="text-[12px]">
+            {selectLabel || "Filter by"}
+          </SelectLabel>
           {options.map(({ label, value }) => (
-            <SelectItem value={value} key={value} className="cursor-pointer">
+            <SelectItem
+              value={value}
+              key={value}
+              className="cursor-pointer text-[12px]"
+            >
               {label}
             </SelectItem>
           ))}

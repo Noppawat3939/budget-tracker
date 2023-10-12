@@ -1,14 +1,17 @@
 "use client";
-import React, { useState } from "react";
+
+import React from "react";
 
 import { MainLayout, Select, Table } from "@/components";
-import { useGetBudgetList } from "@/hooks";
+import { useHandleSummaryList } from "@/hooks";
 import { renderSummaryRows, renderSummaryColumns } from "./utils";
 import { Input } from "@/components/ui/input";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import type { RowData } from "./types";
-import { EMPTY_ARRAY } from "@/constants";
+import { EMPTY_ARRAY, FIRST_INDEX, INDEX_NOT_FOUND } from "@/constants";
+import { FiSearch } from "react-icons/fi";
+import { isEmpty } from "lodash";
 
 const FILTER_OPTIONS = [
   {
@@ -16,34 +19,35 @@ const FILTER_OPTIONS = [
     value: "all",
   },
   {
-    label: "Current Month",
-    value: "currentMonth",
+    label: "This month",
+    value: "thisMonth",
   },
 ];
-
-type FilterSummary = "all" | "currentMonth";
 
 const SummaryContainer = () => {
   const { push } = useRouter();
 
-  const { balanceData, budgetData, isLoading } = useGetBudgetList();
+  const {
+    budgetData,
+    balanceData,
+    isLoading,
+    debounceResponse: { onDebounce, debounceValue },
+    filterResponse: { filter, onChange },
+  } = useHandleSummaryList();
 
-  const [filterSummary, setFilterSummary] = useState<FilterSummary>("all");
+  const rowData = renderSummaryRows({ budgetData, balanceData });
 
-  const rowData = renderSummaryRows({
-    budgetData: budgetData!,
-    balanceData: balanceData!,
-  });
+  const thisMonth = rowData?.filter((data) => {
+    const dateTableFormat = "MMM YYYY";
 
-  const currentMonth = rowData?.filter((data) => {
-    const [_, m, y] = data.date.split(" ");
+    const [_d, m, y] = data.date.split(" ");
 
-    if (`${m} ${y}` === dayjs().format("MMM YYYY")) return data;
+    if (`${m} ${y}` === dayjs().format(dateTableFormat)) return data;
   });
 
   const renderRows = {
     all: rowData,
-    currentMonth,
+    thisMonth,
   };
 
   const onRow = (rowData: RowData) => {
@@ -52,34 +56,53 @@ const SummaryContainer = () => {
     const foundData = budgetData?.find(
       (data) =>
         dateString ===
-        dayjs(data.createdAt).add(-1, "day").toISOString().split("T").at(0)
+        dayjs(data.createdAt)
+          .add(INDEX_NOT_FOUND, "day")
+          .toISOString()
+          .split("T")
+          ?.at(FIRST_INDEX)
     );
 
     push(`/summary/query?=${foundData?.budgetId}`);
   };
 
+  const isShowFooterTable = debounceValue && !isEmpty(budgetData);
+
   return (
     <MainLayout>
       <section className="flex flex-col space-y-6 py-2">
         <div className="flex items-center justify-between">
-          <Input placeholder="Search..." className="w-[300px] h-[36px]" />
+          <Input
+            placeholder="Search..."
+            className="w-[300px] h-[36px]"
+            onChange={onDebounce}
+          />
           <Select
             options={FILTER_OPTIONS}
             isShowFilterIcon
-            defaultValue={filterSummary}
-            onValueChange={(selectedFilter) =>
-              setFilterSummary(selectedFilter as FilterSummary)
-            }
+            defaultValue={filter}
+            onValueChange={onChange}
           />
         </div>
         <div className="max-h-[75vh] overflow-y-auto">
           <Table
             columns={renderSummaryColumns}
-            rows={renderRows[filterSummary] ?? EMPTY_ARRAY}
+            rows={renderRows[filter] ?? EMPTY_ARRAY}
             isLoading={isLoading}
             onRowClick={(data) => onRow(data as RowData)}
           />
         </div>
+
+        {isShowFooterTable && (
+          <div className="flex items-center space-x-2 mx-auto text-slate-300">
+            <FiSearch className="w-6 h-6 " />
+            <h1 className="text-sm">
+              {budgetData.length === 1
+                ? `found ${budgetData.length} item`
+                : `found ${budgetData.length} items`}
+            </h1>
+          </div>
+        )}
       </section>
     </MainLayout>
   );

@@ -129,3 +129,16 @@ export type GetBudgetByBudgetIdResponse = {
     total: IFBudgetTotal;
   }[];
 };
+
+export type GetBudgetByQuerySearchRequest = {
+  idToken: string;
+  search: string;
+};
+
+export type GetBudgetByQuerySearchResponse = {
+  message: string;
+  data: {
+    incomes: Incomes;
+    expenses: Expenses;
+  };
+};

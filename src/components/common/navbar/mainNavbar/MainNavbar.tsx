@@ -4,8 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { ROUTES, SECOND_INDEX } from "@/constants";
 import Link from "next/link";
 import React, { Fragment, useCallback } from "react";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useHandleNavbar, useUser } from "@/hooks";
 import { eq, isEmpty } from "lodash";
 import { Avatar, MenuNavbar, ModalLogout } from "@/components";
@@ -49,19 +47,12 @@ export default function MainNavbar() {
             <React.Fragment>
               <Link
                 href={ROUTES.AUTH.LOGIN}
-                className="text-sm hover:opacity-50 transition-all duration-300"
+                className="text-sm hover:bg-slate-100 py-1 px-2 rounded-sm transition-all duration-300"
               >
                 Log in
               </Link>
-              <Separator orientation="vertical" />
             </React.Fragment>
           )}
-
-          <Link href={ROUTES.BUDGET.CREATE}>
-            <Button className="flex items-center w-full">
-              Try free <ChevronRight className="ml-1 w-4 h-4" />
-            </Button>
-          </Link>
         </React.Fragment>
       );
     }
@@ -81,7 +72,7 @@ export default function MainNavbar() {
               className="w-[48px] h-[40px] object-cover rounded-md"
             />
           </Link>
-          <div className="ml-10 flex space-x-6 w-full">
+          <div className="ml-10 mr-auto flex space-x-6">
             {user &&
               renderMenu.map((menu) => (
                 <Link
@@ -96,7 +87,7 @@ export default function MainNavbar() {
                     cleanupPathname === menu.key
                       ? "text-gray-800"
                       : "text-gray-300"
-                  } hover:opacity-80 font-medium transition-all duration-200 text-sm`}
+                  } hover:text-gray-800 transition-all duration-200 text-sm`}
                 >
                   {menu.label}
                   {menu.key === "summary" && hasNewNotification() && (

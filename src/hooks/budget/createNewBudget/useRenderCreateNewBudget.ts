@@ -68,7 +68,7 @@ function useRenderCreateNewBudget() {
 
   const renderChartBackground = expenseValues?.map(
     (value) =>
-      `rgba(250,0,0,${
+      `rgba(199,0,57,${
         (+toPercent(value, totalExpenses).replaceAll(" %", "") / PERCENT) * 2
       })`
   );
@@ -76,7 +76,7 @@ function useRenderCreateNewBudget() {
   const renderChartData = budgetId
     ? ({
         labels: budget?.flatMap((item) =>
-          item.expenses.map((exp) => exp.expense)
+          item.expenses.map((exp) => exp.expense.toUpperCase())
         ),
         datasets: [
           {

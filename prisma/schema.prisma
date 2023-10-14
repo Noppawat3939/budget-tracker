@@ -36,23 +36,27 @@ model Budget {
 }
 
 model Income {
-  incomeId    String  @id @default(uuid())
+  incomeId    String   @id @default(uuid())
   budgetId    String
-  budget      Budget  @relation(fields: [budgetId], references: [budgetId])
+  budget      Budget   @relation(fields: [budgetId], references: [budgetId])
   income      String
   description String?
   value       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("incomes")
 }
 
 model Expense {
-  expenseId   String  @id @default(uuid())
+  expenseId   String   @id @default(uuid())
   budgetId    String
-  budget      Budget  @relation(fields: [budgetId], references: [budgetId])
+  budget      Budget   @relation(fields: [budgetId], references: [budgetId])
   expense     String
   description String?
   value       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("expenses")
 }

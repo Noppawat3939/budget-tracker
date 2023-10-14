@@ -67,7 +67,7 @@ export const renderChartBackground = (key: TCreateBudget, values: number[]) => {
   if (key === "income")
     return values.map(
       (val) =>
-        `rgba(11 , 156 , 151 ,${String(
+        `rgba(27,156,135,${String(
           (+toPercent(val, total).replaceAll(" %", "") / PERCENT) *
             ADDED_INTENSE
         )})`
@@ -75,7 +75,7 @@ export const renderChartBackground = (key: TCreateBudget, values: number[]) => {
 
   return values.map(
     (val) =>
-      `rgba(250 , 0 , 0 ,${String(
+      `rgba(199,0,57,${String(
         (+toPercent(val, total).replaceAll(" %", "") / PERCENT) * ADDED_INTENSE
       )})`
   );

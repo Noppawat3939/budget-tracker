@@ -6,10 +6,10 @@ import { type ChangeEvent, useCallback, useState } from "react";
 import { TCreateBudget } from "@/types";
 import { cleanUpCreateBudgetValue } from "../helper";
 import type { BudgetStorage, TCreateBudgetValues } from "./type";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createIncomeOrExpense, createNewBudget } from "@/services";
 import { useUser } from "@/hooks";
-import { EMPTY_STRING, STORAGE_KEY } from "@/constants";
+import { EMPTY_STRING, QUERY_KEY, STORAGE_KEY } from "@/constants";
 import { localStorage } from "@/helper";
 
 const initialCreateBudgetValues = {
@@ -22,6 +22,8 @@ const initialBudgetStorage = { income: [], expense: [] };
 export default function useCreateBudget() {
   const { data } = useUser();
 
+  const queryClient = useQueryClient();
+
   const [budgetStorage, setBudgetStorage] =
     useState<BudgetStorage>(initialBudgetStorage);
 
@@ -30,12 +32,12 @@ export default function useCreateBudget() {
 
   const storage = localStorage();
 
-  const isDisabledCreateBudget = isEmpty(
-    createBudgetValues.income.title &&
-      createBudgetValues.income.value &&
-      createBudgetValues.expense.title &&
-      createBudgetValues.expense.value
-  );
+  const isDisabledCreateBudget = [
+    createBudgetValues.income.title,
+    createBudgetValues.income.value,
+    createBudgetValues.expense.title,
+    createBudgetValues.expense.value,
+  ].some(isEmpty);
 
   const onCreateBudgetChange = useCallback(
     (
@@ -67,6 +69,8 @@ export default function useCreateBudget() {
   const handleCreatedIncomeOrExpenseSuccess = () => {
     storage.set(STORAGE_KEY.CREATED_NEW_BUDGET_NOTIFICATION, "1");
     handleResetCreateBudgetValues();
+
+    queryClient.invalidateQueries([QUERY_KEY.GET_BUDGET_BY_ID]);
   };
 
   const createIncomeOrExpenseMutate = useMutation({

@@ -37,6 +37,7 @@ export const POST = async (req: NextRequest) => {
             message: `${NEXT_SERVER_RESPONSE.BAD_REQUEST}_${mapMessageResponse(
               "budget id is required"
             )}`,
+            error: true,
           },
           { status: HttpStatusCode.BadRequest }
         );
@@ -96,6 +97,7 @@ export const POST = async (req: NextRequest) => {
               ? mapMessageResponse("income data not found")
               : mapMessageResponse("expense data not found")
           }`,
+          error: true,
         },
         { status: HttpStatusCode.BadRequest }
       );
@@ -140,6 +142,7 @@ export const POST = async (req: NextRequest) => {
         message: `${NEXT_SERVER_RESPONSE.SERVER_ERROR}_${mapMessageResponse(
           "create budget"
         )}`,
+        error: true,
       },
       { status: HttpStatusCode.InternalServerError }
     );

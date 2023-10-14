@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
+import type { GetBudgetByIdParams, GetBudgetParams } from "./type";
+import { EMPTY_ARRAY } from "@/constants";
 
-export const getBudgetService = async (param: { userId: string }) => {
+export const getBudgetService = async (param: GetBudgetParams) => {
   const prisma = new PrismaClient();
 
   const budgetResponse = await prisma.budget.findMany({
@@ -13,13 +15,7 @@ export const getBudgetService = async (param: { userId: string }) => {
     },
   });
 
-  return budgetResponse || [];
-};
-
-type GetBudgetByIdParams = {
-  budgetId: string;
-  isIncome?: boolean;
-  isExpenses?: boolean;
+  return budgetResponse || EMPTY_ARRAY;
 };
 
 export const getBudgetByIdService = async (params: GetBudgetByIdParams) => {

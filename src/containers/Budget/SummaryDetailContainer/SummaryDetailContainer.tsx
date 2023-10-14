@@ -123,7 +123,7 @@ function SummaryDetailContainer() {
                   </span>{" "}
                   per month.
                 </p>
-                <ul className="my-2 max-h-[300px] overflow-y-auto">
+                <ul className="my-2 max-h-[200px] pr-3 py-1 overflow-y-auto">
                   {isFilterIncome ? (
                     <SummaryByPercentage
                       isLoading={response.isLoading}
@@ -174,7 +174,7 @@ function SummaryDetailContainer() {
                 {renderDescription("income")}
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col gap-y-2">
+                <div className="flex flex-col gap-y-2 pr-3 overflow-y-auto max-h-[180px]">
                   {response.data?.map(
                     (budget) =>
                       budget.incomes &&
@@ -208,7 +208,7 @@ function SummaryDetailContainer() {
                 {renderDescription("expense")}
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col gap-y-2">
+                <div className="flex flex-col gap-y-2 pr-3 overflow-y-auto max-h-[180px]">
                   {response.data?.map(
                     (budget) =>
                       budget.expenses &&

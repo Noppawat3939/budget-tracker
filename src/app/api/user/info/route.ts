@@ -19,13 +19,13 @@ export const POST = async (req: NextRequest) => {
 
   if (!token)
     return NextResponse.json(
-      { message: mapMessageResponse("invalid token") },
+      { message: mapMessageResponse("invalid token"), error: true },
       { status: HttpStatusCode.Unauthorized }
     );
 
   if (!token.email_verified)
     return NextResponse.json(
-      { message: mapMessageResponse("Error email not verified") },
+      { message: mapMessageResponse("Error email not verified"), error: true },
       { status: HttpStatusCode.BadRequest }
     );
 
@@ -35,8 +35,15 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ user });
   } catch (error) {
     console.log(`${NEXT_SERVER_RESPONSE.SERVER_ERROR}_get_user_info`);
-    return new NextResponse(NEXT_SERVER_RESPONSE.SERVER_ERROR, {
-      status: HttpStatusCode.InternalServerError,
-    });
+
+    return NextResponse.json(
+      {
+        message: `${NEXT_SERVER_RESPONSE.SERVER_ERROR}_${mapMessageResponse(
+          "get user info"
+        )}`,
+        error: true,
+      },
+      { status: HttpStatusCode.InternalServerError }
+    );
   }
 };

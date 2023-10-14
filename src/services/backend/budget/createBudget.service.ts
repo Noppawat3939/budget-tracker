@@ -10,7 +10,7 @@ export const createIncomeByBudgetIdService = async (
 ) => {
   const prisma = new PrismaClient();
 
-  const createIncomeResponse = await prisma.income.create({
+  const createdIncomeResponse = await prisma.income.create({
     data: {
       budgetId: params.budgetId,
       income: params.income,
@@ -19,7 +19,7 @@ export const createIncomeByBudgetIdService = async (
     },
   });
 
-  return createIncomeResponse;
+  return createdIncomeResponse;
 };
 
 export const createExpenseByBudgetIdService = async (
@@ -27,7 +27,7 @@ export const createExpenseByBudgetIdService = async (
 ) => {
   const prisma = new PrismaClient();
 
-  const createExpenseResponse = await prisma.expense.create({
+  const createdExpenseResponse = await prisma.expense.create({
     data: {
       budgetId: params.budgetId,
       expense: params.expense,
@@ -36,13 +36,13 @@ export const createExpenseByBudgetIdService = async (
     },
   });
 
-  return createExpenseResponse;
+  return createdExpenseResponse;
 };
 
 export const createBudgetService = async (params: CreateBudgetParams) => {
   const prisma = new PrismaClient();
 
-  const createBudgetResponse = await prisma.budget.create({
+  const createdBudgetResponse = await prisma.budget.create({
     data: {
       userId: params.userId,
       incomes: {
@@ -66,5 +66,5 @@ export const createBudgetService = async (params: CreateBudgetParams) => {
     },
   });
 
-  return createBudgetResponse;
+  return createdBudgetResponse;
 };

@@ -1,5 +1,6 @@
 import { formatDate, numberFormatter, toSubString } from "@/helper";
 import type { BalanceData, BudgetData, SummaryColumns } from "../types";
+import { DEFAULT_VALUE_NUMBER } from "@/constants";
 
 export const renderSummaryRows = ({
   budgetData,
@@ -11,13 +12,14 @@ export const renderSummaryRows = ({
   const FORMAT_DATE = "DD MMM YYYY";
 
   const MAX_WORD_ON_ROW = 25;
+  const ORDERS = 2;
 
   if (budgetData?.length && balanceData?.length) {
     const newMap = budgetData.map((items) => {
       return {
         date: formatDate(items.createdAt, FORMAT_DATE),
         income:
-          items.incomes.map((incomeVal) => incomeVal.income).length > 1
+          items.incomes.map((incomeVal) => incomeVal.income).length >= ORDERS
             ? toSubString(
                 items.incomes
                   .map((incomeVal) => incomeVal.income)
@@ -26,18 +28,21 @@ export const renderSummaryRows = ({
                 MAX_WORD_ON_ROW
               )
             : items.incomes.map((incomeVal) => incomeVal.income).toString(),
-        expense: items.expenses.map((expenseVal) => expenseVal.expense)
-          ? toSubString(
-              items.expenses
-                .map((expenseVal) => expenseVal.expense)
-                .sort()
-                .join(", "),
-              MAX_WORD_ON_ROW
-            )
-          : items.expenses.map((expenseVal) => expenseVal.expense).toString(),
+        expense:
+          items.expenses.map((expenseVal) => expenseVal.expense).length >=
+          ORDERS
+            ? toSubString(
+                items.expenses
+                  .map((expenseVal) => expenseVal.expense)
+                  .sort()
+                  .join(", "),
+                MAX_WORD_ON_ROW
+              )
+            : items.expenses.map((expenseVal) => expenseVal.expense).toString(),
+
         balance: numberFormatter(
           balanceData.find((balance) => balance.budgetId === items.budgetId)
-            ?.totalBalance || 0
+            ?.totalBalance || DEFAULT_VALUE_NUMBER
         ),
       };
     });

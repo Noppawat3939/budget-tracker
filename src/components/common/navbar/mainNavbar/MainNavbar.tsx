@@ -1,6 +1,5 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
 import { ROUTES, SECOND_INDEX } from "@/constants";
 import Link from "next/link";
 import React, { Fragment, useCallback } from "react";
@@ -40,6 +39,7 @@ export default function MainNavbar() {
         </React.Fragment>
       );
     }
+
     if (eq(pathname, ROUTES.MAIN)) {
       return (
         <React.Fragment>
@@ -63,7 +63,13 @@ export default function MainNavbar() {
 
   return (
     <Fragment>
-      <nav className="sticky top-0 bg-white">
+      <nav
+        className={`top-0 ${
+          pathname === ROUTES.MAIN
+            ? "bg-[rgba(255,255,255,.6)] fixed w-full"
+            : "bg-white static"
+        }`}
+      >
         <div className="flex items-center py-4 justify-between px-[4%]">
           <Link href={ROUTES.MAIN} className="text-[20px] font-medium">
             <Image

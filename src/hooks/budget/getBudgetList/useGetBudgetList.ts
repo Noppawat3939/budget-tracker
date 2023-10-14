@@ -28,11 +28,13 @@ function useGetBudgetList() {
   );
 
   const hasLoading = [
-    budgetListQuery.isLoading || budgetBalanceQuery.isLoading,
+    budgetListQuery.isFetching,
+    budgetBalanceQuery.isFetching,
   ].some(identity);
 
   const hasSuccess = [
-    budgetListQuery.isSuccess || budgetBalanceQuery.isSuccess,
+    budgetListQuery.isSuccess,
+    budgetBalanceQuery.isSuccess,
   ].some(identity);
 
   return {

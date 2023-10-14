@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Banner() {
   return (
-    <section className="flex flex-col justify-center items-center h-[350px]">
+    <section className="flex flex-col justify-center items-center h-[85vh]">
       <div className="flex space-x-2 items-baseline justify-center">
         <p className="text-5xl font-bold lg:text-7xl">Budget Tracker</p>
         <Goal className="text-red-500 w-10 h-10" />

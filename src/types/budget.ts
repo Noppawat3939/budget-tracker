@@ -23,6 +23,8 @@ export interface IFIncomeData {
   income: string;
   description?: string;
   value: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IFExpenseData {
@@ -30,6 +32,8 @@ export interface IFExpenseData {
   description?: string;
   expense: string;
   value: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type CreateBudgetRequest = {

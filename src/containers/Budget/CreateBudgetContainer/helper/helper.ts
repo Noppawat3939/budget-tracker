@@ -2,7 +2,6 @@ import {
   cleanUpFirstCharacter,
   getLocalStorage,
   removeLocalStorage,
-  setLocalStorage,
 } from "@/helper";
 
 const LOCAL_STORAGE_KEY = "create_budget";

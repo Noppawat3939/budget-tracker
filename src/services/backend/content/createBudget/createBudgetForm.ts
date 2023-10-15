@@ -7,20 +7,20 @@ export const createBudgetForms: CreateBudgetForms = [
     forms: [
       {
         id: "title",
-        label: "Income title",
+        label: "Income",
         placeholder: "Add your income categories such as salary, rent etc.",
         value: "",
       },
       {
         id: "value",
-        label: "Income value (฿)",
+        label: "Value (฿)",
         placeholder: "Fill in numbers only (0-9)",
         value: "",
       },
       {
         id: "description",
-        label: "Income description",
-        placeholder: "Explain details of your earnings (optional).",
+        label: "Note (optional)",
+        placeholder: "Explain details of your earnings.",
         value: "",
       },
     ],
@@ -31,20 +31,20 @@ export const createBudgetForms: CreateBudgetForms = [
     forms: [
       {
         id: "title",
-        label: "Expenses title",
+        label: "Expenses",
         placeholder: "Add your expense categories such as food, travel, etc.",
         value: "",
       },
       {
         id: "value",
-        label: "Expenses value (฿)",
+        label: "Value (฿)",
         placeholder: "Fill in numbers only (0-9)",
         value: "",
       },
       {
         id: "description",
-        label: "Expenses description",
-        placeholder: "Explain details of expenses (optional).",
+        label: "Note (optional)",
+        placeholder: "Explain details of expenses.",
         value: "",
       },
     ],

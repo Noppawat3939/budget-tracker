@@ -31,7 +31,7 @@ const SummaryContainer = () => {
     budgetData,
     balanceData,
     isLoading,
-    debounceResponse: { onDebounce, debounceValue },
+    debounceResponse: { onDebounce: onDebounceChange, debounceValue },
     filterResponse: { filter, onChange },
   } = useHandleSummaryList();
 
@@ -72,11 +72,13 @@ const SummaryContainer = () => {
     <MainLayout>
       <section className="flex flex-col space-y-6 py-2">
         <div className="flex items-center justify-between">
-          <Input
-            placeholder="Search..."
-            className="w-[300px] h-[36px]"
-            onChange={onDebounce}
-          />
+          <span className="flex relative">
+            <Input
+              placeholder="Search..."
+              className="w-[300px] h-[36px]"
+              onChange={onDebounceChange}
+            />
+          </span>
           <Select
             options={FILTER_OPTIONS}
             isShowFilterIcon

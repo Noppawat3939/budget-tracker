@@ -134,7 +134,7 @@ export default function CreateNewBudgetForm({
                             value={values[key][id]}
                             className={`${
                               id === "value" ? "w-3/4" : "w-full"
-                            } outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none`}
+                            } outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none placeholder:text-gray-400`}
                             onChange={(evt) => onValueChange(evt, key)}
                             aria-label={`${id}-input`}
                             placeholder={placeholder}
@@ -163,7 +163,9 @@ export default function CreateNewBudgetForm({
                         placeholder={placeholder}
                         id={id}
                         onChange={(evt) => onValueChange(evt, key)}
-                        className="resize-none w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none"
+                        className="resize-none w-full outline-none bg-transparent border-hidden focus:border-hidden focus:outline-none focus-within:border-hidden focus-within:outline-none
+                        placeholder:text-gray-400
+                        "
                       />
                     </div>
                   );

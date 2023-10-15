@@ -38,11 +38,14 @@ export const PUT = async (req: NextRequest) => {
       }
 
       if ([income, description, value].every(isEmpty)) {
-        return NextResponse.json({
-          message: mapMessageResponse("payload for update income not found"),
-          error: true,
-          code: HttpStatusCode.NoContent,
-        });
+        return NextResponse.json(
+          {
+            message: mapMessageResponse("payload for update income not found"),
+            error: true,
+            code: HttpStatusCode.BadRequest,
+          },
+          { status: HttpStatusCode.BadRequest }
+        );
       }
 
       const updatedIncome = await updateIncome({
@@ -77,11 +80,14 @@ export const PUT = async (req: NextRequest) => {
       }
 
       if ([expense, description, value].every(isEmpty)) {
-        return NextResponse.json({
-          message: mapMessageResponse("payload for update expense not found"),
-          error: true,
-          code: HttpStatusCode.NoContent,
-        });
+        return NextResponse.json(
+          {
+            message: mapMessageResponse("payload for update expense not found"),
+            error: true,
+            code: HttpStatusCode.BadRequest,
+          },
+          { status: HttpStatusCode.BadRequest }
+        );
       }
 
       const updatedExpense = await updateExpense({

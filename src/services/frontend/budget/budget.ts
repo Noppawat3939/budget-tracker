@@ -15,6 +15,8 @@ import type {
   PostCreateIncomeOrExpenseResponse,
   PostCreateNewBudgetRequest,
   PostCreateNewBudgetResponse,
+  PutEditBudgetRequest,
+  PutEditBudgetResponse,
 } from "./type";
 import { createAuthHeader } from "@/helper";
 
@@ -85,6 +87,14 @@ export const getBudgetByQuerySearch = async (
     params: {
       search: params.search,
     },
+    headers: createAuthHeader(params.idToken),
+  });
+};
+
+export const editBudget = async (
+  params: PutEditBudgetRequest
+): Promise<AxiosResponse<PutEditBudgetResponse>> => {
+  return await axios.put(ENDPOINT.BUDGET.EDIT, params.body, {
     headers: createAuthHeader(params.idToken),
   });
 };

@@ -3,6 +3,7 @@ import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import {
+  ModalSummaryEdit,
   SummaryByPercentage,
   SummaryCardDetail,
   SummaryCardLoader,
@@ -26,7 +27,7 @@ const FILTER_OPTIONS = [
 
 function SummaryDetailContainer() {
   const searchParam = useSearchParams();
-  const budgetIdParam = searchParam.get("");
+  const budgetIdParam = searchParam.get(EMPTY_STRING);
 
   const {
     response,
@@ -225,6 +226,8 @@ function SummaryDetailContainer() {
           )}
         </div>
       </section>
+
+      <ModalSummaryEdit />
     </MainLayout>
   );
 }

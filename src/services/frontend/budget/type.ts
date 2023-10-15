@@ -1,4 +1,11 @@
-import { IFBudgetTotal, Incomes, Expenses, TCreateBudget } from "@/types";
+import {
+  IFBudgetTotal,
+  Incomes,
+  Expenses,
+  TCreateBudget,
+  IFIncomeData,
+  IFExpenseData,
+} from "@/types";
 
 export type PostCreateNewBudgetResponse = {
   message: string;
@@ -141,4 +148,17 @@ export type GetBudgetByQuerySearchResponse = {
     incomes: Incomes;
     expenses: Expenses;
   };
+};
+
+export type PutEditBudgetRequest = {
+  idToken: string;
+  body: {
+    income?: IFIncomeData;
+    expense?: IFExpenseData;
+  };
+};
+
+export type PutEditBudgetResponse = {
+  message: string;
+  data: IFExpenseData | IFIncomeData;
 };

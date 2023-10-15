@@ -11,7 +11,7 @@ export default function Banner() {
       <p className="max-w-[80%] text-lg font-medium text-center mt-5">
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem
         atque sunt voluptates cupiditate illo distinctio quas? Laboriosam,
-        fugiat?
+        fugiat ?
       </p>
     </section>
   );

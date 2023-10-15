@@ -1,10 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import incomeImage from "@/assets/images/income.png";
-import { IFExpenseData, IFIncomeData } from "@/types";
+import { IFExpenseData, IFIncomeData, TCreateBudget } from "@/types";
 import { priceFormatter } from "@/helper";
 import { Dropdown } from "@/components";
 import { DEFAULT_TEXT } from "@/constants";
+import { useEditBudgetDetailStore } from "@/store";
 
 type SummaryCardDetailProps = {
   income?: IFIncomeData;
@@ -12,6 +13,20 @@ type SummaryCardDetailProps = {
 };
 
 function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
+  const { onOpenModal } = useEditBudgetDetailStore((store) => ({
+    onOpenModal: store.onOpenModal,
+  }));
+
+  const onSelectedDropdown = (
+    option: string,
+    active: TCreateBudget,
+    selectedData: IFIncomeData | IFExpenseData
+  ) => {
+    option === "edit"
+      ? onOpenModal(active, { [active]: selectedData })
+      : undefined;
+  };
+
   return (
     <React.Fragment>
       {income && (
@@ -37,7 +52,12 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
           </div>
           <div className="flex items-center space-x-2">
             <p aria-label="income-price">{priceFormatter(income.value)}</p>
-            <Dropdown items={["edit", "remove"]} disabled />
+            <Dropdown
+              items={["edit", "remove"]}
+              onSelected={(option) =>
+                onSelectedDropdown(option, "income", income)
+              }
+            />
           </div>
         </div>
       )}
@@ -65,7 +85,13 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
           </div>
           <div className="flex items-center space-x-2">
             <p aria-label="expense-price">{priceFormatter(expense.value)}</p>
-            <Dropdown items={["edit", "remove"]} disabled />
+
+            <Dropdown
+              items={["edit", "remove"]}
+              onSelected={(option) =>
+                onSelectedDropdown(option, "expense", expense)
+              }
+            />
           </div>
         </div>
       )}

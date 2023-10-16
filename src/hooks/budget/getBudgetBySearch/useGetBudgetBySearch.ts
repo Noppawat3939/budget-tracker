@@ -10,11 +10,7 @@ const useGetBudgetBySearch = (search: string) => {
 
   const searchBudget = useQuery({
     queryKey: [QUERY_KEY.GET_BUDGET_BY_SEARCH, { search }],
-    queryFn: () =>
-      getBudgetByQuerySearch({
-        idToken,
-        search: search,
-      }),
+    queryFn: () => getBudgetByQuerySearch({ idToken, search }),
     select: (res) => res.data.data,
     enabled: Boolean(idToken && search),
   });

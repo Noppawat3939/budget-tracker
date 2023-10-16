@@ -22,9 +22,12 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
     active: TCreateBudget,
     selectedData: IFIncomeData | IFExpenseData
   ) => {
-    option === "edit"
-      ? onOpenModal(active, { [active]: selectedData })
-      : undefined;
+    const conditions = {
+      edit: onOpenModal(active, { [active]: selectedData }),
+      remove: undefined,
+    };
+
+    return conditions[option as keyof typeof conditions];
   };
 
   return (

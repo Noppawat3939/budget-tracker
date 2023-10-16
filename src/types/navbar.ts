@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 export type MenuPosition = "top" | "mid" | "bottom";
-export type MenuSection = "name" | "email" | "settings" | "logout";
+export type MenuSection = "name" | "email" | "settings" | "logout" | "theme";
 export type NavbarMenu = "create-budget" | "summary" | "summary-query";
 
 export type MenuBarList = {
@@ -8,6 +10,7 @@ export type MenuBarList = {
     key: MenuSection;
     value: string;
     onClick?: <TArg>(arg?: TArg) => void;
+    render?: ReactNode;
   }[];
 }[];
 

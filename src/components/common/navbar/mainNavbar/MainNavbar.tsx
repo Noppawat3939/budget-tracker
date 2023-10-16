@@ -2,7 +2,7 @@
 
 import { ROUTES, SECOND_INDEX } from "@/constants";
 import Link from "next/link";
-import React, { Fragment, useCallback } from "react";
+import React, { Fragment } from "react";
 import { useHandleNavbar, useUser } from "@/hooks";
 import { eq, isEmpty } from "lodash";
 import { Avatar, MenuNavbar, ModalLogout } from "@/components";
@@ -10,6 +10,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+
 import DarkLogo from "@/assets/logo/dark-logo.png";
 
 export default function MainNavbar() {
@@ -24,7 +25,7 @@ export default function MainNavbar() {
     handleRemoveNotification,
   } = useHandleNavbar();
 
-  const renderRightMenu = useCallback(() => {
+  const renderRightMenu = () => {
     if (user && pathname !== ROUTES.MAIN) {
       return (
         <React.Fragment>
@@ -32,7 +33,7 @@ export default function MainNavbar() {
             <PopoverTrigger>
               <Avatar src={user.profile} fallback={user?.name?.at(0)} />
             </PopoverTrigger>
-            <PopoverContent align="end" className="w-fit p-0 mt-2">
+            <PopoverContent align="end" className=" z-10 w-fit p-0 mt-2">
               <MenuNavbar menuList={renderMenuBar} />
             </PopoverContent>
           </Popover>
@@ -57,7 +58,7 @@ export default function MainNavbar() {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  };
 
   const cleanupPathname = pathname.slice(SECOND_INDEX).replaceAll("/", "-");
 
@@ -66,8 +67,8 @@ export default function MainNavbar() {
       <nav
         className={`top-0 ${
           pathname === ROUTES.MAIN
-            ? "bg-[rgba(255,255,255,.6)] fixed w-full"
-            : "bg-white static"
+            ? `bg-[rgba(255,255,255,.6)] fixed w-full`
+            : `bg-white static`
         }`}
       >
         <div className="flex items-center py-4 justify-between px-[4%]">

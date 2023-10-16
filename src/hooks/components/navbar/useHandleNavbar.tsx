@@ -1,14 +1,19 @@
+import { Switch } from "@/components/ui/switch";
 import { DEFAULT_TEXT, ROUTES, STORAGE_KEY } from "@/constants";
-import { localStorage, toCapitalize } from "@/helper";
-import { useUser } from "@/hooks";
+import { localStorage, toCapitalize, toSubString } from "@/helper";
+import { useTheme, useUser } from "@/hooks";
 import { useLogoutStore } from "@/store";
 import { MenuBarList, NavbarMenuList } from "@/types";
 import { usePathname, useSearchParams } from "next/navigation";
+
+const MAX_LENGTH = 20;
 
 const useHandleNavbar = () => {
   const pathname = usePathname();
   const search = useSearchParams();
   const budgetIdParams = search.get("");
+
+  const { onToggleTheme, theme } = useTheme();
 
   const { onOpenLogout } = useLogoutStore((store) => ({
     onOpenLogout: store.onOpen,
@@ -49,17 +54,35 @@ const useHandleNavbar = () => {
       menus: [
         {
           key: "name",
-          value: user?.name ? toCapitalize(user.name) : DEFAULT_TEXT,
+          value: user?.name
+            ? toSubString(toCapitalize(user.name), MAX_LENGTH)
+            : DEFAULT_TEXT,
         },
         {
           key: "email",
-          value: user?.email ? toCapitalize(user.email) : DEFAULT_TEXT,
+          value: user?.email
+            ? toSubString(toCapitalize(user.email), MAX_LENGTH)
+            : DEFAULT_TEXT,
         },
       ],
     },
     {
       position: "mid",
-      menus: [{ key: "settings", value: "Settings" }],
+      menus: [
+        { key: "settings", value: "Settings" },
+        // {
+        //   key: "theme",
+        //   value: "Theme",
+        //   render: (
+        //     <Switch
+        //       id="theme"
+        //       checked={theme === "dark-theme"}
+        //       onCheckedChange={onToggleTheme}
+        //       disabled
+        //     />
+        //   ),
+        // },
+      ],
     },
     {
       position: "bottom",

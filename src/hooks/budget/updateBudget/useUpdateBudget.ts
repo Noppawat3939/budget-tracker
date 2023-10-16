@@ -1,3 +1,5 @@
+"use client";
+
 import { DEFAULT_VALUE_NUMBER, EMPTY_STRING, QUERY_KEY } from "@/constants";
 import { cleanUpFirstCharacter } from "@/helper";
 import { useUser } from "@/hooks";

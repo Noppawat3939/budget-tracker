@@ -65,3 +65,27 @@ export const getBudgetBySearchService = async (query: string) => {
 
   return { incomes: searchIncomeResponse, expenses: searchExpenseResponse };
 };
+
+export const getIncomeByIdService = async (incomeId: string) => {
+  const prisma = new PrismaClient();
+
+  const foundIncome = await prisma.income.findMany({
+    where: {
+      incomeId,
+    },
+  });
+
+  return foundIncome;
+};
+
+export const getExpenseByIdService = async (expenseId: string) => {
+  const prisma = new PrismaClient();
+
+  const foundExpense = await prisma.expense.findMany({
+    where: {
+      expenseId,
+    },
+  });
+
+  return foundExpense;
+};

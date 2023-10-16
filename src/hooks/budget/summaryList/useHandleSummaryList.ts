@@ -13,7 +13,8 @@ type FilterSummary = "all" | "thisMonth";
 const DEBOUNCE_DELAY = 500;
 
 function useHandleSummaryList() {
-  const { searchValue, debouncedResults } = useDebounceSearch(DEBOUNCE_DELAY);
+  const { searchValue, memorizeOnDebounceChange: onDebounce } =
+    useDebounceSearch(DEBOUNCE_DELAY);
 
   const { balanceData, budgetData, isLoading } = useGetBudgetList();
 
@@ -51,10 +52,7 @@ function useHandleSummaryList() {
     budgetData: searchValue ? filterBudgetBySearch! : budgetData!,
     balanceData: balanceData!,
     isLoading: hasLoadingData,
-    debounceResponse: {
-      onDebounce: debouncedResults,
-      debounceValue: searchValue,
-    },
+    debounceResponse: { onDebounce, debounceValue: searchValue },
     filterResponse: {
       onChange: onSelectedFilter,
       filter: filterSummary,

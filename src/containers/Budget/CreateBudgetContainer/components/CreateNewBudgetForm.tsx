@@ -113,6 +113,7 @@ export default function CreateNewBudgetForm({
                 size="sm"
                 type="submit"
                 variant="outline"
+                disabled={isPending}
               >
                 {`Add ${key}`}
               </Button>

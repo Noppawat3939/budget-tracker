@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { renderSkeletonTableRow } from "./mock";
 import { isEmpty } from "lodash";
 import { AiOutlineTable } from "react-icons/ai";
+import { DEFAULT_TEXT } from "@/constants";
 
 const Table: FC<Table> = ({ columns, rows, isLoading, onRowClick }) => {
   const renderSkeletonRow = renderSkeletonTableRow(columns);
@@ -47,7 +48,7 @@ const Table: FC<Table> = ({ columns, rows, isLoading, onRowClick }) => {
                 className="cursor-pointer"
               >
                 {Object.values(row).map((key, index) => (
-                  <TableCell key={index}>{key}</TableCell>
+                  <TableCell key={index}>{key || DEFAULT_TEXT}</TableCell>
                 ))}
               </TableRow>
             ))

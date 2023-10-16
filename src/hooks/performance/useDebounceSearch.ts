@@ -14,16 +14,16 @@ function useDebounceSearch(wait?: number) {
     setSearchValue(value);
   };
 
-  const debouncedResults = useMemo(() => {
+  const memorizeOnDebounceChange = useMemo(() => {
     return debounce(handleChange, wait || DEFAULT_WAIT_MS);
   }, [wait]);
 
   useEffect(() => {
-    return () => debouncedResults.cancel();
+    return () => memorizeOnDebounceChange.cancel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { debouncedResults, searchValue };
+  return { memorizeOnDebounceChange, searchValue };
 }
 
 export default useDebounceSearch;

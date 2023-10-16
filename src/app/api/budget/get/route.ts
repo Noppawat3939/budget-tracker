@@ -9,8 +9,7 @@ import {
 import { HttpStatusCode } from "axios";
 import { isEmpty } from "lodash";
 import { NextRequest, NextResponse } from "next/server";
-
-type DirectionParam = "income" | "expense";
+import type { DirectionParam } from "./type";
 
 export const GET = async (req: NextRequest) => {
   const user = await getUserService(req);

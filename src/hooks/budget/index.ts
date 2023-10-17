@@ -5,3 +5,4 @@ export * from "./createNewBudget";
 export * from "./getBudgetBySearch";
 export * from "./summaryList";
 export * from "./updateBudget";
+export * from "./deleteBudget";

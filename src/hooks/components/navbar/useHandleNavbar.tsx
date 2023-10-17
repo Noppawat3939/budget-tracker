@@ -1,7 +1,6 @@
-import { Switch } from "@/components/ui/switch";
 import { DEFAULT_TEXT, ROUTES, STORAGE_KEY } from "@/constants";
 import { localStorage, toCapitalize, toSubString } from "@/helper";
-import { useTheme, useUser } from "@/hooks";
+import { useUser } from "@/hooks";
 import { useLogoutStore } from "@/store";
 import { MenuBarList, NavbarMenuList } from "@/types";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -12,8 +11,6 @@ const useHandleNavbar = () => {
   const pathname = usePathname();
   const search = useSearchParams();
   const budgetIdParams = search.get("");
-
-  const { onToggleTheme, theme } = useTheme();
 
   const { onOpenLogout } = useLogoutStore((store) => ({
     onOpenLogout: store.onOpen,
@@ -68,21 +65,7 @@ const useHandleNavbar = () => {
     },
     {
       position: "mid",
-      menus: [
-        { key: "settings", value: "Settings" },
-        // {
-        //   key: "theme",
-        //   value: "Theme",
-        //   render: (
-        //     <Switch
-        //       id="theme"
-        //       checked={theme === "dark-theme"}
-        //       onCheckedChange={onToggleTheme}
-        //       disabled
-        //     />
-        //   ),
-        // },
-      ],
+      menus: [{ key: "settings", value: "Settings" }],
     },
     {
       position: "bottom",

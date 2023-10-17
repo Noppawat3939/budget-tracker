@@ -5,29 +5,38 @@ import { IFExpenseData, IFIncomeData, TCreateBudget } from "@/types";
 import { priceFormatter } from "@/helper";
 import { Dropdown } from "@/components";
 import { DEFAULT_TEXT } from "@/constants";
-import { useEditBudgetDetailStore } from "@/store";
+import { useDeleteBudgetStore, useEditBudgetDetailStore } from "@/store";
 
 type SummaryCardDetailProps = {
   income?: IFIncomeData;
   expense?: IFExpenseData;
 };
 
+type ExcludeTime = "createdAt" | "updatedAt";
+
+type SelectedDropdownData =
+  | Omit<IFIncomeData, ExcludeTime>
+  | Omit<IFExpenseData, ExcludeTime>;
+
 function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
   const { onOpenModal } = useEditBudgetDetailStore((store) => ({
     onOpenModal: store.onOpenModal,
+  }));
+  const { openDeleteModal } = useDeleteBudgetStore((store) => ({
+    openDeleteModal: store.onOpenModal,
   }));
 
   const onSelectedDropdown = (
     option: string,
     active: TCreateBudget,
-    selectedData: IFIncomeData | IFExpenseData
+    selectedData: SelectedDropdownData
   ) => {
     const conditions = {
-      edit: onOpenModal(active, { [active]: selectedData }),
-      remove: undefined,
+      edit: () => onOpenModal(active, { [active]: selectedData }),
+      remove: () => openDeleteModal(active, { [active]: selectedData }),
     };
 
-    return conditions[option as keyof typeof conditions];
+    conditions[option as keyof typeof conditions]?.();
   };
 
   return (

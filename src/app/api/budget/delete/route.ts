@@ -1,10 +1,8 @@
 import { NEXT_SERVER_RESPONSE } from "@/constants";
 import { mapMessageResponse } from "@/helper";
 import {
-  deleteBudgetService,
   deleteExpenseService,
   deleteIncomeService,
-  getBudgetByIdService,
   getExpenseByIdService,
   getIncomeByIdService,
   getUserService,
@@ -16,11 +14,10 @@ import { NextRequest, NextResponse } from "next/server";
 export const DELETE = async (req: NextRequest) => {
   const user = await getUserService(req);
 
-  const budgetId = req.nextUrl.searchParams.get("budgetId");
   const incomeId = req.nextUrl.searchParams.get("incomeId");
   const expenseId = req.nextUrl.searchParams.get("expenseId");
 
-  const searchParamNotMatched = [budgetId, incomeId, expenseId].every((id) =>
+  const searchParamNotMatched = [incomeId, expenseId].every((id) =>
     isEmpty(id)
   );
 
@@ -56,7 +53,7 @@ export const DELETE = async (req: NextRequest) => {
         });
       } else {
         return NextResponse.json({
-          message: mapMessageResponse("id not found"),
+          message: mapMessageResponse("income id not found"),
         });
       }
     }
@@ -72,7 +69,7 @@ export const DELETE = async (req: NextRequest) => {
         });
       } else {
         return NextResponse.json({
-          message: mapMessageResponse("id not found"),
+          message: mapMessageResponse("expense id not found"),
         });
       }
     }

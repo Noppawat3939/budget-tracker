@@ -10,8 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useLogoutStore } from "@/store";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Logout: FC = () => {
+  const { clear: clearCache } = useQueryClient();
+
   const { onClose, onLogout, open, onOpenChange } = useLogoutStore((store) => ({
     open: store.isOpen,
     onClose: store.onClose,
@@ -20,6 +23,11 @@ const Logout: FC = () => {
   }));
 
   const [isPending, startTransition] = useTransition();
+
+  const handleLogout = () => {
+    clearCache();
+    onLogout();
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -36,7 +44,7 @@ const Logout: FC = () => {
             </Button>
             <Button
               disabled={isPending}
-              onClick={() => startTransition(onLogout)}
+              onClick={() => startTransition(handleLogout)}
             >
               Logout
             </Button>

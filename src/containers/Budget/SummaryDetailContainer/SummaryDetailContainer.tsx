@@ -3,6 +3,7 @@ import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import {
+  ModalDeleteBudget,
   ModalSummaryEdit,
   SummaryByPercentage,
   SummaryCardDetail,
@@ -228,6 +229,7 @@ function SummaryDetailContainer() {
       </section>
 
       <ModalSummaryEdit />
+      <ModalDeleteBudget />
     </MainLayout>
   );
 }

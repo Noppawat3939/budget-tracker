@@ -4,3 +4,4 @@ export { default as SummaryCardLoader } from "./SummaryCardLoader";
 export { default as SummaryTotal } from "./SummaryTotal";
 export { default as SummaryByPercentage } from "./SummaryByPercentage";
 export { default as ModalSummaryEdit } from "./ModalSummaryEdit";
+export { default as ModalDeleteBudget } from "./ModalDeleteBudget";

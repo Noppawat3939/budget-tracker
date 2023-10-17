@@ -1,17 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 
-export const deleteBudgetService = async (budgetId: string) => {
-  const prisma = new PrismaClient();
-
-  const deletedBudget = await prisma.budget.delete({
-    where: {
-      budgetId,
-    },
-  });
-
-  return deletedBudget;
-};
-
 export const deleteIncomeService = async (incomeId: string) => {
   const prisma = new PrismaClient();
 

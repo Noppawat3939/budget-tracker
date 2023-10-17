@@ -9,6 +9,7 @@ export const ENDPOINT = {
     CREATE: "/api/budget/create",
     GET: "/api/budget/get",
     EDIT: "/api/budget/edit",
+    DELETE: "/api/budget/delete",
     BALANCE: "/api/budget/balance",
   },
 } as const;

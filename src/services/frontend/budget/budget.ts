@@ -1,6 +1,7 @@
 import { ENDPOINT } from "@/constants";
-import axios, { AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
 import type {
+  DeleteBudgetRequest,
   GetAllBudgetRequest,
   GetAllBudgetResponse,
   GetBudgetBalanceByBudgetIdRequest,
@@ -95,6 +96,15 @@ export const editBudget = async (
   params: PutEditBudgetRequest
 ): Promise<AxiosResponse<PutEditBudgetResponse>> => {
   return await axios.put(ENDPOINT.BUDGET.EDIT, params.body, {
+    headers: createAuthHeader(params.idToken),
+  });
+};
+
+export const deleteBudget = async (
+  params: DeleteBudgetRequest
+): Promise<AxiosResponse> => {
+  return await axios.delete(ENDPOINT.BUDGET.DELETE, {
+    params: params.param,
     headers: createAuthHeader(params.idToken),
   });
 };

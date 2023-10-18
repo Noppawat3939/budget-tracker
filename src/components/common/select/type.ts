@@ -4,4 +4,5 @@ export type SelectedProps = {
   defaultValue?: string;
   onValueChange: (value: string) => void;
   isShowFilterIcon?: boolean;
+  disabled?: boolean;
 };

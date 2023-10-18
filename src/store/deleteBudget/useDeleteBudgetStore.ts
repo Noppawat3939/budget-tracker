@@ -1,17 +1,5 @@
-import { IFExpenseData, IFIncomeData, TCreateBudget } from "@/types";
 import { create } from "zustand";
-
-type UseDeleteBudgetStore = {
-  isOpenModal: boolean;
-  onOpenModal: (
-    active: TCreateBudget,
-    selectedData: { income?: IFIncomeData; expense?: IFExpenseData }
-  ) => void;
-  onCloseModal: () => void;
-  onOpenModalChange: (open: boolean) => void;
-  active: TCreateBudget | null;
-  selectedData: { income?: IFIncomeData; expense?: IFExpenseData };
-};
+import type { UseDeleteBudgetStore } from "./type";
 
 const initialState = {
   isOpenModal: false,

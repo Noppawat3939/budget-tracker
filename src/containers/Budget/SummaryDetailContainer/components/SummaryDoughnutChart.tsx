@@ -1,10 +1,6 @@
 import { Doughnut } from "@/components";
-import { DoughnutChart } from "@/types";
-import React, { FC } from "react";
-
-type SummaryDoughnutChartProps = {
-  chartData: DoughnutChart;
-};
+import React, { type FC } from "react";
+import type { SummaryDoughnutChartProps } from "../type";
 
 const SummaryDoughnutChart: FC<SummaryDoughnutChartProps> = ({ chartData }) => {
   return (

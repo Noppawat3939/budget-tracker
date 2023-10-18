@@ -2,15 +2,7 @@ import { SECOND_INDEX } from "@/constants";
 import { toCapitalize } from "@/helper";
 import { useRenderSkeleton } from "@/hooks";
 import React, { FC } from "react";
-
-type Total = "income" | "expense" | "balance";
-
-type SummaryTotalProps = {
-  summary: Record<Total, string>;
-  icon: JSX.Element;
-  hasGoodDirection: boolean;
-  isLoading: boolean;
-};
+import type { SummaryTotalProps, Total } from "../type";
 
 const SummaryTotal: FC<SummaryTotalProps> = ({
   summary,

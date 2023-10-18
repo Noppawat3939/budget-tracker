@@ -2,11 +2,12 @@
 
 import { FIRST_INDEX, ROUTES } from "@/constants";
 import { useGetBudgetByBudgetId } from "@/hooks";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CardDescription } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 
 import { BiSolidUpArrow, BiSolidDownArrow } from "react-icons/bi";
+import { isEmpty } from "lodash";
 
 type BudgetKey = "income" | "expense";
 const MIN_LENGTH = 1;
@@ -23,6 +24,19 @@ function useRenderSummaryDetail(budgetId: string) {
   });
 
   const [selectedFilter, setSelectedFilter] = useState<BudgetKey>("expense");
+
+  const hasData = {
+    income: !isEmpty(budget?.flatMap((item) => item.incomes)),
+    expense: !isEmpty(budget?.flatMap((item) => item.expenses)),
+  };
+
+  const isDisabledFilter = Object.values(hasData).includes(false);
+
+  useEffect(() => {
+    if (!hasData.income) return setSelectedFilter("expense");
+
+    if (!hasData.expense) return setSelectedFilter("income");
+  }, [hasData.expense, hasData.income]);
 
   const renderDescription = useCallback(
     (key: BudgetKey) => {
@@ -68,6 +82,7 @@ function useRenderSummaryDetail(budgetId: string) {
     onSelectedFilter,
     selectedFilter,
     renderArrowIcon,
+    isDisabledFilter,
   };
 }
 

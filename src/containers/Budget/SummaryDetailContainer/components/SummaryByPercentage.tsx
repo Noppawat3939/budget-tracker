@@ -1,12 +1,7 @@
 import { toPercent } from "@/helper";
 import { useRenderSkeleton } from "@/hooks";
 import React, { FC } from "react";
-
-type SummaryByPercentageProps = {
-  data: { label: string; value: number }[];
-  total: number;
-  isLoading: boolean;
-};
+import type { SummaryByPercentageProps } from "../type";
 
 const SummaryByPercentage: FC<SummaryByPercentageProps> = ({
   data,

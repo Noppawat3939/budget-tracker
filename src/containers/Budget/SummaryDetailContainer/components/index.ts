@@ -5,3 +5,4 @@ export { default as SummaryTotal } from "./SummaryTotal";
 export { default as SummaryByPercentage } from "./SummaryByPercentage";
 export { default as ModalSummaryEdit } from "./ModalSummaryEdit";
 export { default as ModalDeleteBudget } from "./ModalDeleteBudget";
+export { default as SummaryCard } from "./SummaryCard";

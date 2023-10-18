@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
 import { useSearchParams } from "next/navigation";
 import React from "react";
@@ -6,15 +6,13 @@ import {
   ModalDeleteBudget,
   ModalSummaryEdit,
   SummaryByPercentage,
-  SummaryCardDetail,
   SummaryCardLoader,
   SummaryDoughnutChart,
   SummaryTotal,
+  SummaryCard,
 } from "./components";
 import { MainLayout, Select } from "@/components";
 import { EMPTY_STRING } from "@/constants";
-import { Button } from "@/components/ui/button";
-import { FiPlusCircle } from "react-icons/fi";
 
 import { priceFormatter, toAverage } from "@/helper";
 import { getExpenses, getIncomes, renderChartBackground } from "./utils";
@@ -37,6 +35,7 @@ function SummaryDetailContainer() {
     onSelectedFilter,
     selectedFilter,
     renderArrowIcon,
+    isDisabledFilter,
   } = useRenderSummaryDetail(budgetIdParam || EMPTY_STRING);
 
   const isFilterIncome = selectedFilter === "income";
@@ -104,6 +103,7 @@ function SummaryDetailContainer() {
               defaultValue={selectedFilter}
               onValueChange={onSelectedFilter}
               options={FILTER_OPTIONS}
+              disabled={isDisabledFilter}
             />
           </div>
           <CardContent className="flex items-stretch ">
@@ -157,73 +157,25 @@ function SummaryDetailContainer() {
             ))}
 
           {response.isSuccess && (
-            <Card className="flex-1">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle aria-label="income-title">
-                    Recent Incomes
-                  </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-[12px] px-1"
-                    onClick={() => goToCreateNewBudget("income")}
-                  >
-                    <FiPlusCircle className="mr-1" />
-                    Add income
-                  </Button>
-                </div>
-                {renderDescription("income")}
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-y-2 pr-3 overflow-y-auto max-h-[180px]">
-                  {response.data?.map(
-                    (budget) =>
-                      budget.incomes &&
-                      budget.incomes.map((income) => (
-                        <SummaryCardDetail
-                          key={income.incomeId}
-                          income={income}
-                        />
-                      ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <>
+              <SummaryCard
+                budgetQuery="income"
+                onNavigateToCreateNewBudget={goToCreateNewBudget}
+                renderDescription={renderDescription}
+                data={response.data!}
+              />
+            </>
           )}
 
           {response.isSuccess && (
-            <Card className="flex-1">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Recent Expenses</CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-[12px] px-1"
-                    onClick={() => goToCreateNewBudget("expense")}
-                  >
-                    <FiPlusCircle className="mr-1" />
-                    Add expense
-                  </Button>
-                </div>
-                {renderDescription("expense")}
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-y-2 pr-3 overflow-y-auto max-h-[180px]">
-                  {response.data?.map(
-                    (budget) =>
-                      budget.expenses &&
-                      budget.expenses.map((expense) => (
-                        <SummaryCardDetail
-                          key={expense.expenseId}
-                          expense={expense}
-                        />
-                      ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <>
+              <SummaryCard
+                budgetQuery="expense"
+                onNavigateToCreateNewBudget={goToCreateNewBudget}
+                renderDescription={renderDescription}
+                data={response.data!}
+              />
+            </>
           )}
         </div>
       </section>

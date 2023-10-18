@@ -20,9 +20,14 @@ const Select: FC<SelectedProps> = ({
   selectLabel,
   defaultValue,
   isShowFilterIcon = false,
+  disabled = false,
 }) => {
   return (
-    <ShadSelect onValueChange={onValueChange} defaultValue={defaultValue}>
+    <ShadSelect
+      value={defaultValue}
+      onValueChange={onValueChange}
+      disabled={disabled}
+    >
       <SelectTrigger className="w-[130px] text-[12px]">
         {isShowFilterIcon && <BiFilter className="w-5 h-5 text-slate-600" />}
         <SelectValue placeholder="Select" />

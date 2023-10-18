@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import { MainLayout, Select, Table } from "@/components";
 import { useHandleSummaryList } from "@/hooks";
 import { renderSummaryRows, renderSummaryColumns } from "./utils";
@@ -12,6 +11,7 @@ import type { RowData } from "./types";
 import { EMPTY_ARRAY, FIRST_INDEX, INDEX_NOT_FOUND } from "@/constants";
 import { FiSearch } from "react-icons/fi";
 import { isEmpty } from "lodash";
+import { numberFormatter } from "@/helper";
 
 const FILTER_OPTIONS = [
   {
@@ -53,15 +53,21 @@ const SummaryContainer = () => {
   const onRow = (rowData: RowData) => {
     const [dateString] = dayjs(rowData.date).toISOString().split("T");
 
-    const foundData = budgetData?.find(
-      (data) =>
-        dateString ===
-        dayjs(data.createdAt)
-          .add(INDEX_NOT_FOUND, "day")
-          .toISOString()
-          .split("T")
-          ?.at(FIRST_INDEX)
+    const balance = balanceData.find(
+      (data) => numberFormatter(data.totalBalance) === rowData.balance
     );
+
+    const foundData = budgetData
+      ?.filter(
+        (data) =>
+          dateString ===
+          dayjs(data.createdAt)
+            .add(INDEX_NOT_FOUND, "day")
+            .toISOString()
+            .split("T")
+            ?.at(FIRST_INDEX)
+      )
+      .find((item) => item.budgetId === balance?.budgetId);
 
     push(`/summary/query?=${foundData?.budgetId}`);
   };

@@ -29,6 +29,7 @@ export type CreateNewBudgetFormProps = {
   handleRemoveBudgetValue: (key: CreateBudget, id: string) => void;
   budgetStorage: Record<TCreateBudget, TBudgetValues[]>;
   handleCreateNewBudget: () => void;
+  isNoExpenseData?: boolean;
 };
 
 export type CreateBudgetForms = {

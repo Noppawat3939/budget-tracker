@@ -5,11 +5,10 @@ import React from "react";
 import {
   ModalDeleteBudget,
   ModalSummaryEdit,
-  SummaryByPercentage,
   SummaryCardLoader,
   SummaryDoughnutChart,
-  SummaryTotal,
   SummaryCard,
+  SummaryInfo,
 } from "./components";
 import { MainLayout, Select } from "@/components";
 import { EMPTY_STRING } from "@/constants";
@@ -29,7 +28,7 @@ function SummaryDetailContainer() {
   const budgetIdParam = searchParam.get(EMPTY_STRING);
 
   const {
-    response,
+    response: { data: budgetData, isSuccess, isLoading },
     renderDescription,
     goToCreateNewBudget,
     onSelectedFilter,
@@ -45,12 +44,9 @@ function SummaryDetailContainer() {
     isShow: true,
   });
 
-  const { incomeValues, totalIncomeValue, incomeData } = getIncomes(
-    response.data
-  );
-  const { expenseValues, expenseData, totalExpenseValue } = getExpenses(
-    response.data
-  );
+  const { incomeValues, totalIncomeValue, incomeData } = getIncomes(budgetData);
+  const { expenseValues, expenseData, totalExpenseValue } =
+    getExpenses(budgetData);
 
   const renderIncomeLabels = incomeData?.map((income) =>
     income?.label?.toUpperCase()
@@ -88,7 +84,7 @@ function SummaryDetailContainer() {
     balance: priceFormatter(totalIncomeValue - totalExpenseValue),
   };
 
-  const hasGoodDirection = totalIncomeValue >= totalExpenseValue;
+  const hasPositiveDirection = totalIncomeValue >= totalExpenseValue;
   const chartData = renderChartData();
 
   return (
@@ -108,74 +104,44 @@ function SummaryDetailContainer() {
           </div>
           <CardContent className="flex items-stretch ">
             <SummaryDoughnutChart chartData={chartData} />
-            <div className="flex w-[60%] max-w-[600px]  mx-auto flex-col justify-between">
-              <div className="flex flex-col">
-                <p
-                  className={`text-[14px] text-slate-500 ${
-                    response.isSuccess ? "block" : "hidden"
-                  }`}
-                >
-                  {`You have an average ${selectedFilter} of `}
-                  <span
-                    className={`${
-                      isFilterIncome ? "text-green-600" : "text-red-600"
-                    } font-medium`}
-                  >
-                    {renderAverage}
-                  </span>{" "}
-                  per month.
-                </p>
-                <ul className="my-2 max-h-[200px] pr-3 py-1 overflow-y-auto">
-                  {isFilterIncome ? (
-                    <SummaryByPercentage
-                      isLoading={response.isLoading}
-                      data={incomeData as { label: string; value: number }[]}
-                      total={totalIncomeValue}
-                    />
-                  ) : (
-                    <SummaryByPercentage
-                      isLoading={response.isLoading}
-                      data={expenseData as { label: string; value: number }[]}
-                      total={totalExpenseValue}
-                    />
-                  )}
-                </ul>
-              </div>
-              <SummaryTotal
-                isLoading={response.isLoading}
-                summary={summaryTotalMap}
-                icon={renderArrowIcon(hasGoodDirection)}
-                hasGoodDirection={hasGoodDirection}
-              />
-            </div>
+            <SummaryInfo
+              isSuccess={isSuccess}
+              icon={renderArrowIcon(hasPositiveDirection)}
+              hasPositiveDirection={hasPositiveDirection}
+              isLoading={isLoading}
+              average={renderAverage}
+              total={summaryTotalMap}
+              isFilterIncome={isFilterIncome}
+              selectedFilter={selectedFilter}
+              percentageIncomes={incomeData}
+              percentageExpenses={expenseData}
+              totalExpenses={totalExpenseValue}
+              totalIncomes={totalIncomeValue}
+            />
           </CardContent>
         </Card>
         <div className="flex space-x-5">
-          {response.isLoading &&
+          {isLoading &&
             BUDGET_DETAILS.map((render) => (
               <SummaryCardLoader key={render} renderSkeleton={renderSkeleton} />
             ))}
 
-          {response.isSuccess && (
-            <>
-              <SummaryCard
-                budgetQuery="income"
-                onNavigateToCreateNewBudget={goToCreateNewBudget}
-                renderDescription={renderDescription}
-                data={response.data!}
-              />
-            </>
+          {isSuccess && (
+            <SummaryCard
+              budgetQuery="income"
+              onNavigateToCreateNewBudget={goToCreateNewBudget}
+              renderDescription={renderDescription}
+              data={budgetData}
+            />
           )}
 
-          {response.isSuccess && (
-            <>
-              <SummaryCard
-                budgetQuery="expense"
-                onNavigateToCreateNewBudget={goToCreateNewBudget}
-                renderDescription={renderDescription}
-                data={response.data!}
-              />
-            </>
+          {isSuccess && (
+            <SummaryCard
+              budgetQuery="expense"
+              onNavigateToCreateNewBudget={goToCreateNewBudget}
+              renderDescription={renderDescription}
+              data={budgetData}
+            />
           )}
         </div>
       </section>

@@ -1,10 +1,17 @@
-import React from "react";
+import React, { Fragment } from "react";
+
 import { useCreateBudget } from "./hooks";
-import { CreateNewBudgetForm, DoughnutCard, SummaryCard } from "./components";
+import {
+  BudgetNotFound,
+  CreateNewBudgetForm,
+  DoughnutCard,
+  SummaryCard,
+} from "./components";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
 import { useMounted, useNotification, useRenderCreateNewBudget } from "@/hooks";
 import { MainLayout } from "@/components";
 import { Card } from "@/components/ui/card";
+import { isEmpty } from "lodash";
 
 const defaultIncomeValue = 30000;
 
@@ -38,12 +45,18 @@ function CreateBudgetContainer() {
     <MainLayout>
       <Card className="h-full px-5">
         <section className="flex space-x-5 py-5 items-center justify-between h-fit mb-5">
-          <DoughnutCard data={renderChartData || DEFAULT_CHART_DATA} />
-          <SummaryCard
-            end={sumIncome || defaultIncomeValue}
-            isMounted={isFetched || isMounted}
-            data={summaryList || DEFAULT_SUMMARY_LIST}
-          />
+          {isEmpty(summaryList) ? (
+            <BudgetNotFound />
+          ) : (
+            <Fragment>
+              <DoughnutCard data={renderChartData || DEFAULT_CHART_DATA} />
+              <SummaryCard
+                end={sumIncome || defaultIncomeValue}
+                isMounted={isFetched || isMounted}
+                data={summaryList || DEFAULT_SUMMARY_LIST}
+              />
+            </Fragment>
+          )}
         </section>
         <CreateNewBudgetForm
           isPending={isPending}
@@ -54,6 +67,7 @@ function CreateBudgetContainer() {
           budgetStorage={budgetStorage}
           handleRemoveBudgetValue={handleRemoveBudgetValue}
           handleCreateNewBudget={handleCreateNewBudget}
+          isNoExpenseData={isEmpty(summaryList)}
         />
       </Card>
     </MainLayout>

@@ -26,6 +26,7 @@ export default function CreateNewBudgetForm({
   budgetStorage,
   handleCreateNewBudget,
   isPending,
+  isNoExpenseData,
 }: CreateNewBudgetFormProps) {
   const { data } = useGetContent<GetCreateBudgetFormsResponse>({
     params: "?form=create-budget",
@@ -73,7 +74,10 @@ export default function CreateNewBudgetForm({
   const newFormContent = renderFormContent();
 
   return (
-    <Drawer title="Add a new" btnText="Create now">
+    <Drawer
+      title="Add a new"
+      btnText={isNoExpenseData ? "Create new expense" : "Create now"}
+    >
       <div className="flex-col space-y-3">
         {isLoading ? (
           <React.Fragment>{renderSkeleton}</React.Fragment>

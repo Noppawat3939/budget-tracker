@@ -2,12 +2,12 @@ import { SECOND_INDEX } from "@/constants";
 import { toCapitalize } from "@/helper";
 import { useRenderSkeleton } from "@/hooks";
 import React, { FC } from "react";
-import type { SummaryTotalProps, Total } from "../type";
+import type { SummaryTotalProps, TotalLabel } from "../type";
 
 const SummaryTotal: FC<SummaryTotalProps> = ({
   summary,
   icon,
-  hasGoodDirection,
+  hasPositiveDirection,
   isLoading,
 }) => {
   const { renderSkeleton } = useRenderSkeleton({
@@ -37,18 +37,18 @@ const SummaryTotal: FC<SummaryTotalProps> = ({
             {`total ${toCapitalize(key)}:`}
           </p>
           <span className="flex space-x-2 items-center">
-            {(key as Total) === "balance" && icon}
+            {(key as TotalLabel) === "balance" && icon}
             <p
               aria-label="total-value"
               className={`text-[15px] font-medium ${
-                (key as Total) === "balance"
-                  ? hasGoodDirection
+                (key as TotalLabel) === "balance"
+                  ? hasPositiveDirection
                     ? "text-green-600"
                     : "text-red-600"
                   : "text-slate-900"
               }`}
             >
-              {summary[key as Total]}
+              {summary[key as TotalLabel]}
             </p>
           </span>
         </div>

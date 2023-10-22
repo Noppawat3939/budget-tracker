@@ -1,23 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Drawer } from "@/components";
 import { Button } from "@/components/ui/button";
-import type {
-  GetCreateBudgetFormsResponse,
-  CreateNewBudgetFormProps,
-} from "./type";
 import { useGetContent, useRenderSkeleton } from "@/hooks";
 import { isEmpty } from "lodash";
 import { useDrawerStore } from "@/store";
-import { BadgeBudget } from ".";
+import { BadgeBudget } from "..";
 import { Textarea } from "@/components/ui/textarea";
 import { useSearchParams } from "next/navigation";
 import type { TCreateBudget } from "@/types";
 import { EMPTY_STRING } from "@/constants";
+import type { CreateBudgetContentForm, CreateNewBudgetFormProps } from "./type";
 
-export default function CreateNewBudgetForm({
+const CreateNewBudgetForm: FC<CreateNewBudgetFormProps> = ({
   values,
   isDisabled,
   onValueChange,
@@ -27,8 +24,8 @@ export default function CreateNewBudgetForm({
   handleCreateNewBudget,
   isPending,
   isNoExpenseData,
-}: CreateNewBudgetFormProps) {
-  const { data } = useGetContent<GetCreateBudgetFormsResponse>({
+}) => {
+  const { data } = useGetContent<CreateBudgetContentForm>({
     params: "?form=create-budget",
   });
 
@@ -191,4 +188,6 @@ export default function CreateNewBudgetForm({
       )}
     </Drawer>
   );
-}
+};
+
+export default CreateNewBudgetForm;

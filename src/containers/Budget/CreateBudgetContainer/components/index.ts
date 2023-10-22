@@ -1,5 +1,5 @@
-export { default as SummaryCard } from "./SummaryCard";
-export { default as DoughnutCard } from "./DoughnutCard";
-export { default as CreateNewBudgetForm } from "./CreateNewBudgetForm";
-export { default as BadgeBudget } from "./BadgeBudget";
-export { default as BudgetNotFound } from "./BudgetNotFound";
+export * from "./doughnutChart";
+export * from "./badge";
+export * from "./notfound";
+export * from "./createForm";
+export * from "./summaryCard";

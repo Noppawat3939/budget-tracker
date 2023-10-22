@@ -6,6 +6,7 @@ import {
   IFIncomeData,
   IFExpenseData,
 } from "@/types";
+import { AxiosResponse } from "axios";
 
 export type PostCreateNewBudgetResponse = {
   message: string;
@@ -167,4 +168,22 @@ type DeleteBudgetParam = "incomeId" | "expenseId";
 export type DeleteBudgetRequest = {
   idToken: string;
   param: Partial<Record<DeleteBudgetParam, string>>;
+};
+
+export type GetIncomeDataRequest = {
+  idToken: string;
+};
+
+export type GetIncomeDataResponse = {
+  message: string;
+  data: IFIncomeData & { budgetId: string }[];
+};
+
+export type GetExpenseDataRequest = {
+  idToken: string;
+};
+
+export type GetExpenseDataResponse = {
+  message: string;
+  data: IFExpenseData & { budgetId: string }[];
 };

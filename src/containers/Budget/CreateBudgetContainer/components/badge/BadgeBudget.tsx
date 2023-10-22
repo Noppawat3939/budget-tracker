@@ -1,13 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { XCircle } from "lucide-react";
-import React from "react";
+import React, { type FC } from "react";
+import type { BadgeBudgetProps } from "./type";
 
-type BadgeBudgetProps = {
-  text: string;
-  onClick?: () => void;
-};
-
-export default function BadgeBudget({ text, onClick }: BadgeBudgetProps) {
+const BadgeBudget: FC<BadgeBudgetProps> = ({ text, onClick }) => {
   return (
     <Badge
       variant="outline"
@@ -20,4 +16,6 @@ export default function BadgeBudget({ text, onClick }: BadgeBudgetProps) {
       />
     </Badge>
   );
-}
+};
+
+export default BadgeBudget;

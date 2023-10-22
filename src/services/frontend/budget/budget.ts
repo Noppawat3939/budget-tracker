@@ -12,6 +12,10 @@ import type {
   GetBudgetByBudgetIdResponse,
   GetBudgetByQuerySearchRequest,
   GetBudgetByQuerySearchResponse,
+  GetExpenseDataRequest,
+  GetExpenseDataResponse,
+  GetIncomeDataRequest,
+  GetIncomeDataResponse,
   PostCreateIncomeOrExpenseRequest,
   PostCreateIncomeOrExpenseResponse,
   PostCreateNewBudgetRequest,
@@ -105,6 +109,22 @@ export const deleteBudget = async (
 ): Promise<AxiosResponse> => {
   return await axios.delete(ENDPOINT.BUDGET.DELETE, {
     params: params.param,
+    headers: createAuthHeader(params.idToken),
+  });
+};
+
+export const getExpenseData = async (
+  params: GetExpenseDataRequest
+): Promise<AxiosResponse<GetExpenseDataResponse>> => {
+  return await axios.get(`${ENDPOINT.BUDGET.GET}/expense`, {
+    headers: createAuthHeader(params.idToken),
+  });
+};
+
+export const getIncomeData = async (
+  params: GetIncomeDataRequest
+): Promise<AxiosResponse<GetIncomeDataResponse>> => {
+  return await axios.get(`${ENDPOINT.BUDGET.GET}/income`, {
     headers: createAuthHeader(params.idToken),
   });
 };

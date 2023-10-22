@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type FC } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CountUp from "react-countup";
 import { priceFormatter } from "@/helper";
@@ -8,12 +8,7 @@ import Image from "next/image";
 import Expense from "@/assets/images/expense.png";
 import type { SummaryCardProps } from "./type";
 
-export default function SummaryCard({
-  end,
-  start,
-  isMounted,
-  data,
-}: SummaryCardProps) {
+const SummaryCard: FC<SummaryCardProps> = ({ end, start, isMounted, data }) => {
   return (
     <Card className="w-full h-[398px]">
       <CardHeader>
@@ -80,4 +75,6 @@ export default function SummaryCard({
       </CardContent>
     </Card>
   );
-}
+};
+
+export default SummaryCard;

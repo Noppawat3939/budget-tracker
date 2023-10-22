@@ -1,3 +1,5 @@
+import { cleanUpFirstCharacter } from ".";
+
 type Incomes = {
   incomeId: string;
   budgetId: string;
@@ -38,4 +40,17 @@ export const mapBudgetData = (data: BudgetData) => {
 
     return mapExpense;
   }
+};
+
+export const cleanUpCreateBudgetValue = (
+  key: "description" | "value",
+  value: string
+) => {
+  if (key === "value") {
+    const cleaned = cleanUpFirstCharacter(value);
+
+    return cleaned;
+  }
+
+  return value;
 };

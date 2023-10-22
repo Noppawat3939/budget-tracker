@@ -1,6 +1,7 @@
 "use client";
-import { MainLayout } from "@/components";
+
 import React from "react";
+import { MainLayout } from "@/components";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";

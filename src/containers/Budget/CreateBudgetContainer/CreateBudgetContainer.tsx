@@ -1,6 +1,4 @@
 import React, { Fragment } from "react";
-
-import { useCreateBudget } from "./hooks";
 import {
   BudgetNotFound,
   CreateNewBudgetForm,
@@ -8,7 +6,12 @@ import {
   SummaryCard,
 } from "./components";
 import { DEFAULT_CHART_DATA, DEFAULT_SUMMARY_LIST } from "./constants";
-import { useMounted, useNotification, useRenderCreateNewBudget } from "@/hooks";
+import {
+  useMounted,
+  useNotification,
+  useRenderCreateNewBudget,
+  useCreateBudget,
+} from "@/hooks";
 import { MainLayout } from "@/components";
 import { Card } from "@/components/ui/card";
 import { isEmpty } from "lodash";

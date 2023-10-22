@@ -4,13 +4,27 @@
 import { identity, isEmpty } from "lodash";
 import { type ChangeEvent, useCallback, useState } from "react";
 import { TCreateBudget } from "@/types";
-import { cleanUpCreateBudgetValue } from "../helper";
-import type { BudgetStorage, TCreateBudgetValues } from "./type";
+import { cleanUpCreateBudgetValue } from "@/helper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createIncomeOrExpense, createNewBudget } from "@/services";
 import { useUser } from "@/hooks";
 import { EMPTY_STRING, QUERY_KEY, STORAGE_KEY } from "@/constants";
 import { localStorage } from "@/helper";
+
+type TBudgetValues = {
+  id: string;
+  title: string;
+  description?: string;
+  value: string;
+  createdAt: string;
+};
+
+type BudgetStorage = Record<TCreateBudget, TBudgetValues[]>;
+
+type TCreateBudgetValues = Record<
+  TCreateBudget,
+  { value: string; title: string; description: string }
+>;
 
 const initialCreateBudgetValues = {
   income: { value: "", description: "", title: "" },
@@ -142,12 +156,12 @@ export default function useCreateBudget() {
     setBudgetStorage((prev) => ({ ...prev, [key]: removeBudgetStorage }));
   };
 
-  const hasFetchSuccess = [
+  const hasFetchedSuccess = [
     createIncomeOrExpenseMutate.isSuccess,
     createNewBudgetMutate.isSuccess,
   ].some(identity);
 
-  const hasFetchFail = [
+  const hasFetchedFail = [
     createIncomeOrExpenseMutate.isError,
     createNewBudgetMutate.isError,
   ].some(identity);
@@ -164,9 +178,9 @@ export default function useCreateBudget() {
     budgetStorage,
     handleRemoveBudgetValue,
     handleCreateNewBudget,
-    isError: hasFetchFail,
+    isError: hasFetchedFail,
     isDisabledCreateBudget,
-    isSuccess: hasFetchSuccess,
+    isSuccess: hasFetchedSuccess,
     isPending: hasFetching,
   };
 }

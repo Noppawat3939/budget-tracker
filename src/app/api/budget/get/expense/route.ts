@@ -1,4 +1,4 @@
-import { NEXT_SERVER_RESPONSE } from "@/constants";
+import { EMPTY_ARRAY, NEXT_SERVER_RESPONSE } from "@/constants";
 import { mapMessageResponse } from "@/helper";
 import { getExpenseDataService, getUserService } from "@/services";
 import { HttpStatusCode } from "axios";
@@ -31,7 +31,7 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json({
       message: mapMessageResponse("expense not found"),
-      data: null,
+      data: EMPTY_ARRAY,
     });
   } catch (error) {
     console.log(

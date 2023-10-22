@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +13,6 @@ import { priceFormatter } from "@/helper";
 import { useDeleteBudget, useNotification } from "@/hooks";
 import { useDeleteBudgetStore } from "@/store";
 import { isEmpty } from "lodash";
-import React from "react";
 import { RiAlertFill } from "react-icons/ri";
 
 const ModalDeleteBudget = () => {

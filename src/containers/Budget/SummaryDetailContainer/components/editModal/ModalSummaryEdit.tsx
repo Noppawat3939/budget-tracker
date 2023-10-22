@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/dialog";
 import { useEditBudgetDetailStore } from "@/store";
 import { useGetContent, useNotification, useUpdateBudget } from "@/hooks";
-import { GetCreateBudgetFormsResponse } from "../../CreateBudgetContainer/components/type";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import type { CreateBudgetContentForm } from "./type";
 
 const ModalSummaryEdit = () => {
   const { isOpen, onOpenChange, activeModal, onClose } =
@@ -34,7 +34,7 @@ const ModalSummaryEdit = () => {
     formState,
   } = useUpdateBudget();
 
-  const { data } = useGetContent<GetCreateBudgetFormsResponse>({
+  const { data } = useGetContent<CreateBudgetContentForm>({
     params: "?form=create-budget",
   });
 

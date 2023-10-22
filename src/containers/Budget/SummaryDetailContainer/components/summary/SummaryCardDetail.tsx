@@ -1,25 +1,15 @@
-import React from "react";
+import React, { type FC } from "react";
 import Image from "next/image";
 import incomeImage from "@/assets/images/income.png";
 import expenseImage from "@/assets/images/expense.png";
-import { IFExpenseData, IFIncomeData, TCreateBudget } from "@/types";
+import type { TCreateBudget } from "@/types";
 import { priceFormatter } from "@/helper";
 import { Dropdown } from "@/components";
 import { DEFAULT_TEXT } from "@/constants";
 import { useDeleteBudgetStore, useEditBudgetDetailStore } from "@/store";
+import type { SelectedDropdownData, SummaryCardDetailProps } from "./type";
 
-type SummaryCardDetailProps = {
-  income?: IFIncomeData;
-  expense?: IFExpenseData;
-};
-
-type ExcludeTime = "createdAt" | "updatedAt";
-
-type SelectedDropdownData =
-  | Omit<IFIncomeData, ExcludeTime>
-  | Omit<IFExpenseData, ExcludeTime>;
-
-function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
+const SummaryCardDetail: FC<SummaryCardDetailProps> = ({ income, expense }) => {
   const { onOpenModal } = useEditBudgetDetailStore((store) => ({
     onOpenModal: store.onOpenModal,
   }));
@@ -112,6 +102,6 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
       )}
     </React.Fragment>
   );
-}
+};
 
 export default SummaryCardDetail;

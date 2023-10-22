@@ -10,6 +10,7 @@ type BudgetValues = {
   value: string;
   createdAt: string;
 };
+
 type CreateBudgetForms = {
   title: string;
   key: CreateBudget;

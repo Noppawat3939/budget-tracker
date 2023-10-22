@@ -1,11 +1,8 @@
+import React, { type FC } from "react";
+import type { SummaryCardLoaderProps } from "./type";
 import { Skeleton } from "@/components";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton as ShadSkeleton } from "@/components/ui/skeleton";
-import React, { FC } from "react";
-
-type SummaryCardLoaderProps = {
-  renderSkeleton: JSX.Element[];
-};
 
 const SummaryCardLoader: FC<SummaryCardLoaderProps> = ({ renderSkeleton }) => {
   return (

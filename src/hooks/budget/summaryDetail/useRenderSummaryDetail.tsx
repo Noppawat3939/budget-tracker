@@ -1,15 +1,29 @@
 "use client";
 
-import { FIRST_INDEX, ROUTES } from "@/constants";
+import {
+  DEFAULT_VALUE_NUMBER,
+  EMPTY_ARRAY,
+  FIRST_INDEX,
+  ROUTES,
+} from "@/constants";
 import { useGetBudgetByBudgetId } from "@/hooks";
 import { useCallback, useEffect, useState } from "react";
 import { CardDescription } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-
 import { BiSolidUpArrow, BiSolidDownArrow } from "react-icons/bi";
 import { isEmpty } from "lodash";
+import type { Expenses, IFBudgetTotal, Incomes, TCreateBudget } from "@/types";
 
-type BudgetKey = "income" | "expense";
+type BudgetKey = TCreateBudget;
+type Budget =
+  | {
+      budgetId: string;
+      expenses: Expenses;
+      incomes: Incomes;
+      total: IFBudgetTotal;
+    }[]
+  | undefined;
+
 const MIN_LENGTH = 1;
 
 function useRenderSummaryDetail(budgetId: string) {
@@ -71,6 +85,50 @@ function useRenderSummaryDetail(budgetId: string) {
     );
   };
 
+  const getIncomes = (data: Budget) => {
+    const incomeData =
+      data
+        ?.map((item) =>
+          item["incomes"]
+            ?.sort((inA, inB) => inB?.value - inA?.value)
+            ?.map((income) => ({
+              label: income?.income,
+              value: income?.value,
+            }))
+        )
+        ?.at(FIRST_INDEX) ?? EMPTY_ARRAY;
+
+    const incomeValues = incomeData?.map((income) => income?.value);
+    const totalIncomeValue = incomeValues?.reduce(
+      (prev, cur) => prev + cur,
+      DEFAULT_VALUE_NUMBER
+    );
+
+    return { incomeData, incomeValues, totalIncomeValue };
+  };
+
+  const getExpenses = (data: Budget) => {
+    const expenseData =
+      data
+        ?.map((item) =>
+          item["expenses"]
+            ?.sort((exA, exB) => exB?.value - exA?.value)
+            ?.map((expense) => ({
+              label: expense?.expense,
+              value: expense?.value,
+            }))
+        )
+        ?.at(FIRST_INDEX) ?? EMPTY_ARRAY;
+
+    const expenseValues = expenseData?.map((expense) => expense?.value);
+    const totalExpenseValue = expenseValues?.reduce(
+      (prev, cur) => prev + cur,
+      DEFAULT_VALUE_NUMBER
+    );
+
+    return { expenseData, expenseValues, totalExpenseValue };
+  };
+
   return {
     response: {
       data: budget,
@@ -83,6 +141,10 @@ function useRenderSummaryDetail(budgetId: string) {
     selectedFilter,
     renderArrowIcon,
     isDisabledFilter,
+    get: {
+      incomes: getIncomes(budget),
+      expenses: getExpenses(budget),
+    },
   };
 }
 

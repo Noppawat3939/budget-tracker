@@ -1,9 +1,6 @@
-export { default as SummaryCardDetail } from "./SummaryCardDetail";
-export { default as SummaryDoughnutChart } from "./SummaryDoughnutChart";
-export { default as SummaryCardLoader } from "./SummaryCardLoader";
-export { default as SummaryTotal } from "./SummaryTotal";
-export { default as SummaryByPercentage } from "./SummaryByPercentage";
-export { default as ModalSummaryEdit } from "./ModalSummaryEdit";
-export { default as ModalDeleteBudget } from "./ModalDeleteBudget";
-export { default as SummaryCard } from "./SummaryCard";
-export { default as SummaryInfo } from "./SummaryInfo";
+export * from "./summary";
+export * from "./deleteModal";
+export * from "./editModal";
+export * from "./sumPercent";
+export * from "./sumTotal";
+export * from "./doughnutChart";

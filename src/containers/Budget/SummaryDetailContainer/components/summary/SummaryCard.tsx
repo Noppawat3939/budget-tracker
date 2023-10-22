@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { type FC } from "react";
 import {
   Card,
   CardContent,
@@ -9,8 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { FiPlusCircle, FiInbox } from "react-icons/fi";
 import { isEmpty } from "lodash";
-import type { SummaryCardProps } from "../type";
-import { SummaryCardDetail } from ".";
+import type { SummaryCardProps } from "./type";
+import { SummaryCardDetail } from "..";
 
 const SummaryCard: FC<SummaryCardProps> = ({
   budgetQuery,

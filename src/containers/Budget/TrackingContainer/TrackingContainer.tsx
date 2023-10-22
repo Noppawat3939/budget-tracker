@@ -6,8 +6,6 @@ import { useGetExpenseData } from "@/hooks";
 const TrackingContainer = () => {
   const expenses = useGetExpenseData();
 
-  console.log("🚀 ===> expenses:", expenses.data);
-
   return (
     <MainLayout>
       TrackingContainer

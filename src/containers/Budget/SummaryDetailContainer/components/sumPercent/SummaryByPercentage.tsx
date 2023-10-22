@@ -1,7 +1,7 @@
+import React, { type FC } from "react";
 import { toPercent } from "@/helper";
 import { useRenderSkeleton } from "@/hooks";
-import React, { FC } from "react";
-import type { SummaryByPercentageProps } from "../type";
+import type { SummaryByPercentageProps } from "./type";
 
 const SummaryByPercentage: FC<SummaryByPercentageProps> = ({
   data,

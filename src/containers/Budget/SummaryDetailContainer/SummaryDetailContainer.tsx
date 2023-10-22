@@ -1,7 +1,7 @@
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
 import { useSearchParams } from "next/navigation";
-import React from "react";
 import {
   ModalDeleteBudget,
   ModalSummaryEdit,
@@ -14,7 +14,7 @@ import { MainLayout, Select } from "@/components";
 import { EMPTY_STRING } from "@/constants";
 
 import { priceFormatter, toAverage } from "@/helper";
-import { getExpenses, getIncomes, renderChartBackground } from "./utils";
+import { renderChartBackground } from "./utils";
 
 const BUDGET_DETAILS = ["income", "expense"];
 
@@ -35,7 +35,11 @@ function SummaryDetailContainer() {
     selectedFilter,
     renderArrowIcon,
     isDisabledFilter,
+    get,
   } = useRenderSummaryDetail(budgetIdParam || EMPTY_STRING);
+
+  const { incomeData, incomeValues, totalIncomeValue } = get.incomes;
+  const { expenseData, expenseValues, totalExpenseValue } = get.expenses;
 
   const isFilterIncome = selectedFilter === "income";
 
@@ -43,10 +47,6 @@ function SummaryDetailContainer() {
     length: 2,
     isShow: true,
   });
-
-  const { incomeValues, totalIncomeValue, incomeData } = getIncomes(budgetData);
-  const { expenseValues, expenseData, totalExpenseValue } =
-    getExpenses(budgetData);
 
   const renderIncomeLabels = incomeData?.map((income) =>
     income?.label?.toUpperCase()

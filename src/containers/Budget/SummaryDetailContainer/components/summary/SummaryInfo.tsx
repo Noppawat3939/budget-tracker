@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-import { SummaryByPercentage, SummaryTotal } from ".";
-import type { PercentageData, SummaryInfoProps } from "../type";
+import React, { type FC } from "react";
+import { SummaryByPercentage, SummaryTotal } from "..";
+import type { PercentageData, SummaryInfoProps } from "./type";
 
 const SummaryInfo: FC<SummaryInfoProps> = ({
   isLoading,

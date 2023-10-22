@@ -1,7 +1,8 @@
-import {
-  DoughnutChart,
+import type {
   Expenses,
   IFBudgetTotal,
+  IFExpenseData,
+  IFIncomeData,
   Incomes,
   TCreateBudget,
 } from "@/types";
@@ -18,28 +19,25 @@ export type SummaryCardProps = {
   }[];
 };
 
-export type PercentageData = { label: string; value: number }[];
-export type TotalLabel = "income" | "expense" | "balance";
-export type Filter = TCreateBudget;
+export type ExcludeTime = "createdAt" | "updatedAt";
 
+export type SummaryCardDetailProps = {
+  income?: IFIncomeData;
+  expense?: IFExpenseData;
+};
+
+export type SelectedDropdownData =
+  | Omit<IFIncomeData, ExcludeTime>
+  | Omit<IFExpenseData, ExcludeTime>;
+
+export type SummaryCardLoaderProps = {
+  renderSkeleton: JSX.Element[];
+};
+
+export type TotalLabel = TCreateBudget | "balance";
 type Total = Record<TotalLabel, string>;
-
-export type SummaryTotalProps = {
-  summary: Total;
-  icon: JSX.Element;
-  hasPositiveDirection: boolean;
-  isLoading: boolean;
-};
-
-export type SummaryByPercentageProps = {
-  data: PercentageData;
-  total: number;
-  isLoading: boolean;
-};
-
-export type SummaryDoughnutChartProps = {
-  chartData: DoughnutChart;
-};
+type Filter = TCreateBudget;
+export type PercentageData = { label: string; value: number }[];
 
 export type SummaryInfoProps = {
   isLoading: boolean;

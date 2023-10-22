@@ -2,7 +2,11 @@ import { ReactNode } from "react";
 
 export type MenuPosition = "top" | "mid" | "bottom";
 export type MenuSection = "name" | "email" | "settings" | "logout" | "theme";
-export type NavbarMenu = "create-budget" | "summary" | "summary-query";
+export type NavbarMenu =
+  | "create-budget"
+  | "summary"
+  | "summary-query"
+  | "tracking";
 
 export type MenuBarList = {
   position: MenuPosition;
@@ -14,4 +18,9 @@ export type MenuBarList = {
   }[];
 }[];
 
-export type NavbarMenuList = { key: NavbarMenu; label: string; url: string }[];
+export type NavbarMenuList = {
+  key: NavbarMenu;
+  label: string;
+  url: string;
+  order: number;
+}[];

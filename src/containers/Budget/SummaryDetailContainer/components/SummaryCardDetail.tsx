@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import incomeImage from "@/assets/images/income.png";
+import expenseImage from "@/assets/images/expense.png";
 import { IFExpenseData, IFIncomeData, TCreateBudget } from "@/types";
 import { priceFormatter } from "@/helper";
 import { Dropdown } from "@/components";
@@ -50,7 +51,8 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
             <Image
               src={incomeImage}
               alt="income-img"
-              className="h-8 w-8 rounded-full object-cover bg-slate-100"
+              loading="lazy"
+              className="h-8 w-8 rounded-full bg-slate-100"
             />
             <div className="flex-col">
               <p aria-label="income-title">{income.income}</p>
@@ -58,7 +60,7 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
                 className="text-sm text-gray-500"
                 aria-label="income-description"
               >
-                {income?.description || DEFAULT_TEXT}
+                {income?.description ?? DEFAULT_TEXT}
               </p>
             </div>
           </div>
@@ -81,9 +83,10 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
         >
           <div className="flex items-center space-x-4">
             <Image
-              src={incomeImage}
+              loading="lazy"
+              src={expenseImage}
               alt="expense-img"
-              className="h-8 w-8 rounded-full object-cover bg-slate-100"
+              className="h-8 w-8 rounded-full bg-slate-100"
             />
             <div className="flex-col">
               <p aria-label="expense-title">{expense.expense}</p>
@@ -91,7 +94,7 @@ function SummaryCardDetail({ income, expense }: SummaryCardDetailProps) {
                 className="text-sm text-gray-500"
                 aria-label="expense-description"
               >
-                {expense?.description || DEFAULT_TEXT}
+                {expense?.description ?? DEFAULT_TEXT}
               </p>
             </div>
           </div>

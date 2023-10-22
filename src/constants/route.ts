@@ -6,5 +6,6 @@ export const ROUTES = {
   BUDGET: {
     CREATE: "/create-budget",
     SUMMARY: "/summary",
+    TRACKING: "/tracking",
   },
 } as const;

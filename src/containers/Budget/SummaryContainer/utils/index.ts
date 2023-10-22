@@ -16,35 +16,33 @@ export const renderSummaryRows = ({
 
   if (budgetData?.length && balanceData?.length) {
     const newMap = budgetData.map((items) => {
-      return {
-        date: formatDate(items.createdAt, FORMAT_DATE),
-        income:
-          items.incomes.map((incomeVal) => incomeVal.income).length >= ORDERS
-            ? toSubString(
-                items.incomes
-                  .map((incomeVal) => incomeVal.income)
-                  .sort()
-                  .join(", "),
-                MAX_WORD_ON_ROW
-              )
-            : items.incomes.map((incomeVal) => incomeVal.income).toString(),
-        expense:
-          items.expenses.map((expenseVal) => expenseVal.expense).length >=
-          ORDERS
-            ? toSubString(
-                items.expenses
-                  .map((expenseVal) => expenseVal.expense)
-                  .sort()
-                  .join(", "),
-                MAX_WORD_ON_ROW
-              )
-            : items.expenses.map((expenseVal) => expenseVal.expense).toString(),
+      const date = formatDate(items.createdAt, FORMAT_DATE);
+      const income =
+        items.incomes.map((incomeVal) => incomeVal.income).length >= ORDERS
+          ? toSubString(
+              items.incomes
+                .map((incomeVal) => incomeVal.income)
+                .sort()
+                .join(", "),
+              MAX_WORD_ON_ROW
+            )
+          : items.incomes.map((incomeVal) => incomeVal.income).toString();
+      const expense =
+        items.expenses.map((expenseVal) => expenseVal.expense).length >= ORDERS
+          ? toSubString(
+              items.expenses
+                .map((expenseVal) => expenseVal.expense)
+                .sort()
+                .join(", "),
+              MAX_WORD_ON_ROW
+            )
+          : items.expenses.map((expenseVal) => expenseVal.expense).toString();
+      const balance = numberFormatter(
+        balanceData.find((balance) => balance.budgetId === items.budgetId)
+          ?.totalBalance || DEFAULT_VALUE_NUMBER
+      );
 
-        balance: numberFormatter(
-          balanceData.find((balance) => balance.budgetId === items.budgetId)
-            ?.totalBalance || DEFAULT_VALUE_NUMBER
-        ),
-      };
+      return { date, income, expense, balance };
     });
 
     return newMap;

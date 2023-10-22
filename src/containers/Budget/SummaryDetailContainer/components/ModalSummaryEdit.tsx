@@ -77,6 +77,7 @@ const ModalSummaryEdit = () => {
                         placeholder={form.placeholder}
                         value={formState.values.description}
                         onChange={(evt) => formState.onChange(evt, form.id)}
+                        id={form.id}
                       />
                     </span>
                   );

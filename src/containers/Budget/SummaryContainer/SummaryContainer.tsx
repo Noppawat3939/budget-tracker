@@ -36,8 +36,9 @@ const SummaryContainer = () => {
   } = useHandleSummaryList();
 
   const rowData = renderSummaryRows({ budgetData, balanceData });
+  const sortedRowData = rowData?.sort((a, b) => b.date.localeCompare(a.date));
 
-  const thisMonth = rowData?.filter((data) => {
+  const thisMonth = sortedRowData?.filter((data) => {
     const dateTableFormat = "MMM YYYY";
 
     const [_d, m, y] = data.date.split(" ");
@@ -46,7 +47,7 @@ const SummaryContainer = () => {
   });
 
   const renderRows = {
-    all: rowData,
+    all: sortedRowData,
     thisMonth,
   };
 

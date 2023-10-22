@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const middleware = (request: NextRequest & { token: string }) => {
+export const middleware = async (request: NextRequest & { token: string }) => {
   const regex = new RegExp("/api/*");
 
   if (regex.test(request.url)) {

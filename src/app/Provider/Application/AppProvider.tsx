@@ -17,7 +17,7 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <NextAuthProvider>{children}</NextAuthProvider>
-      <ToastContainer autoClose={2500} closeButton={false} theme="colored" />
+      <ToastContainer autoClose={2000} theme="colored" />
     </QueryClientProvider>
   );
 };

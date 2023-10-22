@@ -12,11 +12,16 @@ import { useMounted, useNotification, useRenderCreateNewBudget } from "@/hooks";
 import { MainLayout } from "@/components";
 import { Card } from "@/components/ui/card";
 import { isEmpty } from "lodash";
+import { useSearchParams } from "next/navigation";
 
 const defaultIncomeValue = 30000;
 
 function CreateBudgetContainer() {
   const isMounted = useMounted();
+
+  const search = useSearchParams();
+
+  const selectedParam = search.get("selected");
 
   const { summaryList, sumIncome, isFetched, renderChartData } =
     useRenderCreateNewBudget();
@@ -41,11 +46,13 @@ function CreateBudgetContainer() {
     successMessage: "Create new budget successfully",
   });
 
+  const hasNotQuery = Boolean(selectedParam && isEmpty(summaryList));
+
   return (
     <MainLayout>
       <Card className="h-full px-5">
         <section className="flex space-x-5 py-5 items-center justify-between h-fit mb-5">
-          {isEmpty(summaryList) ? (
+          {hasNotQuery ? (
             <BudgetNotFound />
           ) : (
             <Fragment>
@@ -67,7 +74,7 @@ function CreateBudgetContainer() {
           budgetStorage={budgetStorage}
           handleRemoveBudgetValue={handleRemoveBudgetValue}
           handleCreateNewBudget={handleCreateNewBudget}
-          isNoExpenseData={isEmpty(summaryList)}
+          isNoExpenseData={hasNotQuery}
         />
       </Card>
     </MainLayout>

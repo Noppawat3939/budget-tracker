@@ -57,7 +57,6 @@ export default function MainNavbar() {
         </React.Fragment>
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
   const cleanupPathname = pathname.slice(SECOND_INDEX).replaceAll("/", "-");
@@ -67,7 +66,7 @@ export default function MainNavbar() {
       <nav
         className={`top-0 ${
           pathname === ROUTES.MAIN
-            ? `bg-[rgba(255,255,255,.6)] fixed w-full`
+            ? `fixed w-full backdrop-blur supports-[backdrop-filter]:bg-background/50`
             : `bg-white static`
         }`}
       >

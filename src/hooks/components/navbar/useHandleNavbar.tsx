@@ -27,23 +27,36 @@ const useHandleNavbar = () => {
       key: "summary",
       label: "My Summary",
       url: ROUTES.BUDGET.SUMMARY,
+      order: 1,
     },
     {
       key: "create-budget",
       label: "Create budget",
       url: ROUTES.BUDGET.CREATE,
+      order: 3,
     },
     {
       key: "summary-query",
       label: "Summary detail",
       url: `/summary/query?=${budgetIdParams}`,
+      order: 4,
+    },
+    {
+      key: "tracking",
+      label: "Tracking",
+      url: ROUTES.BUDGET.TRACKING,
+      order: 2,
     },
   ];
 
+  const sortedNavbarMenus = navbarMenus.sort((a, b) => a.order - b.order);
+
   const filterMenu =
     pathname === "/summary/query"
-      ? navbarMenus
-      : navbarMenus.filter((menu) => !hideDisplayNavbarMenu.includes(menu.key));
+      ? sortedNavbarMenus
+      : sortedNavbarMenus.filter(
+          (menu) => !hideDisplayNavbarMenu.includes(menu.key)
+        );
 
   const menuBar: MenuBarList = [
     {

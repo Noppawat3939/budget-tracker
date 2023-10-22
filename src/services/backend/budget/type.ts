@@ -8,7 +8,11 @@ export type CreateBudgetParams = {
   userId: string;
 };
 
-export type GetBudgetParams = { userId: string };
+export type GetBudgetParams = {
+  userId: string;
+  selectedIncome?: boolean;
+  selectedExpense?: boolean;
+};
 export type GetBudgetByIdParams = {
   budgetId: string;
   isIncome?: boolean;

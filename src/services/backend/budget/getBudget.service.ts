@@ -2,16 +2,20 @@ import { PrismaClient } from "@prisma/client";
 import type { GetBudgetByIdParams, GetBudgetParams } from "./type";
 import { EMPTY_ARRAY } from "@/constants";
 
-export const getBudgetService = async (param: GetBudgetParams) => {
+export const getBudgetService = async ({
+  userId,
+  selectedExpense = true,
+  selectedIncome = true,
+}: GetBudgetParams) => {
   const prisma = new PrismaClient();
 
   const budgetResponse = await prisma.budget.findMany({
     where: {
-      userId: param.userId,
+      userId: userId,
     },
     include: {
-      incomes: true,
-      expenses: true,
+      incomes: selectedIncome,
+      expenses: selectedExpense,
     },
   });
 
@@ -88,4 +92,24 @@ export const getExpenseByIdService = async (expenseId: string) => {
   });
 
   return foundExpense;
+};
+
+export const getIncomeDataService = async (userId: string) => {
+  const incomesData = await getBudgetService({
+    userId,
+    selectedIncome: true,
+    selectedExpense: false,
+  });
+
+  return incomesData;
+};
+
+export const getExpenseDataService = async (userId: string) => {
+  const expensesData = await getBudgetService({
+    userId,
+    selectedIncome: false,
+    selectedExpense: true,
+  });
+
+  return expensesData;
 };

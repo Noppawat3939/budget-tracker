@@ -26,6 +26,8 @@ export const PUT = async (req: NextRequest) => {
         income: { income, incomeId, description, value },
       } = body;
 
+      const isEmptyIncomePayload = [income, description, value].every(isEmpty);
+
       if (!incomeId) {
         return NextResponse.json(
           {
@@ -37,7 +39,7 @@ export const PUT = async (req: NextRequest) => {
         );
       }
 
-      if ([income, description, value].every(isEmpty)) {
+      if (isEmptyIncomePayload) {
         return NextResponse.json(
           {
             message: mapMessageResponse("payload for update income not found"),
@@ -68,6 +70,10 @@ export const PUT = async (req: NextRequest) => {
         expense: { expenseId, expense, value, description },
       } = body;
 
+      const isEmptyExpensePayload = [expense, description, value].every(
+        isEmpty
+      );
+
       if (!expenseId) {
         return NextResponse.json(
           {
@@ -79,7 +85,7 @@ export const PUT = async (req: NextRequest) => {
         );
       }
 
-      if ([expense, description, value].every(isEmpty)) {
+      if (isEmptyExpensePayload) {
         return NextResponse.json(
           {
             message: mapMessageResponse("payload for update expense not found"),

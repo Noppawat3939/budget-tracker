@@ -1,6 +1,6 @@
 import { NEXT_SERVER_RESPONSE } from "@/constants";
 import { mapMessageResponse } from "@/helper";
-import { getExpenseDataService, getUserService } from "@/services";
+import { getIncomeDataService, getUserService } from "@/services";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -18,30 +18,30 @@ export const GET = async (req: NextRequest) => {
     );
 
   try {
-    const expenses = await getExpenseDataService(user?.userId);
+    const incomes = await getIncomeDataService(user?.userId);
 
-    if (expenses.length) {
-      const mapExpenses = expenses.flatMap((expense) => expense.expenses);
+    if (incomes.length) {
+      const mapIncomes = incomes.flatMap((income) => income.incomes);
 
       return NextResponse.json({
-        message: mapMessageResponse("get expense success"),
-        data: mapExpenses,
+        message: mapMessageResponse("get income success"),
+        data: mapIncomes,
       });
     }
 
     return NextResponse.json({
-      message: mapMessageResponse("expense not found"),
+      message: mapMessageResponse("income not found"),
       data: null,
     });
   } catch (error) {
     console.log(
-      `🚀 ===> ${NEXT_SERVER_RESPONSE.SERVER_ERROR}_get_expense`,
+      `🚀 ===> ${NEXT_SERVER_RESPONSE.SERVER_ERROR}_get_income`,
       error
     );
     return NextResponse.json(
       {
         message: `${NEXT_SERVER_RESPONSE.SERVER_ERROR}_${mapMessageResponse(
-          "get expense"
+          "get income"
         )}`,
       },
       { status: HttpStatusCode.InternalServerError }

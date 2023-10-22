@@ -17,9 +17,7 @@ export const DELETE = async (req: NextRequest) => {
   const incomeId = req.nextUrl.searchParams.get("incomeId");
   const expenseId = req.nextUrl.searchParams.get("expenseId");
 
-  const searchParamNotMatched = [incomeId, expenseId].every((id) =>
-    isEmpty(id)
-  );
+  const searchParamNotMatch = [incomeId, expenseId].every((id) => isEmpty(id));
 
   if (!user)
     return NextResponse.json(
@@ -31,7 +29,7 @@ export const DELETE = async (req: NextRequest) => {
       { status: HttpStatusCode.BadRequest }
     );
 
-  if (searchParamNotMatched)
+  if (searchParamNotMatch)
     return NextResponse.json(
       {
         message: mapMessageResponse("id for delete is required"),

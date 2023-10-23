@@ -1,25 +1,31 @@
 import React from "react";
 import { MainLayout } from "@/components";
 import { RenderTrackingComponents as RenderComponents } from "./components";
-import { useGetExpenseData } from "@/hooks";
+import { useTrackingBudget } from "@/hooks";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorContainer } from "@/containers";
 
 const TrackingContainer = () => {
-  const expenses = useGetExpenseData();
+  const { queryExpenses, trackingChart, topExpenses } = useTrackingBudget();
+
+  const onReset = () => queryExpenses.refetch();
 
   const errorProps = {
     description:
       "At this time, the budget tracking information is not yet known.",
-    onClick: () => expenses.refetch(),
+    onClick: onReset,
   };
 
-  if (expenses.status === "error") return <ErrorContainer {...errorProps} />;
+  if (queryExpenses.status === "error")
+    return <ErrorContainer {...errorProps} />;
 
   return (
     <ErrorBoundary fallback={<ErrorContainer />}>
       <MainLayout>
-        <RenderComponents />
+        <RenderComponents
+          trackingChart={trackingChart}
+          topExpenses={topExpenses}
+        />
       </MainLayout>
     </ErrorBoundary>
   );

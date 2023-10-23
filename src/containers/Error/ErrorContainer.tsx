@@ -1,4 +1,4 @@
-import React, { type FC } from "react";
+import React, { memo, type FC, useTransition } from "react";
 import type { ErrorContainerProps } from "./type";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ const ErrorContainer: FC<ErrorContainerProps> = ({
   isDisabled,
 }) => {
   const { push } = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const backToHome = () => push(ROUTES.MAIN);
 
   return (
@@ -26,17 +28,18 @@ const ErrorContainer: FC<ErrorContainerProps> = ({
         </h1>
         <p className="text-xl font-medium">
           {description ||
-            "At this time, the budget tracking information is not yet known."}
+            "At this time, the <page_name> information is not yet known."}
         </p>
         <footer about="footer-error" className="justify-center space-x-4 flex">
           <Button
-            disabled={isDisabled}
+            disabled={isPending || isDisabled}
             className="mt-[5%] w-[180px]"
-            onClick={onClick}
+            onClick={(_arg) => startTransition(() => onClick?.(_arg))}
           >
             Try again
           </Button>
           <Button
+            disabled={isPending}
             className="mt-[5%] w-[180px]"
             variant="outline"
             onClick={backToHome}
@@ -49,4 +52,4 @@ const ErrorContainer: FC<ErrorContainerProps> = ({
   );
 };
 
-export default ErrorContainer;
+export default memo(ErrorContainer);

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
 import { useSearchParams } from "next/navigation";
@@ -93,7 +94,7 @@ function SummaryDetailContainer() {
         <Card>
           <div className="p-5 flex justify-between">
             <h1 className="text-2xl font-medium">
-              {`Top ${isFilterIncome ? "Income" : "Expense"}`}
+              {isLoading ? "" : `Top ${isFilterIncome ? "Income" : "Expense"}`}
             </h1>
             <Select
               defaultValue={selectedFilter}

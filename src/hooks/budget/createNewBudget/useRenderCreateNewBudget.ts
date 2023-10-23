@@ -19,15 +19,12 @@ type SummaryList = {
   description?: string;
 }[];
 
-const CACHE_TIME = 60000; //1 minute
-
 function useRenderCreateNewBudget() {
   const search = useSearchParams();
   const budgetId = search.get("id") || EMPTY_STRING;
 
   const { data: budget, isFetched } = useGetBudgetByBudgetId({
     budgetId,
-    cacheTime: CACHE_TIME,
   });
 
   const expensesMap = budget

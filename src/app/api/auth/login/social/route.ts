@@ -19,7 +19,7 @@ export const POST = async (req: Request) => {
     });
 
     if (isEmpty(user)) {
-      const userId = `${body.email.at(0)}${body.provider.slice(
+      const userId = `${body.email.at(FIRST_INDEX)}${body.provider.slice(
         FIRST_INDEX,
         SECOND_INDEX
       )}-${uuidv4()}`;

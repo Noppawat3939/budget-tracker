@@ -8,12 +8,11 @@ import { isUndefined } from "lodash";
 
 type UseGetBudgetByBudgetIdParams = {
   budgetId: string;
-  cacheTime?: number;
 };
 
 function useGetBudgetByBudgetId(params: UseGetBudgetByBudgetIdParams) {
   const { data } = useUser();
-  const { budgetId, cacheTime } = params;
+  const { budgetId } = params;
 
   const budgetByIdQuery = useQuery({
     queryKey: [QUERY_KEY.GET_BUDGET_BY_ID, { budgetId }],
@@ -24,7 +23,6 @@ function useGetBudgetByBudgetId(params: UseGetBudgetByBudgetIdParams) {
       }),
     select: (res) => res.data.data,
     enabled: !isUndefined(data?.idToken),
-    cacheTime,
   });
 
   return budgetByIdQuery;

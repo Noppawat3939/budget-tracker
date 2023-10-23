@@ -6,7 +6,6 @@ import {
   IFIncomeData,
   IFExpenseData,
 } from "@/types";
-import { AxiosResponse } from "axios";
 
 export type PostCreateNewBudgetResponse = {
   message: string;
@@ -120,7 +119,7 @@ export type GetBudgetBalanceResponse = {
   }[];
 };
 
-type BudgetDirection = "income" | "expense";
+type BudgetDirection = TCreateBudget;
 
 export type GetBudgetByBudgetIdRequest = {
   budgetId: string;
@@ -165,6 +164,7 @@ export type PutEditBudgetResponse = {
 };
 
 type DeleteBudgetParam = "incomeId" | "expenseId";
+
 export type DeleteBudgetRequest = {
   idToken: string;
   param: Partial<Record<DeleteBudgetParam, string>>;
@@ -176,7 +176,7 @@ export type GetIncomeDataRequest = {
 
 export type GetIncomeDataResponse = {
   message: string;
-  data: IFIncomeData & { budgetId: string }[];
+  data: (IFIncomeData & { budgetId: string })[];
 };
 
 export type GetExpenseDataRequest = {
@@ -185,5 +185,5 @@ export type GetExpenseDataRequest = {
 
 export type GetExpenseDataResponse = {
   message: string;
-  data: IFExpenseData & { budgetId: string }[];
+  data: (IFExpenseData & { budgetId: string })[];
 };

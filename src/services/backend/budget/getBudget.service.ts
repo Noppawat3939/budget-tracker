@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import type { GetBudgetByIdParams, GetBudgetParams } from "./type";
 import { EMPTY_ARRAY } from "@/constants";
+import dayjs from "dayjs";
 
 export const getBudgetService = async ({
   userId,
@@ -95,20 +96,39 @@ export const getExpenseByIdService = async (expenseId: string) => {
 };
 
 export const getIncomeDataService = async (userId: string) => {
-  const incomesData = await getBudgetService({
-    userId,
-    selectedIncome: true,
-    selectedExpense: false,
+  const prisma = new PrismaClient();
+
+  const incomesData = await prisma.income.findMany({
+    where: {
+      budget: { userId },
+    },
   });
 
   return incomesData;
 };
 
-export const getExpenseDataService = async (userId: string) => {
-  const expensesData = await getBudgetService({
-    userId,
-    selectedIncome: false,
-    selectedExpense: true,
+export const getExpenseDataService = async <T extends string>({
+  userId,
+  startDate,
+  endDate,
+}: {
+  userId: T;
+  startDate?: T;
+  endDate?: T;
+}) => {
+  const prisma = new PrismaClient();
+
+  const startDateTime = dayjs(startDate ?? "2000-01-30").toISOString();
+  const endDateTime = dayjs(endDate ?? "2023-10-30").toISOString();
+
+  const expensesData = await prisma.expense.findMany({
+    where: {
+      budget: { userId },
+      createdAt: {
+        lte: endDateTime,
+        gte: startDateTime,
+      },
+    },
   });
 
   return expensesData;

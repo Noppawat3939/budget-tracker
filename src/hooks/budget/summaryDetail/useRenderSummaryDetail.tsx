@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { CardDescription } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { BiSolidUpArrow, BiSolidDownArrow } from "react-icons/bi";
-import { isEmpty } from "lodash";
+import { identity, isEmpty } from "lodash";
 import type { Expenses, IFBudgetTotal, Incomes, TCreateBudget } from "@/types";
 
 type BudgetKey = TCreateBudget;
@@ -129,10 +129,12 @@ function useRenderSummaryDetail(budgetId: string) {
     return { expenseData, expenseValues, totalExpenseValue };
   };
 
+  const hasLoading = [isLoading, isEmpty(budget)].some(identity);
+
   return {
     response: {
       data: budget,
-      isLoading,
+      isLoading: hasLoading,
       isSuccess,
     },
     renderDescription,

@@ -1,12 +1,12 @@
 import jwtDecode from "jwt-decode";
 import type { JwtToken } from "@/types";
 import { NextRequest } from "next/server";
-import { NEXT_SERVER_REQUEST, SECOND_INDEX } from "@/constants";
+import { EMPTY_STRING, NEXT_SERVER_REQUEST, SECOND_INDEX } from "@/constants";
 
 const CONVERT_TIME = 1000;
 
 export const decodedTokenService = (idToken: string) => {
-  const token: JwtToken = jwtDecode(idToken || "");
+  const token: JwtToken = jwtDecode(idToken || EMPTY_STRING);
 
   return { token };
 };

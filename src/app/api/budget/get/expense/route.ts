@@ -14,8 +14,22 @@ export const GET = async (req: NextRequest) => {
   if (!user)
     return NextResponse.json(
       {
+        message: `${NEXT_SERVER_RESPONSE.USER_NOT_FOUND}`,
+        error: true,
+        code: HttpStatusCode.BadRequest,
+      },
+      { status: HttpStatusCode.BadRequest }
+    );
+
+  const hasInValidParam = [date, startDate, endDate].some((param) =>
+    param ? isNaN(Date.parse(param)) : false
+  );
+
+  if (hasInValidParam)
+    return NextResponse.json(
+      {
         message: `${NEXT_SERVER_RESPONSE.BAD_REQUEST}_${mapMessageResponse(
-          "user not found"
+          "query param is invalid"
         )}`,
         error: true,
         code: HttpStatusCode.BadRequest,
@@ -24,7 +38,8 @@ export const GET = async (req: NextRequest) => {
     );
 
   try {
-    if (startDate && endDate && startDate !== endDate) {
+    const hasStartAndEnd = startDate && endDate;
+    if (hasStartAndEnd && startDate !== endDate) {
       const expenses = await getExpenseDataService({
         userId: user?.userId,
         startDate,
@@ -37,16 +52,9 @@ export const GET = async (req: NextRequest) => {
           data: expenses,
         });
       }
-
-      return NextResponse.json({
-        message: `${NEXT_SERVER_RESPONSE.GET}_${mapMessageResponse(
-          "expense not found"
-        )}`,
-        data: EMPTY_ARRAY,
-      });
     }
 
-    if (startDate && endDate && startDate === endDate) {
+    if (hasStartAndEnd && startDate === endDate) {
       const expenses = await getExpenseDataService({
         userId: user?.userId,
         startDate: startDate,
@@ -58,13 +66,6 @@ export const GET = async (req: NextRequest) => {
           data: expenses,
         });
       }
-
-      return NextResponse.json({
-        message: `${NEXT_SERVER_RESPONSE.GET}_${mapMessageResponse(
-          "expense not found"
-        )}`,
-        data: EMPTY_ARRAY,
-      });
     }
 
     const expenses = await getExpenseDataService({
@@ -80,13 +81,11 @@ export const GET = async (req: NextRequest) => {
     }
 
     return NextResponse.json({
-      message: `${NEXT_SERVER_RESPONSE.GET}_${mapMessageResponse(
-        "expense not found"
-      )}`,
+      message: mapMessageResponse("expense not found"),
       data: EMPTY_ARRAY,
     });
   } catch (error) {
-    console.log(
+    console.error(
       `🚀 ===> ${NEXT_SERVER_RESPONSE.SERVER_ERROR}_get_expense`,
       error
     );

@@ -7,14 +7,6 @@ import {
   IFExpenseData,
 } from "@/types";
 
-type Budget = {
-  budgetId: string;
-  incomes: Incomes;
-  expenses: {
-    expense: Expenses;
-  };
-};
-
 type BalanceData = {
   budgetId: string;
   incomeValues: number;

@@ -1,7 +1,6 @@
 import { ENDPOINT } from "@/constants";
 import axios, { type AxiosResponse } from "axios";
 import type {
-  DeleteBudgetRequest,
   GetAllBudgetRequest,
   GetAllBudgetResponse,
   GetBudgetBalanceByBudgetIdRequest,
@@ -16,42 +15,17 @@ import type {
   GetExpenseDataResponse,
   GetIncomeDataRequest,
   GetIncomeDataResponse,
-  PostCreateIncomeOrExpenseRequest,
-  PostCreateIncomeOrExpenseResponse,
-  PostCreateNewBudgetRequest,
-  PostCreateNewBudgetResponse,
-  PutEditBudgetRequest,
-  PutEditBudgetResponse,
+  GetTotalBudgetRequest,
+  GetTotalBudgetResponse,
 } from "./type";
 import { createAuthHeader } from "@/helper";
 
-export const createNewBudget = async ({
-  body,
-  idToken,
-}: PostCreateNewBudgetRequest): Promise<
-  AxiosResponse<PostCreateNewBudgetResponse>
-> => {
-  return axios.post(ENDPOINT.BUDGET.CREATE, body, {
-    headers: createAuthHeader(idToken),
-  });
-};
-
-export const createIncomeOrExpense = async ({
-  body,
-  query,
-  idToken,
-}: PostCreateIncomeOrExpenseRequest): Promise<
-  AxiosResponse<PostCreateIncomeOrExpenseResponse>
-> => {
-  return axios.post(`${ENDPOINT.BUDGET.CREATE}?${query}`, body, {
-    headers: createAuthHeader(idToken),
-  });
-};
+const { BUDGET } = ENDPOINT;
 
 export const getAllBudget = async (
   param: GetAllBudgetRequest
 ): Promise<AxiosResponse<GetAllBudgetResponse>> => {
-  return await axios.get(ENDPOINT.BUDGET.GET, {
+  return await axios.get(BUDGET.GET, {
     headers: createAuthHeader(param.idToken),
   });
 };
@@ -59,7 +33,7 @@ export const getAllBudget = async (
 export const getBudgetByBudgetId = async (
   params: GetBudgetByBudgetIdRequest
 ): Promise<AxiosResponse<GetBudgetByBudgetIdResponse>> => {
-  return await axios.get(ENDPOINT.BUDGET.GET, {
+  return await axios.get(BUDGET.GET, {
     params: {
       budgetId: params.budgetId,
       direction: params.direction,
@@ -71,7 +45,7 @@ export const getBudgetByBudgetId = async (
 export const getBudgetBalance = async (
   param: GetBudgetBalanceRequest
 ): Promise<AxiosResponse<GetBudgetBalanceResponse>> => {
-  return await axios.get(ENDPOINT.BUDGET.BALANCE, {
+  return await axios.get(BUDGET.BALANCE, {
     headers: createAuthHeader(param.idToken),
   });
 };
@@ -79,7 +53,7 @@ export const getBudgetBalance = async (
 export const getBudgetBalanceByBudgetId = async (
   params: GetBudgetBalanceByBudgetIdRequest
 ): Promise<AxiosResponse<GetBudgetBalanceByBudgetIdResponse>> => {
-  return await axios.get(ENDPOINT.BUDGET.BALANCE, {
+  return await axios.get(BUDGET.BALANCE, {
     headers: createAuthHeader(params.idToken),
     params: { budgetId: params.budgetId },
   });
@@ -88,7 +62,7 @@ export const getBudgetBalanceByBudgetId = async (
 export const getBudgetByQuerySearch = async (
   params: GetBudgetByQuerySearchRequest
 ): Promise<AxiosResponse<GetBudgetByQuerySearchResponse>> => {
-  return await axios.get(ENDPOINT.BUDGET.GET, {
+  return await axios.get(BUDGET.GET, {
     params: {
       search: params.search,
     },
@@ -96,27 +70,10 @@ export const getBudgetByQuerySearch = async (
   });
 };
 
-export const editBudget = async (
-  params: PutEditBudgetRequest
-): Promise<AxiosResponse<PutEditBudgetResponse>> => {
-  return await axios.put(ENDPOINT.BUDGET.EDIT, params.body, {
-    headers: createAuthHeader(params.idToken),
-  });
-};
-
-export const deleteBudget = async (
-  params: DeleteBudgetRequest
-): Promise<AxiosResponse> => {
-  return await axios.delete(ENDPOINT.BUDGET.DELETE, {
-    params: params.param,
-    headers: createAuthHeader(params.idToken),
-  });
-};
-
 export const getExpenseData = async (
   params: GetExpenseDataRequest
 ): Promise<AxiosResponse<GetExpenseDataResponse>> => {
-  return await axios.get(`${ENDPOINT.BUDGET.GET}/expense`, {
+  return await axios.get(`${BUDGET.GET}/expense`, {
     headers: createAuthHeader(params.idToken),
   });
 };
@@ -124,7 +81,18 @@ export const getExpenseData = async (
 export const getIncomeData = async (
   params: GetIncomeDataRequest
 ): Promise<AxiosResponse<GetIncomeDataResponse>> => {
-  return await axios.get(`${ENDPOINT.BUDGET.GET}/income`, {
+  return await axios.get(`${BUDGET.GET}/income`, {
     headers: createAuthHeader(params.idToken),
+  });
+};
+
+export const getBudgetTotal = async ({
+  idToken,
+  startDate,
+  endDate,
+}: GetTotalBudgetRequest): Promise<AxiosResponse<GetTotalBudgetResponse>> => {
+  return axios.get(BUDGET.GET_TOTAL, {
+    headers: createAuthHeader(idToken),
+    params: { startDate, endDate },
   });
 };

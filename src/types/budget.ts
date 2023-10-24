@@ -45,3 +45,11 @@ export type CreateBudgetRequest = {
 export type Expenses = IFExpenseData[];
 
 export type Incomes = IFIncomeData[];
+
+export type Budget = {
+  budgetId: string;
+  incomes: Incomes;
+  expenses: {
+    expense: Expenses;
+  };
+};

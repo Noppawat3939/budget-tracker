@@ -5,4 +5,5 @@ export const QUERY_KEY = {
   GET_BUDGET_BY_SEARCH: "searchBudget",
   GET_INCOMES: "getIncomes",
   GET_EXPENSES: "getExpenses",
+  GET_BUDGET_TOTAL: "getBudgetTotal",
 } as const;

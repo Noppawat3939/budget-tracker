@@ -7,11 +7,6 @@ import {
   IFExpenseData,
 } from "@/types";
 
-export type PostCreateNewBudgetResponse = {
-  message: string;
-  budget: Budget;
-};
-
 type Budget = {
   budgetId: string;
   incomes: Incomes;
@@ -20,40 +15,11 @@ type Budget = {
   };
 };
 
-type IncomeRequest = {
-  income: {
-    income: string;
-    value: number;
-    description?: string;
-  };
-};
-
-type ExpenseRequest = {
-  expense: {
-    expense: string;
-    value: number;
-    description?: string;
-  };
-};
-
 type BalanceData = {
   budgetId: string;
   incomeValues: number;
   expenseValues: number;
   totalBalance: number;
-};
-
-export type PostCreateNewBudgetRequest = {
-  body: IncomeRequest & ExpenseRequest;
-  idToken: string;
-};
-
-export type PostCreateIncomeOrExpenseRequest = {
-  body:
-    | (IncomeRequest & { budgetId: string })
-    | (ExpenseRequest & { budgetId: string });
-  query: TCreateBudget;
-  idToken: string;
 };
 
 type PostCreateOnlyIncomeResponse = {
@@ -75,10 +41,6 @@ type PostCreateOnlyExpenseResponse = {
     description: string;
   };
 };
-
-export type PostCreateIncomeOrExpenseResponse =
-  | PostCreateOnlyIncomeResponse
-  | PostCreateOnlyExpenseResponse;
 
 export type GetAllBudgetRequest = {
   idToken: string;
@@ -150,26 +112,6 @@ export type GetBudgetByQuerySearchResponse = {
   };
 };
 
-export type PutEditBudgetRequest = {
-  idToken: string;
-  body: {
-    income?: IFIncomeData;
-    expense?: IFExpenseData;
-  };
-};
-
-export type PutEditBudgetResponse = {
-  message: string;
-  data: IFExpenseData | IFIncomeData;
-};
-
-type DeleteBudgetParam = "incomeId" | "expenseId";
-
-export type DeleteBudgetRequest = {
-  idToken: string;
-  param: Partial<Record<DeleteBudgetParam, string>>;
-};
-
 export type GetIncomeDataRequest = {
   idToken: string;
 };
@@ -186,4 +128,17 @@ export type GetExpenseDataRequest = {
 export type GetExpenseDataResponse = {
   message: string;
   data: (IFExpenseData & { budgetId: string })[];
+};
+
+export type GetTotalBudgetRequest = {
+  idToken: string;
+  startDate?: string;
+  endDate?: string;
+  query: TCreateBudget;
+};
+
+export type GetTotalBudgetResponse = {
+  message: string;
+  value: number;
+  count: number;
 };

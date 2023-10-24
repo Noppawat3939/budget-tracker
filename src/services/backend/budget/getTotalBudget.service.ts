@@ -13,7 +13,7 @@ export const getTotalIncome = async <T extends string>({
 }) => {
   const prisma = new PrismaClient();
 
-  const startDateTime = dayjs(startDate ?? "2000-01-30").toISOString();
+  const startDateTime = dayjs(startDate ?? undefined).toISOString();
   const endDateTime = dayjs(endDate ?? undefined).toISOString();
 
   const incomeValues = await prisma.income.findMany({
@@ -52,7 +52,7 @@ export const getTotalExpense = async <T extends string>({
 }) => {
   const prisma = new PrismaClient();
 
-  const startDateTime = dayjs(startDate ?? "2000-01-30").toISOString();
+  const startDateTime = dayjs(startDate ?? undefined).toISOString();
   const endDateTime = dayjs(endDate ?? undefined).toISOString();
 
   const expenseValues = await prisma.expense.findMany({

@@ -90,9 +90,10 @@ export const getBudgetTotal = async ({
   idToken,
   startDate,
   endDate,
+  query,
 }: GetTotalReq): Promise<AxiosResponse<GetTotalResp>> => {
   return axios.get(BUDGET.GET_TOTAL, {
     headers: createAuthHeader(idToken),
-    params: { startDate, endDate },
+    params: { startDate, endDate, query },
   });
 };

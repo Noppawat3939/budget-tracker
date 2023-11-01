@@ -27,11 +27,8 @@ const TrackingContainer = () => {
     onClick: onReset,
   };
 
-  if (queryExpenses.status === "error")
-    return <ErrorContainer {...errorProps} />;
-
   return (
-    <ErrorBoundary fallback={<ErrorContainer />}>
+    <ErrorBoundary fallback={<ErrorContainer {...errorProps} />}>
       <MainLayout>
         <RenderComponents
           trackingChart={trackingChart}

@@ -1,19 +1,9 @@
-import {
-  cleanUpFirstCharacter,
-  getLocalStorage,
-  removeLocalStorage,
-} from "@/helper";
+import { cleanUpFirstCharacter, removeLocalStorage } from "@/helper";
 
 const LOCAL_STORAGE_KEY = "create_budget";
 
 export const removeCreateBudgetFromStorage = () =>
   removeLocalStorage(LOCAL_STORAGE_KEY);
-
-export const getCreateBudgetFromStorage = () => {
-  const foundValue = getLocalStorage(LOCAL_STORAGE_KEY);
-
-  if (foundValue) return foundValue;
-};
 
 export const cleanUpCreateBudgetValue = (
   key: "description" | "value",

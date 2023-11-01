@@ -6,9 +6,20 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorContainer } from "@/containers";
 
 const TrackingContainer = () => {
-  const { queryExpenses, trackingChart, topExpenses } = useTrackingBudget();
+  const {
+    queryExpenses,
+    trackingChart,
+    expenses,
+    total,
+    queriesTotal,
+    loading,
+  } = useTrackingBudget();
 
-  const onReset = () => queryExpenses.refetch();
+  const onReset = () => {
+    queryExpenses.refetch();
+    queriesTotal.cur.refetch();
+    queriesTotal.prev.refetch();
+  };
 
   const errorProps = {
     description:
@@ -24,7 +35,9 @@ const TrackingContainer = () => {
       <MainLayout>
         <RenderComponents
           trackingChart={trackingChart}
-          topExpenses={topExpenses}
+          expenses={expenses}
+          total={total}
+          loading={loading}
         />
       </MainLayout>
     </ErrorBoundary>

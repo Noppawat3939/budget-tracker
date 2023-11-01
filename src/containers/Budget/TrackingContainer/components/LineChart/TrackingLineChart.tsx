@@ -8,9 +8,9 @@ import {
   Title,
   Tooltip,
   Filler,
-  ChartData,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import type { TrackingLineChartProps } from "./type";
 
 ChartJS.register(
   CategoryScale,
@@ -21,12 +21,6 @@ ChartJS.register(
   Tooltip,
   Filler
 );
-
-type Data = ChartData<"line", number[], string>;
-
-type TrackingLineChartProps = {
-  data: Data;
-};
 
 const TrackingLineChart: FC<TrackingLineChartProps> = ({ data }) => {
   const options = {

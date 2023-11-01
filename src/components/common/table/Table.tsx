@@ -24,7 +24,9 @@ const Table: FC<Table> = ({ columns, rows, isLoading, onRowClick }) => {
       <ShadTable className="border">
         <TableHeader className="border bg-slate-50">
           {columns?.map((column) => (
-            <TableHead key={column.key}>{column.label}</TableHead>
+            <TableHead key={column.key} className="font-semibold">
+              {column.label}
+            </TableHead>
           ))}
         </TableHeader>
         <TableBody>

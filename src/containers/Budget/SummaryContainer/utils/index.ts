@@ -15,7 +15,12 @@ export const renderSummaryRows = ({
   const ORDERS = 2;
 
   if (budgetData?.length && balanceData?.length) {
-    const newMap = budgetData.map((items) => {
+    const sortedLastDate = budgetData.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    const newMap = sortedLastDate.map((items) => {
       const date = formatDate(items.createdAt, FORMAT_DATE);
       const income =
         items.incomes.map((incomeVal) => incomeVal.income).length >= ORDERS

@@ -6,7 +6,8 @@ import {
   useGetBudgetList,
 } from "@/hooks";
 import { identity, isEmpty } from "lodash";
-import { useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
 type FilterSummary = "all" | "thisMonth";
 
@@ -17,11 +18,24 @@ function useHandleSummaryList() {
     useDebounceSearch(DEBOUNCE_DELAY);
 
   const { balanceData, budgetData, isLoading } = useGetBudgetList();
+  const searchParams = useSearchParams();
+
+  const router = useRouter();
 
   const { data: searchData, isFetching } = useGetBudgetBySearch(searchValue);
 
   const [isPending, startTransition] = useTransition();
   const [filterSummary, setFilterSummary] = useState<FilterSummary>("all");
+
+  useEffect(() => {
+    const queryFilter = searchParams.get("filter");
+
+    if (queryFilter) {
+      setFilterSummary(queryFilter === "all" ? "all" : "thisMonth");
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get("filter")]);
 
   const searchDataId = {
     incomeId: searchData?.incomes.map((income) => income.incomeId),
@@ -43,6 +57,14 @@ function useHandleSummaryList() {
   });
 
   const onSelectedFilter = (selectedValue: string) => {
+    const queryStrFilter = {
+      thisMonth: "month",
+      all: "all",
+    };
+    router.replace(
+      `/summary?filter=${queryStrFilter[selectedValue as FilterSummary]}`
+    );
+
     startTransition(() => setFilterSummary(selectedValue as FilterSummary));
   };
 

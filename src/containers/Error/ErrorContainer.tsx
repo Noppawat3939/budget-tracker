@@ -1,3 +1,5 @@
+"use client";
+
 import React, { memo, type FC, useTransition } from "react";
 import type { ErrorContainerProps } from "./type";
 import { useRouter } from "next/navigation";

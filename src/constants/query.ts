@@ -6,4 +6,5 @@ export const QUERY_KEY = {
   GET_INCOMES: "getIncomes",
   GET_EXPENSES: "getExpenses",
   GET_BUDGET_TOTAL: "getBudgetTotal",
+  GET_BUDGET_TIMESTAMP: "getBudgetTimestamp",
 } as const;

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { numberFormatter, toCapitalize } from "@/helper";
 import { FIRST_INDEX } from "@/constants";
 import type { RenderTrackingComponentsProps, TotalSpendLabel } from "./type";
+import { Select } from "@/components";
 
 const totalLabel: TotalSpendLabel[] = ["current", "previous", "balance"];
 
@@ -15,6 +16,7 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
   expenses,
   total,
   loading,
+  filter,
 }) => {
   const { renderSkeleton } = useRenderSkeleton({
     length: 3,
@@ -24,7 +26,16 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
 
   return (
     <main>
-      <div className="flex max-w-[90%] h-[400px] mx-auto">
+      <div className="flex relative max-w-[90%] h-[400px] mx-auto">
+        <div className="absolute right-[-100px] top-0">
+          <Select
+            options={filter.map((value) => ({
+              label: value,
+              value,
+            }))}
+            onValueChange={() => null}
+          />
+        </div>
         <TrackingLineChart data={chartData} />
       </div>
 

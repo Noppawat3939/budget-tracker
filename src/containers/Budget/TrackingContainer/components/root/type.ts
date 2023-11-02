@@ -10,4 +10,5 @@ export type RenderTrackingComponentsProps = {
   })[];
   total: Record<TotalSpendLabel, number>;
   loading: Record<LoadingData, boolean>;
+  filter: string[];
 };

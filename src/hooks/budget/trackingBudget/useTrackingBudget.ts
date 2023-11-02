@@ -1,32 +1,45 @@
 import { EMPTY_ARRAY, QUERY_KEY } from "@/constants";
 import { useGetExpenseData } from "..";
 import { useQueries } from "@tanstack/react-query";
-import { getBudgetTotal } from "@/services";
+import { getBudgetTimestamp, getBudgetTotal } from "@/services";
 import { useUser } from "@/hooks";
-import { toNumber, toString } from "@/helper";
+import {
+  formatDate,
+  getEndDateOfCurrentMonth,
+  getEndDateOfPreviousMonth,
+  getStartDateOfCurrentMonth,
+  getStartDateOfPreviousMonth,
+  getUnique,
+  toNumber,
+  toString,
+} from "@/helper";
 import { identity, isEmpty } from "lodash";
-import dayjs from "dayjs";
+import { AxiosResponse } from "axios";
 
 type TotalResponse = { count: number; value: number; message: string };
+type TimestampResponse = AxiosResponse<{ message: string; data: Date[] }>;
 
 const FORMAT_DATE = "YYYY-MM-DD";
 
+const currentMonth = {
+  startDate: getStartDateOfCurrentMonth(FORMAT_DATE),
+  endDate: getEndDateOfCurrentMonth(FORMAT_DATE),
+};
+const previousMonth = {
+  startDate: getStartDateOfPreviousMonth(FORMAT_DATE),
+  endDate: getEndDateOfPreviousMonth(FORMAT_DATE),
+};
+
 function useTrackingBudget() {
-  const expenses = useGetExpenseData();
+  const expenses = useGetExpenseData({
+    startDate: currentMonth.startDate,
+    endDate: currentMonth.endDate,
+  });
   const { data: user } = useUser();
 
   const enabled = !isEmpty(user?.idToken);
 
-  const currentMonth = {
-    startDate: dayjs().startOf("month").format(FORMAT_DATE),
-    endDate: dayjs().endOf("month").format(FORMAT_DATE),
-  };
-  const previousMonth = {
-    startDate: dayjs().add(-1, "month").startOf("month").format(FORMAT_DATE),
-    endDate: dayjs().add(-1, "month").endOf("month").format(FORMAT_DATE),
-  };
-
-  const [currentTotal, previousTotal] = useQueries({
+  const [currentTotal, previousTotal, budgetTimestamp] = useQueries({
     queries: [
       {
         queryFn: () =>
@@ -46,6 +59,7 @@ function useTrackingBudget() {
           count,
           value,
         }),
+        refetchOnWindowFocus: false,
       },
       {
         queryFn: () =>
@@ -61,10 +75,18 @@ function useTrackingBudget() {
           previousMonth.endDate,
         ],
         enabled,
+        refetchOnWindowFocus: false,
         select: ({ data: { count, value } }: { data: TotalResponse }) => ({
           count,
           value,
         }),
+      },
+      {
+        queryFn: () => getBudgetTimestamp({ idToken: toString(user?.idToken) }),
+        queryKey: [QUERY_KEY.GET_BUDGET_TIMESTAMP],
+        enabled,
+        refetchOnWindowFocus: false,
+        select: ({ data }: TimestampResponse) => data.data,
       },
     ],
   });
@@ -88,6 +110,11 @@ function useTrackingBudget() {
       toNumber(previousTotal.data?.value) - toNumber(currentTotal.data?.value),
   };
 
+  const formattedFilterTimestamp = budgetTimestamp.data?.map(
+    (date) => formatDate(date, "MMM YYYY") || EMPTY_ARRAY
+  );
+  const uniqueFilterTracking = getUnique(formattedFilterTimestamp) as string[];
+
   const loading = {
     getTotal: [currentTotal.isLoading, previousTotal.isLoading].some(identity),
     expenses: expenses.isLoading,
@@ -103,6 +130,7 @@ function useTrackingBudget() {
       prev: previousTotal,
     },
     loading,
+    renderFilter: uniqueFilterTracking,
   };
 }
 

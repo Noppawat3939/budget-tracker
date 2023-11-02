@@ -75,6 +75,10 @@ export const getExpenseData = async (
 ): Promise<AxiosResponse<GetExpensesResp>> => {
   return await axios.get(`${BUDGET.GET}/expense`, {
     headers: createAuthHeader(params.idToken),
+    params: {
+      startDate: params.startDate,
+      endDate: params.endDate,
+    },
   });
 };
 

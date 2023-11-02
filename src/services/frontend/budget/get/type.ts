@@ -115,6 +115,8 @@ export type GetIncomeDataResponse = {
 
 export type GetExpenseDataRequest = {
   idToken: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type GetExpenseDataResponse = {

@@ -12,5 +12,6 @@ export const ENDPOINT = {
     DELETE: "/api/budget/delete",
     BALANCE: "/api/budget/balance",
     GET_TOTAL: "/api/budget/get/total",
+    GET_TIMESTAMP: "/api/budget/timestamp",
   },
 } as const;

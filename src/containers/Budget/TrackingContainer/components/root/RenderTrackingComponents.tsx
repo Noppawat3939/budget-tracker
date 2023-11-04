@@ -1,4 +1,10 @@
-import React, { type FC, Fragment } from "react";
+import React, {
+  type FC,
+  Fragment,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { TrackingLineChart } from "..";
 import { useRenderSkeleton, useTrackingChart } from "@/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +13,7 @@ import { FIRST_INDEX } from "@/constants";
 import type { RenderTrackingComponentsProps } from "./type";
 import { Select } from "@/components";
 import { identity, isEmpty } from "lodash";
+import { Button } from "@/components/ui/button";
 
 const MAX_TOP_SPENDING = 3;
 
@@ -25,6 +32,9 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
     isEmpty(total),
   ].some(identity);
 
+  const [isPending, startTransition] = useTransition();
+  const [maxShowExpense, setMaxShowExpense] = useState(MAX_TOP_SPENDING);
+
   const { renderSkeleton } = useRenderSkeleton({
     length: 3,
     isShow: isShowSkeleton,
@@ -32,6 +42,8 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
   const { chartData } = useTrackingChart(trackingChart);
 
   const filterOptions = filter.map((value) => ({ label: value, value }));
+
+  const isShowMoreExpense = maxShowExpense > MAX_TOP_SPENDING;
 
   return (
     <main>
@@ -57,23 +69,51 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
                 <Fragment>{renderSkeleton}</Fragment>
               </div>
             ) : (
-              expenses
-                .slice(
-                  FIRST_INDEX,
-                  expenses.length >= MAX_TOP_SPENDING
-                    ? MAX_TOP_SPENDING
-                    : expenses.length
-                )
-                .map(({ expense, value, expenseId }) => (
-                  <div className="flex justify-between mb-2" key={expenseId}>
-                    <p aria-label="expense-label" className="font-medium">
-                      {toCapitalize(expense)}
-                    </p>
-                    <p aria-label="expense-value" className="text-[17px]">
-                      {numberFormatter(value)} ฿
-                    </p>
-                  </div>
-                ))
+              <div>
+                <div className="flex flex-col max-h-[300px] overflow-y-auto ">
+                  {expenses
+                    .slice(
+                      FIRST_INDEX,
+                      expenses.length >= maxShowExpense
+                        ? maxShowExpense
+                        : expenses.length
+                    )
+                    .map(({ expense, value, expenseId }) => (
+                      <div
+                        className="flex justify-between mb-2"
+                        key={expenseId}
+                      >
+                        <p aria-label="expense-label" className="font-medium">
+                          {toCapitalize(expense)}
+                        </p>
+                        <p aria-label="expense-value" className="text-[17px]">
+                          {numberFormatter(value)} ฿
+                        </p>
+                      </div>
+                    ))}
+                </div>
+                {expenses.length > 0 && (
+                  <Button
+                    className="mt-2 w-full text-gray-400 font-medium"
+                    size="sm"
+                    variant="outline"
+                    disabled={isPending}
+                    onClick={() =>
+                      startTransition(() => {
+                        maxShowExpense <= MAX_TOP_SPENDING
+                          ? setMaxShowExpense(expenses.length)
+                          : setMaxShowExpense(MAX_TOP_SPENDING);
+                      })
+                    }
+                  >
+                    {isPending
+                      ? "loading..."
+                      : isShowMoreExpense
+                      ? "Show less"
+                      : "Show more"}
+                  </Button>
+                )}
+              </div>
             )}
           </CardContent>
         </Card>

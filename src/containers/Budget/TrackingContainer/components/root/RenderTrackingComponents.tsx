@@ -4,10 +4,9 @@ import { useRenderSkeleton, useTrackingChart } from "@/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { numberFormatter, toCapitalize } from "@/helper";
 import { FIRST_INDEX } from "@/constants";
-import type { RenderTrackingComponentsProps, TotalSpendLabel } from "./type";
+import type { RenderTrackingComponentsProps } from "./type";
 import { Select } from "@/components";
-
-const totalLabel: TotalSpendLabel[] = ["current", "previous", "balance"];
+import { identity, isEmpty } from "lodash";
 
 const MAX_TOP_SPENDING = 3;
 
@@ -17,24 +16,28 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
   total,
   loading,
   filter,
+  onFilter,
 }) => {
+  const isShowSkeleton = [
+    loading.expenses,
+    loading.total,
+    isEmpty(expenses),
+    isEmpty(total),
+  ].some(identity);
+
   const { renderSkeleton } = useRenderSkeleton({
     length: 3,
-    isShow: loading.expenses || loading.getTotal,
+    isShow: isShowSkeleton,
   });
   const { chartData } = useTrackingChart(trackingChart);
+
+  const filterOptions = filter.map((value) => ({ label: value, value }));
 
   return (
     <main>
       <div className="flex relative max-w-[90%] h-[400px] mx-auto">
         <div className="absolute right-[-100px] top-0">
-          <Select
-            options={filter.map((value) => ({
-              label: value,
-              value,
-            }))}
-            onValueChange={() => null}
-          />
+          <Select options={filterOptions} onValueChange={onFilter} />
         </div>
         <TrackingLineChart data={chartData} />
       </div>
@@ -50,7 +53,9 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
           </CardHeader>
           <CardContent>
             {loading.expenses ? (
-              <Fragment>{renderSkeleton}</Fragment>
+              <div className="flex-col flex gap-y-3">
+                <Fragment>{renderSkeleton}</Fragment>
+              </div>
             ) : (
               expenses
                 .slice(
@@ -77,11 +82,16 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
             <CardTitle>Total spending</CardTitle>
           </CardHeader>
           <CardContent>
-            {totalLabel.map((key) => (
-              <div className="flex items-center justify-between mb-2" key={key}>
-                {loading.getTotal ? (
-                  <Fragment>{renderSkeleton}</Fragment>
-                ) : (
+            {loading.total ? (
+              <div className="flex-col flex gap-y-3">
+                <Fragment>{renderSkeleton}</Fragment>
+              </div>
+            ) : (
+              Object.keys(total).map((key) => (
+                <div
+                  className="flex items-center justify-between mb-2"
+                  key={key}
+                >
                   <Fragment>
                     <p
                       aria-label={`total-${key}-spending-label`}
@@ -94,11 +104,13 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
                     <p
                       aria-label={`total-${key}-spending-value`}
                       className="text-gray-700 text-[17px]"
-                    >{`${numberFormatter(total[key])} ฿`}</p>
+                    >{`${numberFormatter(
+                      total[key as keyof typeof total]
+                    )} ฿`}</p>
                   </Fragment>
-                )}
-              </div>
-            ))}
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
       </div>

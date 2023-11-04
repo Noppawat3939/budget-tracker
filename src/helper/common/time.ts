@@ -6,14 +6,14 @@ const DEFAULT_FORMAT = "DD MMM YYYY";
 export const formatDate = (date: Dates, format?: string) =>
   dayjs(date).format(format || DEFAULT_FORMAT);
 
-export const getStartDateOfCurrentMonth = (format?: string) =>
-  dayjs().startOf("month").format(format);
+export const getPrevMonth = () => dayjs().add(-1, "month");
 
-export const getStartDateOfPreviousMonth = (format?: string) =>
-  dayjs().add(-1, "month").startOf("month").format(format);
+export const getFirstDateOfMonth = (
+  date?: string | number | Date | dayjs.Dayjs | null,
+  format?: string
+) => dayjs(date).startOf("month").format(format);
 
-export const getEndDateOfCurrentMonth = (format?: string) =>
-  dayjs().endOf("month").format(format);
-
-export const getEndDateOfPreviousMonth = (format?: string) =>
-  dayjs().add(-1, "month").endOf("month").format(format);
+export const getLastDateOfMonth = (
+  date?: string | number | Date | dayjs.Dayjs | null,
+  format?: string
+) => dayjs(date).endOf("month").format(format);

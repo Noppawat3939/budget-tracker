@@ -2,10 +2,19 @@ import { NextResponse } from "next/server";
 
 import { getContentService } from "@/services";
 import { NEXT_SERVER_RESPONSE } from "@/constants";
+import { HttpStatusCode } from "axios";
+import { mapMessageResponse } from "@/helper";
 
 export const GET = async (req: Request) => {
   if (!req)
-    return new NextResponse("Request params is required", { status: 400 });
+    return NextResponse.json(
+      {
+        message: mapMessageResponse("Request params is required"),
+        error: true,
+        code: HttpStatusCode.BadRequest,
+      },
+      { status: HttpStatusCode.BadRequest }
+    );
 
   try {
     if (req) {
@@ -14,10 +23,21 @@ export const GET = async (req: Request) => {
       return NextResponse.json(JSON.stringify({ form: content }));
     }
 
-    return NextResponse.json({ message: "content not found" });
+    return NextResponse.json({
+      message: mapMessageResponse("content not found"),
+    });
   } catch (error) {
     console.log(`${NEXT_SERVER_RESPONSE.SERVER_ERROR}_get_content`, error);
 
-    return new NextResponse(NEXT_SERVER_RESPONSE.SERVER_ERROR, { status: 500 });
+    return NextResponse.json(
+      {
+        message: `${NEXT_SERVER_RESPONSE.SERVER_ERROR}_${mapMessageResponse(
+          `can't get content from server`
+        )}`,
+        error: true,
+        code: HttpStatusCode.InternalServerError,
+      },
+      { status: HttpStatusCode.InternalServerError }
+    );
   }
 };

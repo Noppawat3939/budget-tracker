@@ -1,7 +1,7 @@
 import { IFExpenseData } from "@/types";
 
 export type TotalSpendLabel = "current" | "previous" | "balance";
-export type LoadingData = "getTotal" | "expenses";
+export type LoadingData = "total" | "expenses";
 
 export type RenderTrackingComponentsProps = {
   trackingChart: { value: number; date: string; expense: string }[];
@@ -11,4 +11,5 @@ export type RenderTrackingComponentsProps = {
   total: Record<TotalSpendLabel, number>;
   loading: Record<LoadingData, boolean>;
   filter: string[];
+  onFilter: (selected: string) => void;
 };

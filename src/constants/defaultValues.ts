@@ -6,3 +6,4 @@ export const EMPTY_STRING = "";
 export const EMPTY_ARRAY = [];
 export const DEFAULT_VALUE_NUMBER = 0;
 export const PERCENT = 100;
+export const _UDF = undefined;

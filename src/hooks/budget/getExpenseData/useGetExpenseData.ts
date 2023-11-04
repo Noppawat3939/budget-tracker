@@ -16,7 +16,7 @@ function useGetExpenseData({
   const enabled = !isEmpty(user?.idToken);
 
   return useQuery({
-    queryKey: [QUERY_KEY.GET_EXPENSES],
+    queryKey: [QUERY_KEY.GET_EXPENSES, startDate, endDate],
     queryFn: () =>
       getExpenseData({ idToken: toString(user?.idToken), startDate, endDate }),
     enabled,

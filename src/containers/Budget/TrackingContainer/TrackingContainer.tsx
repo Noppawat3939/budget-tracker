@@ -13,7 +13,7 @@ const TrackingContainer = () => {
     total,
     queriesTotal,
     loading,
-    renderFilter,
+    filter,
   } = useTrackingBudget();
 
   const onReset = () => {
@@ -32,11 +32,12 @@ const TrackingContainer = () => {
     <ErrorBoundary fallback={<ErrorContainer {...errorProps} />}>
       <MainLayout>
         <RenderComponents
-          filter={renderFilter}
+          filter={filter.renderFilter}
           trackingChart={trackingChart}
           expenses={expenses}
           total={total}
           loading={loading}
+          onFilter={filter.onFilter}
         />
       </MainLayout>
     </ErrorBoundary>

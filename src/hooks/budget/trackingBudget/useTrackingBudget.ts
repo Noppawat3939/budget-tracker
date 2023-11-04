@@ -1,3 +1,5 @@
+"use client";
+
 import { EMPTY_ARRAY, QUERY_KEY, _UDF } from "@/constants";
 import { useGetExpenseData } from "..";
 import { useQueries } from "@tanstack/react-query";

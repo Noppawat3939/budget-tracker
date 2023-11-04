@@ -1,10 +1,6 @@
-import React, {
-  type FC,
-  Fragment,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+"use client";
+
+import React, { type FC, Fragment, useState, useTransition } from "react";
 import { TrackingLineChart } from "..";
 import { useRenderSkeleton, useTrackingChart } from "@/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

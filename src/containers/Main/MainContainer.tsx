@@ -8,12 +8,13 @@ import { ROUTES } from "@/constants";
 import { useUser } from "@/hooks";
 import { isEmpty } from "lodash";
 
-import { FaCoins, FaChartPie } from "react-icons/fa";
+import { FaCoins, FaChartPie, FaChartLine } from "react-icons/fa";
 import { BiTable } from "react-icons/bi";
 
 import createBudget from "@/assets/images/landing-page/create-budget.jpeg";
 import summaryTable from "@/assets/images/landing-page/summary-overview.jpeg";
 import summaryDetail from "@/assets/images/landing-page/summary-detail.jpeg";
+import trackingBudget from "@/assets/images/landing-page/tracking-budget.jpeg";
 
 function MainContainer() {
   const { data: user } = useUser();
@@ -21,6 +22,12 @@ function MainContainer() {
   const btnText = isEmpty(user) ? "Try free" : "Get Create free";
 
   const preview = [
+    {
+      label: "Tracking budget",
+      aboutSection: "tracking-budget-section",
+      icon: <FaChartLine className="w-8 h-8 text-[#35A29F]" />,
+      image: trackingBudget,
+    },
     {
       label: "Create budget",
       aboutSection: "create-budget-section",

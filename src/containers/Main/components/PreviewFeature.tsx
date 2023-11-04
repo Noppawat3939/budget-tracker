@@ -34,7 +34,7 @@ const PreviewFeature: FC<PreviewFeatureProps> = ({
             loading="lazy"
             src={src}
             alt="create-budget-image"
-            className="w-full h-full object-cover rounded-lg shadow-md border-white border transition-all duration-300 hover:shadow-lg hover:border hover:border-gray-50"
+            className="w-full h-full object-cover rounded-lg shadow-md border-white border transition-all duration-400 hover:shadow-lg hover:border hover:-translate-y-1.5 hover:border-gray-50"
           />
         </div>
       </div>

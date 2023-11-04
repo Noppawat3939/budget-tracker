@@ -21,7 +21,7 @@ export const GET = async (req: NextRequest) => {
     const incomes = await getIncomeDataService(user?.userId);
 
     if (incomes.length) {
-      const mapIncomes = incomes.flatMap((income) => income.incomes);
+      const mapIncomes = incomes.flatMap((income) => income.income);
 
       return NextResponse.json({
         message: mapMessageResponse("get income success"),

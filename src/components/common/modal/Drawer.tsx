@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Drawer as VDrawer } from "vaul";
@@ -20,7 +21,7 @@ export default function Drawer({
       onOpenChange={onOpenChange}
     >
       <VDrawer.Trigger asChild>
-        <div className="flex">
+        <div className="w-fit mx-auto">
           <Button onClick={onOpen} className="mx-auto">
             {btnText}
           </Button>

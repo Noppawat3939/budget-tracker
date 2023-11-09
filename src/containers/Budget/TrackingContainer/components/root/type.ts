@@ -12,4 +12,5 @@ export type RenderTrackingComponentsProps = {
   loading: Record<LoadingData, boolean>;
   filter: string[];
   onFilter: (selected: string) => void;
+  percentChange: number;
 };

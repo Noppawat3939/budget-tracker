@@ -133,6 +133,6 @@ export type GetTotalBudgetRequest = {
 
 export type GetTotalBudgetResponse = {
   message: string;
-  value: number;
+  value: number | null;
   count: number;
 };

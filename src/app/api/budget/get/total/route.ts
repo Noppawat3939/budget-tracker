@@ -55,7 +55,7 @@ export const GET = async (req: NextRequest) => {
 
       const sumIncome = value.length
         ? value.reduce((prev, curr) => curr.value + prev, DEFAULT_VALUE_NUMBER)
-        : DEFAULT_VALUE_NUMBER;
+        : null;
 
       return NextResponse.json({
         message: mapMessageResponse(`get total ${query} is success`),
@@ -73,7 +73,7 @@ export const GET = async (req: NextRequest) => {
 
       const sumExpense = value.length
         ? value.reduce((prev, curr) => curr.value + prev, DEFAULT_VALUE_NUMBER)
-        : DEFAULT_VALUE_NUMBER;
+        : null;
 
       return NextResponse.json({
         message: mapMessageResponse(`get total ${query} is success`),

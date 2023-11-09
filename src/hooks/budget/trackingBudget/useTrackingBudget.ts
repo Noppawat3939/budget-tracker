@@ -1,6 +1,11 @@
 "use client";
 
-import { EMPTY_ARRAY, QUERY_KEY, _UDF } from "@/constants";
+import {
+  DEFAULT_VALUE_NUMBER,
+  EMPTY_ARRAY,
+  QUERY_KEY,
+  _UDF,
+} from "@/constants";
 import { useGetExpenseData } from "..";
 import { useQueries } from "@tanstack/react-query";
 import { getBudgetTimestamp, getBudgetTotal } from "@/services";
@@ -19,7 +24,7 @@ import { AxiosResponse } from "axios";
 import { useCallback, useState } from "react";
 import dayjs from "dayjs";
 
-type TotalResponse = { count: number; value: number; message: string };
+type TotalResponse = { count: number; value: null | number; message: string };
 type TimestampResponse = AxiosResponse<{ message: string; data: Date[] }>;
 
 const FORMAT_DATE = "YYYY-MM-DD";
@@ -59,7 +64,7 @@ function useTrackingBudget() {
         enabled,
         select: ({ data: { count, value } }: { data: TotalResponse }) => ({
           count,
-          value,
+          value: value ?? DEFAULT_VALUE_NUMBER,
         }),
         refetchOnWindowFocus: false,
       },
@@ -80,7 +85,7 @@ function useTrackingBudget() {
         refetchOnWindowFocus: false,
         select: ({ data: { count, value } }: { data: TotalResponse }) => ({
           count,
-          value,
+          value: value ?? DEFAULT_VALUE_NUMBER,
         }),
       },
       {
@@ -92,6 +97,7 @@ function useTrackingBudget() {
       },
     ],
   });
+
   const expenses = useGetExpenseData({
     startDate: current.startDate,
     endDate: current.endDate,
@@ -105,11 +111,11 @@ function useTrackingBudget() {
 
       setPrevious({
         startDate: getFirstDateOfMonth(
-          dayjs(foundCurrentDate).add(-1),
+          dayjs(foundCurrentDate).add(-1, "month"),
           FORMAT_DATE
         ),
         endDate: getLastDateOfMonth(
-          dayjs(foundCurrentDate).add(-1),
+          dayjs(foundCurrentDate).add(-1, "month"),
           FORMAT_DATE
         ),
       });
@@ -136,11 +142,22 @@ function useTrackingBudget() {
     ? expenses.data?.sort((a, b) => b.value - a.value)
     : EMPTY_ARRAY;
 
+  const percentChange = +(
+    ((toNumber(previousTotal.data?.value) -
+      toNumber(currentTotal.data?.value)) /
+      toNumber(currentTotal.data?.value)) *
+    100
+  ).toFixed(2);
+
   const total = {
     current: toNumber(currentTotal.data?.value),
     previous: toNumber(previousTotal.data?.value),
     balance:
-      toNumber(previousTotal.data?.value) - toNumber(currentTotal.data?.value),
+      isEmpty(previousTotal.data?.count) && isEmpty(previousTotal.data?.value)
+        ? toNumber(currentTotal.data?.value) -
+          toNumber(previousTotal.data?.value)
+        : toNumber(previousTotal.data?.value) -
+          toNumber(currentTotal.data?.value),
   };
 
   const formattedFilterTimestamp = budgetTimestamp.data
@@ -159,6 +176,7 @@ function useTrackingBudget() {
     trackingChart,
     expenses: sortedExpenses,
     total,
+    percentChange,
     queriesTotal: {
       cur: currentTotal,
       prev: previousTotal,

@@ -4,7 +4,7 @@ import React, { type FC, Fragment, useState, useTransition } from "react";
 import { TrackingLineChart } from "..";
 import { useRenderSkeleton, useTrackingChart } from "@/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { numberFormatter, toCapitalize } from "@/helper";
+import { numberFormatter, toCapitalize, toNumber } from "@/helper";
 import { FIRST_INDEX } from "@/constants";
 import type { RenderTrackingComponentsProps } from "./type";
 import { Select } from "@/components";
@@ -20,6 +20,7 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
   loading,
   filter,
   onFilter,
+  percentChange,
 }) => {
   const isShowSkeleton = [
     loading.expenses,
@@ -44,7 +45,7 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
   return (
     <main>
       <div className="flex relative max-w-[90%] h-[400px] mx-auto">
-        <div className="absolute right-[-100px] top-0">
+        <div className="absolute right-[-50px] top-0">
           <Select options={filterOptions} onValueChange={onFilter} />
         </div>
         <TrackingLineChart data={chartData} />
@@ -147,6 +148,26 @@ const RenderTrackingComponents: FC<RenderTrackingComponentsProps> = ({
                 </div>
               ))
             )}
+            <Fragment>
+              <p
+                aria-label="percent-change-title"
+                className="text-sm text-gray-400 border-b mt-4"
+              >
+                Changes compared to the previous month
+              </p>
+              <div
+                className={`${
+                  toNumber(percentChange) >= 0
+                    ? "text-green-600"
+                    : "text-red-600"
+                } font-medium text-sm flex justify-between items-center mt-2`}
+              >
+                <p aria-label="percent-change-label">Change</p>
+                <p aria-label="percent-change-balance-value">{`${numberFormatter(
+                  toNumber(percentChange)
+                )}%`}</p>
+              </div>
+            </Fragment>
           </CardContent>
         </Card>
       </div>

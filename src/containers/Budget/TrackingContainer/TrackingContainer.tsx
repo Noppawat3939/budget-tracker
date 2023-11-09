@@ -14,6 +14,7 @@ const TrackingContainer = () => {
     queriesTotal,
     loading,
     filter,
+    percentChange,
   } = useTrackingBudget();
 
   const onReset = () => {
@@ -38,6 +39,7 @@ const TrackingContainer = () => {
           total={total}
           loading={loading}
           onFilter={filter.onFilter}
+          percentChange={percentChange}
         />
       </MainLayout>
     </ErrorBoundary>

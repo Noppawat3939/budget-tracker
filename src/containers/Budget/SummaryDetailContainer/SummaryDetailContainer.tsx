@@ -2,7 +2,7 @@ import React from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useRenderSkeleton, useRenderSummaryDetail } from "@/hooks";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import {
   ModalDeleteBudget,
   ModalSummaryEdit,
@@ -16,6 +16,7 @@ import { EMPTY_STRING } from "@/constants";
 
 import { priceFormatter, toAverage } from "@/helper";
 import { renderChartBackground } from "./utils";
+import { isEmpty } from "lodash";
 
 const BUDGET_DETAILS = ["income", "expense"];
 
@@ -87,6 +88,8 @@ function SummaryDetailContainer() {
 
   const hasPositiveDirection = totalIncomeValue >= totalExpenseValue;
   const chartData = renderChartData();
+
+  if (isEmpty(budgetData)) redirect("/summary");
 
   return (
     <MainLayout>

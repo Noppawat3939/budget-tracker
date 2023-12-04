@@ -84,7 +84,7 @@ export default function useCreateBudget() {
     storage.set(STORAGE_KEY.CREATED_NEW_BUDGET_NOTIFICATION, "1");
     handleResetCreateBudgetValues();
 
-    queryClient.invalidateQueries([QUERY_KEY.GET_BUDGET_BY_ID]);
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEY.GET_BUDGET_BY_ID] });
   };
 
   const createIncomeOrExpenseMutate = useMutation({
@@ -124,8 +124,6 @@ export default function useCreateBudget() {
         idToken: data?.idToken!,
       });
     }
-
-    //TODO: create budget without login
   };
 
   const handleCreateNewBudget = () => {
@@ -167,8 +165,8 @@ export default function useCreateBudget() {
   ].some(identity);
 
   const hasFetching = [
-    createIncomeOrExpenseMutate.isLoading,
-    createNewBudgetMutate.isLoading,
+    createIncomeOrExpenseMutate.isPending,
+    createNewBudgetMutate.isPending,
   ].some(identity);
 
   return {

@@ -42,6 +42,11 @@ export const GET = async (req: NextRequest) => {
           isIncome: true,
         });
 
+        if (isEmpty(budgetByIdData))
+          return NextResponse.json({
+            message: mapMessageResponse(`budget id is empty data`),
+          });
+
         return NextResponse.json({
           message: `${NEXT_SERVER_RESPONSE.GET}`,
           data: budgetByIdData.map((data) => ({
